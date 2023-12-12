@@ -1,7 +1,9 @@
 package com.insy2s.KeyCloakAuth;
 
+import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
+import com.insy2s.KeyCloakAuth.service.IAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +19,8 @@ import java.util.Optional;
 public class KeyCloakAuthServiceApplication {
 @Autowired
 private RoleRepository roleRepository;
-
+	@Autowired
+	private IAccessService accessService;
 	public static void main(String[] args) {
 		SpringApplication.run(KeyCloakAuthServiceApplication.class, args);
 	}
@@ -45,7 +48,18 @@ private RoleRepository roleRepository;
 
 		};}
 
+    private void setDefaultAccess(){
+		//menu cours
+       Access menuCours=accessService.create(new Access("Cours","Menu"));
+		Access listCours=accessService.create(new Access("List des cours","Page","cours",menuCours));
+		Access addCours=accessService.create(new Access("Ajouter un cours","Page","ajoutcours",menuCours));
+		//menu projet
+		Access menuProjet=accessService.create(new Access("Projet","Menu"));
+		Access listProjet=accessService.create(new Access("List des projets","Page","projets",menuProjet));
+		Access addProjet=accessService.create(new Access("Ajouter un projet","Page","createprojet",menuProjet));
 
+
+	}
 
 	private void saveRole(Role role)
 	{
