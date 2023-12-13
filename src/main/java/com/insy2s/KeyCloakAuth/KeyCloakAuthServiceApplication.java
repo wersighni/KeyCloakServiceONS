@@ -46,6 +46,7 @@ private RoleRepository roleRepository;
 			apprenantVerification.setName("Apprenant de Verif");
 			saveRole(apprenantVerification)	;
 
+			setDefaultAccess();
 		};}
 
     private void setDefaultAccess(){
