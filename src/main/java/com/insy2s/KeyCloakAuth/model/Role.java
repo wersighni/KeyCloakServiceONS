@@ -1,7 +1,10 @@
 package com.insy2s.KeyCloakAuth.model;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -16,5 +19,12 @@ public class Role {
     private String name;
     @Column(length = 20)
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "role_access",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "access_id"))
+    List<Access> accessList;
 
 }
