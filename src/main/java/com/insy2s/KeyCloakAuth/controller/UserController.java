@@ -1,6 +1,7 @@
 package com.insy2s.KeyCloakAuth.controller;
 
 import com.insy2s.KeyCloakAuth.dto.UserDto;
+import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.model.User;
 import com.insy2s.KeyCloakAuth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/keycloak/users")
@@ -21,10 +24,16 @@ public class UserController {
     {
         return ResponseEntity.status(200).body(userService.getUser(username ));
     }
-    @GetMapping("/")
+/*    @GetMapping("/")
     ResponseEntity getAllUsers( )
     {
         return userService.listUsers( );
+    }*/
+
+    @GetMapping("/")
+    List<User> getUser( )
+    {
+        return userService.getUsers( );
     }
 
   @PostMapping(value = "/create")

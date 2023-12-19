@@ -19,8 +19,8 @@ import java.util.Optional;
 public class KeyCloakAuthServiceApplication {
 @Autowired
 private RoleRepository roleRepository;
-	@Autowired
-	private IAccessService accessService;
+@Autowired
+private IAccessService accessService;
 	public static void main(String[] args) {
 		SpringApplication.run(KeyCloakAuthServiceApplication.class, args);
 	}

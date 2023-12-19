@@ -209,10 +209,12 @@ public class UserService {
         return userRepository.findByUsername(username).get();
     }
 
-    public ResponseEntity listUsers() {
+/*    public ResponseEntity listUsers() {
         List<User> usersWithAdminOrRhManagerRoles = userRepository.findByRoles_NameIn(Arrays.asList("ADMIN", "RHManager"));
         return ResponseEntity.status(200).body(usersWithAdminOrRhManagerRoles);
-    }
+    }*/
+    public List<User>getUsers(){
+        return userRepository.findAll();}
 
 
 }

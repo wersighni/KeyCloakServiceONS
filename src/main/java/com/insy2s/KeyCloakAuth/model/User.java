@@ -35,7 +35,7 @@ public class User   {
     private String docProfileId;
 
     private  String password;
-private  boolean enabled=true;
+    private  boolean enabled=true;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
