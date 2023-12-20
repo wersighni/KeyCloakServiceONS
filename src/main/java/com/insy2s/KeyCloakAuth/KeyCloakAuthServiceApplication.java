@@ -51,13 +51,13 @@ private IAccessService accessService;
 
     private void setDefaultAccess(){
 		//menu cours
-       Access menuCours=accessService.create(new Access("Cours","Menu"));
-		Access listCours=accessService.create(new Access("List des cours","Page","cours",menuCours));
-		Access addCours=accessService.create(new Access("Ajouter un cours","Page","ajoutcours",menuCours));
+       Access menuCours=accessService.create(new Access("Cours","Cours","Menu"));
+		Access listCours=accessService.create(new Access("List des cours","lstCours","Page","cours",menuCours));
+		Access addCours=accessService.create(new Access("Ajouter un cours","addCours","Page","ajoutcours",menuCours));
 		//menu projet
-		Access menuProjet=accessService.create(new Access("Projet","Menu"));
-		Access listProjet=accessService.create(new Access("List des projets","Page","projets",menuProjet));
-		Access addProjet=accessService.create(new Access("Ajouter un projet","Page","createprojet",menuProjet));
+		Access menuProjet=accessService.create(new Access("Projet","Projet","Menu"));
+		Access listProjet=accessService.create(new Access("List des projets","lstProjets","Page","projets",menuProjet));
+		Access addProjet=accessService.create(new Access("Ajouter un projet","createprojet","Page","createprojet",menuProjet));
 
 
 	}

@@ -15,25 +15,26 @@ public class Access {
     @GeneratedValue
     private Long id;
     private String name;
+    private String code;
     private String type;
     private String path;
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Access parent;
 
-    public Access(String name, String type) {
+    public Access(String name,String code, String type) {
         this.name = name;
         this.type = type;
     }
 
-    public Access(String name, String type, String path, Access parent) {
+    public Access(String name,String code, String type, String path, Access parent) {
         this.name = name;
         this.type = type;
         this.path = path;
         this.parent = parent;
     }
 
-    public Access(String name, String type, Access parent) {
+    public Access(String name,String code, String type, Access parent) {
         this.name = name;
         this.type = type;
         this.parent = parent;
