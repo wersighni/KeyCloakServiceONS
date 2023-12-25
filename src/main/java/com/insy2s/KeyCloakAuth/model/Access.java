@@ -25,10 +25,12 @@ public class Access {
     public Access(String name,String code, String type) {
         this.name = name;
         this.type = type;
+        this.code=code;
     }
 
     public Access(String name,String code, String type, String path, Access parent) {
         this.name = name;
+        this.code=code;
         this.type = type;
         this.path = path;
         this.parent = parent;
@@ -36,6 +38,7 @@ public class Access {
 
     public Access(String name,String code, String type, Access parent) {
         this.name = name;
+        this.code=code;
         this.type = type;
         this.parent = parent;
     }

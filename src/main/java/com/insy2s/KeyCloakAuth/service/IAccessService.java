@@ -1,6 +1,7 @@
 package com.insy2s.KeyCloakAuth.service;
 
 import com.insy2s.KeyCloakAuth.model.Access;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface IAccessService {
 
     public List<Access> findByParentId(Long id) ;
     public List<Access>  findByType(String type) ;
+
+    List<Access> findByRoleAndType(Long roleId,  String type);
 
 }

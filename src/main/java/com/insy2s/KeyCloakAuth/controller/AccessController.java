@@ -48,5 +48,8 @@ public class AccessController {
     public List<Access> getAccessByParentId (@PathVariable String type) {
         return accessService.findByType(type);
     }
-
+    @GetMapping("/byRoleAndType")
+    public List<Access> findByRoleAndType( @RequestParam  Long roleId, @RequestParam  String type){
+        return accessService.findByRoleAndType(roleId,type);
+    }
 }

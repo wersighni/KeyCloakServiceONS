@@ -27,6 +27,8 @@ private IAccessService accessService;
 	@Bean
 	CommandLineRunner start(){
 		return args-> {
+
+			setDefaultAccess();
 			Role admin = new Role();
 			admin.setName("ADMIN");
 			saveRole(admin)		;
@@ -46,7 +48,7 @@ private IAccessService accessService;
 			apprenantVerification.setName("Apprenant de Verif");
 			saveRole(apprenantVerification)	;
 
-			setDefaultAccess();
+
 		};}
 
     private void setDefaultAccess(){
@@ -58,6 +60,7 @@ private IAccessService accessService;
 		Access menuProjet=accessService.create(new Access("Projet","Projet","Menu"));
 		Access listProjet=accessService.create(new Access("List des projets","lstProjets","Page","projets",menuProjet));
 		Access addProjet=accessService.create(new Access("Ajouter un projet","createprojet","Page","createprojet",menuProjet));
+		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProject","Action",listProjet));
 
 
 	}
@@ -66,6 +69,7 @@ private IAccessService accessService;
 	{
 		Optional<Role> roleSearched=roleRepository.findByName(role.getName());
 		if(roleSearched.isEmpty()){
+			role.setAccessList(accessService.getAllAccess());
 			roleRepository.save(role);
 			System.out.println("The role with name "+role.getName() +" saved ");
 
