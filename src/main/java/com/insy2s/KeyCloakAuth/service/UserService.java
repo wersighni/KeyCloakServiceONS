@@ -192,6 +192,7 @@ public class UserService {
                // User created successfully
 
            }
+
        } catch (Exception e) {
            e.printStackTrace();
            return ResponseEntity.status(500).body(null);

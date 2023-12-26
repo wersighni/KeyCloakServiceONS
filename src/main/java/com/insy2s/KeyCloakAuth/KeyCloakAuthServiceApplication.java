@@ -21,6 +21,8 @@ public class KeyCloakAuthServiceApplication {
 private RoleRepository roleRepository;
 @Autowired
 private IAccessService accessService;
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(KeyCloakAuthServiceApplication.class, args);
 	}
