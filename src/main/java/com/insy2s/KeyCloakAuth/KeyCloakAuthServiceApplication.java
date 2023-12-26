@@ -29,6 +29,8 @@ private IAccessService accessService;
 	@Bean
 	CommandLineRunner start(){
 		return args-> {
+
+			setDefaultAccess();
 			Role admin = new Role();
 			admin.setName("ADMIN");
 			saveRole(admin)		;
@@ -48,18 +50,19 @@ private IAccessService accessService;
 			apprenantVerification.setName("Apprenant de Verif");
 			saveRole(apprenantVerification)	;
 
-			setDefaultAccess();
+
 		};}
 
     private void setDefaultAccess(){
 		//menu cours
-       Access menuCours=accessService.create(new Access("Cours","Menu"));
-		Access listCours=accessService.create(new Access("List des cours","Page","cours",menuCours));
-		Access addCours=accessService.create(new Access("Ajouter un cours","Page","ajoutcours",menuCours));
+       Access menuCours=accessService.create(new Access("Cours","Cours","Menu"));
+		Access listCours=accessService.create(new Access("List des cours","lstCours","Page","cours",menuCours));
+		Access addCours=accessService.create(new Access("Ajouter un cours","addCours","Page","ajoutcours",menuCours));
 		//menu projet
-		Access menuProjet=accessService.create(new Access("Projet","Menu"));
-		Access listProjet=accessService.create(new Access("List des projets","Page","projets",menuProjet));
-		Access addProjet=accessService.create(new Access("Ajouter un projet","Page","createprojet",menuProjet));
+		Access menuProjet=accessService.create(new Access("Projet","Projet","Menu"));
+		Access listProjet=accessService.create(new Access("List des projets","lstProjets","Page","projets",menuProjet));
+		Access addProjet=accessService.create(new Access("Ajouter un projet","createprojet","Page","createprojet",menuProjet));
+		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProject","Action",listProjet));
 
 
 	}
@@ -68,6 +71,7 @@ private IAccessService accessService;
 	{
 		Optional<Role> roleSearched=roleRepository.findByName(role.getName());
 		if(roleSearched.isEmpty()){
+			role.setAccessList(accessService.getAllAccess());
 			roleRepository.save(role);
 			System.out.println("The role with name "+role.getName() +" saved ");
 

@@ -3,9 +3,8 @@ package com.insy2s.KeyCloakAuth.service;
 
 //import com.insy2s.KeyCloakAuth.ApiClient.MailingClient;
 import com.insy2s.KeyCloakAuth.dto.MailDto;
-import com.insy2s.KeyCloakAuth.model.LoginRequest;
-import com.insy2s.KeyCloakAuth.model.LoginResponse;
-import com.insy2s.KeyCloakAuth.model.User;
+import com.insy2s.KeyCloakAuth.model.*;
+import com.insy2s.KeyCloakAuth.repository.AccessRepository;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -31,8 +30,8 @@ import java.util.*;
 public class LoginService {
 	@Autowired
 	UserService userService;
-/*	@Autowired
-	MailingClient mailingClient;*/
+	@Autowired
+	AccessRepository accessRepository;
 @Value("${keycloak.server-url}")
 private String serverUrl;
 
@@ -293,9 +292,10 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 
 	public ResponseEntity login(LoginRequest loginrequest) {
 
+		User user=null;
 		if(!loginrequest.getUsername().equals("insy2s")) {
 
-			User user = userService.getUser(loginrequest.getUsername());
+			 user = userService.getUser(loginrequest.getUsername());
 			if (user == null) {
 				return ResponseEntity.status(401).body(Collections.singletonMap("message", "Le nom d'utilisateur ou le mot de passe est incorrect"));
 
@@ -321,6 +321,8 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			AccessTokenResponse accessTokenResponse = keycloak.tokenManager().grantToken(); // Attempt to obtain an access token
 			loginResponse.setAccess_token(accessTokenResponse.getToken());// Set the access token in the response
 			loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());   // Set the refresh token in the response
+  //gestion des accé d'utiloisateur conecté
+			loginResponse=setAccess(user,loginResponse);
 
 			return ResponseEntity.ok().body(loginResponse);
 
@@ -328,6 +330,35 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			return ResponseEntity.status(401).body(" Le nom utilisateur ou le mot de passe est incorrect");
 		}
 	}
+
+	private LoginResponse setAccess(User user,LoginResponse loginResponse) {
+		List<Access> menus=new ArrayList<Access>();
+		List<Access> pages=new ArrayList<Access>();
+		List<Access> actions=new ArrayList<Access>();
+		for(Role r: user.getRoles()){
+
+			 menus.addAll(accessRepository.findByRoleAndType(r.getId(),"Menu"));
+			pages.addAll(accessRepository.findByRoleAndType(r.getId(),"Page"));
+			 actions.addAll(accessRepository.findByRoleAndType(r.getId(),"Action"));
+		}
+		loginResponse.setMenus(refactorAccess(menus));
+		loginResponse.setPages(refactorAccess(pages));
+		loginResponse.setActions(refactorAccess(actions));
+		return loginResponse;
+	}
+
+	private List<String> refactorAccess(List<Access> access){
+		List<String> res=new ArrayList<String>();
+		for(Access a : access){
+			if(!res.contains(a.getCode()))
+			{
+				res.add(a.getCode());
+			}
+		}
+		return res;
+	}
+
+
 	public ResponseEntity<String> logout(String userId) {
 		// Create a Keycloak instance for logout
 		Keycloak keycloakAdmin = KeycloakBuilder.builder()

@@ -2,6 +2,8 @@ package com.insy2s.KeyCloakAuth.controller;
 
 import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.service.IAccessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.List;
 @RequestMapping("/api/keycloak/access")
 public class AccessController {
 
+    Logger logger = LoggerFactory.getLogger(AccessController.class);
     @Autowired
     private IAccessService accessService;
 
@@ -45,5 +48,8 @@ public class AccessController {
     public List<Access> getAccessByParentId (@PathVariable String type) {
         return accessService.findByType(type);
     }
-
+    @GetMapping("/byRoleAndType")
+    public List<Access> findByRoleAndType( @RequestParam  Long roleId, @RequestParam  String type){
+        return accessService.findByRoleAndType(roleId,type);
+    }
 }

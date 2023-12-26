@@ -3,6 +3,7 @@ package com.insy2s.KeyCloakAuth.service;
 import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.repository.AccessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,4 +36,9 @@ public class AccessService implements IAccessService{
     public List<Access>  findByType(String type) {
         return  accessRepository.findByType(type);
     }
+
+    public List<Access> findByRoleAndType( Long roleId, String type){
+        return accessRepository.findByRoleAndType(roleId,type);
+    }
+
 }
