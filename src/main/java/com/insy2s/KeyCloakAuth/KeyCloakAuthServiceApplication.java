@@ -2,6 +2,7 @@ package com.insy2s.KeyCloakAuth;
 
 import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.model.Role;
+import com.insy2s.KeyCloakAuth.model.User;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import com.insy2s.KeyCloakAuth.service.IAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ private IAccessService accessService;
 			setDefaultAccess();
 			Role admin = new Role();
 			admin.setName("ADMIN");
-			saveRole(admin)		;
+			admin=saveRole(admin)		;
+			//User user=ne
 			Role TuteurProfessionnel = new Role();
 			TuteurProfessionnel.setName("Tuteur Professionnel");
 			saveRole(TuteurProfessionnel);
@@ -65,18 +67,19 @@ private IAccessService accessService;
 
 	}
 
-	private void saveRole(Role role)
+	private Role saveRole(Role role)
 	{
 		Optional<Role> roleSearched=roleRepository.findByName(role.getName());
 		if(roleSearched.isEmpty()){
 			role.setAccessList(accessService.getAllAccess());
-			roleRepository.save(role);
+			role=roleRepository.save(role);
 			System.out.println("The role with name "+role.getName() +" saved ");
 
 		}
 		else{
 			System.out.println("The role with name "+role.getName() +" found ");
 		}
+		return role;
 	}
 
 
