@@ -1,30 +1,22 @@
 package com.insy2s.KeyCloakAuth.service;
 
 import com.insy2s.KeyCloakAuth.dto.ErrorResponse;
-import com.insy2s.KeyCloakAuth.dto.RoleDto;
-import com.insy2s.KeyCloakAuth.dto.UserDto;
 import com.insy2s.KeyCloakAuth.model.*;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.RoleResource;
 import org.keycloak.admin.client.resource.RolesResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -63,8 +55,8 @@ private RoleRepository roleRepository;
                     .build();
 
 
-
-            if (roleRepository.findByName(role.getName()).isPresent()
+            Optional<Role> existingRole = roleRepository.findByName(role.getName());
+            if (existingRole.isPresent() && !existingRole.get().isStatus()
                    ) {
 
                 //Vérifier si  Le rôle existe soit localement (dans la base de donnée) soit dans Keycloak
@@ -79,7 +71,7 @@ private RoleRepository roleRepository;
                     RoleRepresentation createdRole = keycloak.realm(realm).roles().get(role.getName()).toRepresentation();
                     String keycloakRoleId = createdRole.getId();
                     // Associez l'ID Keycloak à l'ID de la base de données pour le rôle créé
-                    role.setKeycloakId(keycloakRoleId);
+                    //role.setKeycloakId(keycloakRoleId);
                     System.out.println(role);
                     Role roleSaved = roleRepository.save(role);
                     return ResponseEntity.status(201).body(roleSaved);
@@ -92,12 +84,16 @@ private RoleRepository roleRepository;
 
     public List<Role>getRoles(){
         return roleRepository.findAll();}
+    public List<Role> getAllRolesStatusFalse() {
 
-    public ResponseEntity<String> deleteRole(Long id) {
+        return roleRepository.getAllRolesByStatusFalse();
+    }
+
+    public ResponseEntity<Role> deleteRole(Long id) {
         Role role = roleRepository.findById(id).orElse(null);
-        String roleKeycloakId = role.getKeycloakId();// Obtenez l'ID Keycloak correspondant à roleId depuis votre base de données ou une autre source
-        System.out.println(roleKeycloakId);
-
+        Role role1 = roleRepository.findById(id).orElseThrow((null));
+        role1.setStatus(true); // Désactiver le role
+        Role updateRole = roleRepository.save(role1);
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm(realm)
@@ -112,18 +108,52 @@ private RoleRepository roleRepository;
         RolesResource rolesResource = realmResource.roles();
         // Supprimer le rôle par son ID
         try {
-            RoleRepresentation rolee = rolesResource.get(roleKeycloakId).toRepresentation();
-
-            rolesResource.deleteRole(role.getName());
-
-            // Supprimer le rôle de la base de données locale
-            roleRepository.deleteById(id);
-            return ResponseEntity.status(200).body("Le rôle a été supprimé avec succès.");
+            RoleResource roleResource = rolesResource.get(role.getName());
+            // Supprimer le rôle de la keycloak
+            roleResource.remove();
+            //roleRepository.deleteById(id);
+            return ResponseEntity.ok(updateRole);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la suppression du rôle.");
+            return ResponseEntity.ok(null);
         }
+    }
+    public Role getRoleById(Long id) {
+        return roleRepository.findById(id).get();
+    }
+
+    public Role updateRole(Long id, Role role) {
+        // Récupérer le rolee existant depuis le repository par son ID
+        Role existingRole = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role non trouvé avec l'ID : " + id));
+        Keycloak keycloak = KeycloakBuilder.builder()
+                .serverUrl(serverUrl)
+                .realm(realm)
+                .clientId(clientId)
+                .password(passwordAdmin)
+                .username(userNameAdmin)
+                .clientSecret(clientSecret)
+                .build();
+
+        // Récupérer la ressource du realm pour le realm désiré
+        RealmResource realmResource = keycloak.realm(realm);
+        // Récupérer la ressource des rôles
+        RolesResource rolesResource = realmResource.roles();
+
+        // Mettre à jour les détails du problème existant avec les nouvelles données
+        RoleRepresentation roleToUpdate = rolesResource.get(role.getName()).toRepresentation();
+        System.out.println(roleToUpdate);
+        roleToUpdate.setDescription(role.getDescription());
+
+        RoleResource roleResource = rolesResource.get(role.getName());
+        System.out.println(roleResource);
+        roleResource.update(roleToUpdate);
+
+        existingRole.setDescription(role.getDescription());
+
+
+        // Enregistrer les modifications dans la base de données et retourner le problème mis à jour
+        return roleRepository.save(existingRole);
     }
 
 

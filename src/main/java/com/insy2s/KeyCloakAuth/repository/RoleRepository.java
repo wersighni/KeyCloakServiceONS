@@ -13,5 +13,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query("SELECT r FROM Role r WHERE r.name IN ('ADMIN', 'RHManager')")
     List<Role> findClientAndRH();
 
+    List<Role> getAllRolesByStatusFalse();
+
     Optional<Role> findByName(String name);
 }

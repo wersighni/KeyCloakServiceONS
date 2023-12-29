@@ -33,7 +33,7 @@ private IAccessService accessService;
 			setDefaultAccess();
 			Role admin = new Role();
 			admin.setName("ADMIN");
-			saveRole(admin)		;
+			saveRole(admin);
 			Role TuteurProfessionnel = new Role();
 			TuteurProfessionnel.setName("Tuteur Professionnel");
 			saveRole(TuteurProfessionnel);

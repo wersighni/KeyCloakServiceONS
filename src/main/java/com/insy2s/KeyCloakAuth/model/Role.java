@@ -19,8 +19,7 @@ public class Role {
     private String name;
     @Column(length = 20)
     private String description;
-    @Column(name = "keycloak_id")
-    private String keycloakId; // Champ pour stocker l'ID Keycloak
+    private boolean status = false;
     @ManyToMany
     @JoinTable(
             name = "role_access",

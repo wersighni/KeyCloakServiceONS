@@ -292,10 +292,10 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 
 	public ResponseEntity login(LoginRequest loginrequest) {
 
-		User user=null;
+		//User user=null;
 		if(!loginrequest.getUsername().equals("insy2s")) {
 
-			 user = userService.getUser(loginrequest.getUsername());
+			 User user = userService.getUser(loginrequest.getUsername());
 			if (user == null) {
 				return ResponseEntity.status(401).body(Collections.singletonMap("message", "Le nom d'utilisateur ou le mot de passe est incorrect"));
 
@@ -321,8 +321,8 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			AccessTokenResponse accessTokenResponse = keycloak.tokenManager().grantToken(); // Attempt to obtain an access token
 			loginResponse.setAccess_token(accessTokenResponse.getToken());// Set the access token in the response
 			loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());   // Set the refresh token in the response
-  //gestion des accé d'utiloisateur conecté
-			loginResponse=setAccess(user,loginResponse);
+  			//gestion des accé d'utiloisateur conecté
+			//loginResponse=setAccess(user,loginResponse);
 
 			return ResponseEntity.ok().body(loginResponse);
 
