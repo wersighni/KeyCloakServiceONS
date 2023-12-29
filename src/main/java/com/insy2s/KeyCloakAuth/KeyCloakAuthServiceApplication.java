@@ -34,12 +34,8 @@ private IAccessService accessService;
 			setDefaultAccess();
 			Role admin = new Role();
 			admin.setName("ADMIN");
-<<<<<<< HEAD
 			saveRole(admin);
-=======
-			admin=saveRole(admin)		;
-			//User user=ne
->>>>>>> 64ba91ca2c6a3f09d373df7ecfc06d0ca337bf3d
+
 			Role TuteurProfessionnel = new Role();
 			TuteurProfessionnel.setName("Tuteur Professionnel");
 			saveRole(TuteurProfessionnel);
