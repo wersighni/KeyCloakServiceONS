@@ -293,11 +293,12 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 
 	public ResponseEntity login(LoginRequest loginrequest) {
 
+
 		User user = null;
-		System.out.println("ds try"+loginrequest);
+
 		if(!loginrequest.getUsername().equals("insy2s")) {
 
-			 user = userService.getUser(loginrequest.getUsername());
+			  user = userService.getUser(loginrequest.getUsername());
 			if (user == null) {
 				return ResponseEntity.status(401).body(Collections.singletonMap("message", "Le nom d'utilisateur ou le mot de passe est incorrect"));
 
@@ -323,13 +324,15 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			AccessTokenResponse accessTokenResponse = keycloak.tokenManager().grantToken(); // Attempt to obtain an access token
 			loginResponse.setAccess_token(accessTokenResponse.getToken());// Set the access token in the response
 			loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());   // Set the refresh token in the response
-  //gestion des accé d'utiloisateur conecté
+
+  			//gestion des accé d'utiloisateur conecté
 			try {
-				System.out.println("ds try"+loginResponse);
+
 				loginResponse = setAccess(user, loginResponse);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
+
 
 			return ResponseEntity.ok().body(loginResponse);
 
@@ -344,12 +347,12 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 		List<Access> actions=new ArrayList<Access>();
 		if(user!=null) {
 			for (Role r : user.getRoles()) {
-				System.out.println(" ds liste role : role " + r.getAccessList());
+
 				menus.addAll(/*r.getAccessList());*/accessRepository.findByRoleAndType(r.getId(), "Menu"));
 				pages.addAll(accessRepository.findByRoleAndType(r.getId(), "Page"));
 				actions.addAll(accessRepository.findByRoleAndType(r.getId(), "Action"));
 			}
-			System.out.println("actions="+actions);
+
 			List<AccessDto> res = new ArrayList<AccessDto>();
 			List<String> names=new ArrayList<String>();
 			for (Access m : menus) {
@@ -390,7 +393,7 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 				}
 
 
-				System.out.println(" ds liste menu : role " + res);
+
 			}
 
 

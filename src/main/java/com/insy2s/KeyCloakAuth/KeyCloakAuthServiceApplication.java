@@ -22,6 +22,8 @@ public class KeyCloakAuthServiceApplication {
 private RoleRepository roleRepository;
 @Autowired
 private IAccessService accessService;
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(KeyCloakAuthServiceApplication.class, args);
 	}
@@ -33,6 +35,9 @@ private IAccessService accessService;
 			Role admin = new Role();
 			admin.setName("ADMIN");
 			admin=saveRole(admin)		;
+
+			saveRole(admin);
+
 
 			Role TuteurProfessionnel = new Role();
 			TuteurProfessionnel.setName("Tuteur Professionnel");
