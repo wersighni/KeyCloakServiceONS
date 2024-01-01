@@ -2,6 +2,7 @@ package com.insy2s.KeyCloakAuth.service;
 
 
 //import com.insy2s.KeyCloakAuth.ApiClient.MailingClient;
+import com.insy2s.KeyCloakAuth.dto.AccessDto;
 import com.insy2s.KeyCloakAuth.dto.MailDto;
 import com.insy2s.KeyCloakAuth.model.*;
 import com.insy2s.KeyCloakAuth.repository.AccessRepository;
@@ -293,6 +294,7 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 	public ResponseEntity login(LoginRequest loginrequest) {
 
 		User user = null;
+		System.out.println("ds try"+loginrequest);
 		if(!loginrequest.getUsername().equals("insy2s")) {
 
 			 user = userService.getUser(loginrequest.getUsername());
@@ -323,6 +325,7 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());   // Set the refresh token in the response
   //gestion des accé d'utiloisateur conecté
 			try {
+				System.out.println("ds try"+loginResponse);
 				loginResponse = setAccess(user, loginResponse);
 			}catch(Exception e){
 				e.printStackTrace();
@@ -341,17 +344,100 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 		List<Access> actions=new ArrayList<Access>();
 		if(user!=null) {
 			for (Role r : user.getRoles()) {
-				System.out.println(" ds liste role : role " + r.getName());
-				menus.addAll(accessRepository.findByRoleAndType(r.getId(), "Menu"));
+				System.out.println(" ds liste role : role " + r.getAccessList());
+				menus.addAll(/*r.getAccessList());*/accessRepository.findByRoleAndType(r.getId(), "Menu"));
 				pages.addAll(accessRepository.findByRoleAndType(r.getId(), "Page"));
 				actions.addAll(accessRepository.findByRoleAndType(r.getId(), "Action"));
 			}
+			System.out.println("actions="+actions);
+			List<AccessDto> res = new ArrayList<AccessDto>();
+			List<String> names=new ArrayList<String>();
+			for (Access m : menus) {
+				AccessDto  mDto=new AccessDto(m.getId(),m.getName(),m.getCode(),m.getType(),m.getPath());
 
-			System.out.println(" ds liste menu : role " + menus);
+				if (!names.contains(mDto.getCode())) {
+					names.add(mDto.getCode());
+					mDto.setSubAccess(new ArrayList<AccessDto>());
+
+					for (Access p : pages) {
+						if (p.getParent() != null && p.getParent().getId().equals(m.getId())) {
+							AccessDto  pDto=new AccessDto(p.getId(),p.getName(),p.getCode(),p.getType(),p.getPath());
+							if (mDto.getSubAccess() != null && !mDto.getSubAccess().contains(pDto)) {
+								List<AccessDto> lstP = mDto.getSubAccess();
+								pDto.setSubAccess(new ArrayList<AccessDto>());
+								for (Access a: actions) {
+
+
+
+
+									if (a.getParent() != null && a.getParent().getId().equals(p.getId())) {
+										System.out.println("action"+a+" "+a.getParent());
+										AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath());
+										if (pDto.getSubAccess() != null && !pDto.getSubAccess().contains(aDto)) {
+											List<AccessDto> lsta = pDto.getSubAccess();
+											lsta.add(aDto);
+											pDto.setSubAccess(lsta);
+										}
+									}
+								}
+
+											lstP.add(pDto);
+								mDto.setSubAccess(lstP);
+														}
+						}
+					}
+					res.add(mDto);
+				}
+
+
+				System.out.println(" ds liste menu : role " + res);
+			}
+
+
+
+
+
+	/*		List<Access> res = new ArrayList<Access>();
+			for (Access m : menus) {
+				if (!res.contains(m)) {
+                     res.add(m);
+				}
+			}
+			for (Access m : menus) {
+				if (!res.contains(m)) {
+					m.setChild(new ArrayList<Access>());
+					for (Access p : pages) {
+						if (p.getParent()!=null&&p.getParent().getId().equals(m.getId()) && !m.getChild().contains(p)) {
+							p.setChild(new ArrayList<Access>());
+							for (Access a : actions) {
+								if (a.getParent() !=null && a.getParent().getId().equals(p) && !p.getChild().contains(a)) {
+									List<Access> ap = p.getChild();
+									ap.add(a);
+									p.setChild(ap);
+								}
+							}
+							List<Access> pp = m.getChild();
+							pp.add(p);
+							m.setChild(pp);
+						}
+					}
+
+
+					res.add(m);
+				}
+			}
+
+
+			System.out.println(" ds liste menu : role " + res);
+
+		 */
+
 			loginResponse.setMenus(refactorAccess(menus));
 			loginResponse.setPages(refactorAccess(pages));
 			loginResponse.setActions(refactorAccess(actions));
+			loginResponse.setAccess(res);
 		}
+
 		return loginResponse;
 	}
 
@@ -363,10 +449,21 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 				res.add(a.getCode());
 			}
 		}
+
 		return res;
 	}
 
+	private List<Access> refactorMenu(List<Access> access,LoginResponse loginResponse){
+		List<Access> res=new ArrayList<Access>();
+		for(Access a : access){
+			if(!res.contains(a))
+			{
+				res.add(a);
+			}
+		}
 
+		return res;
+	}
 	public ResponseEntity<String> logout(String userId) {
 		// Create a Keycloak instance for logout
 		Keycloak keycloakAdmin = KeycloakBuilder.builder()

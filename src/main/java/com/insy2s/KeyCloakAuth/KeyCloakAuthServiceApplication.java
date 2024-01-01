@@ -33,7 +33,7 @@ private IAccessService accessService;
 			Role admin = new Role();
 			admin.setName("ADMIN");
 			admin=saveRole(admin)		;
-			//User user=ne
+
 			Role TuteurProfessionnel = new Role();
 			TuteurProfessionnel.setName("Tuteur Professionnel");
 			saveRole(TuteurProfessionnel);
@@ -62,8 +62,13 @@ private IAccessService accessService;
 		Access menuProjet=accessService.create(new Access("Projet","Projet","Menu"));
 		Access listProjet=accessService.create(new Access("List des projets","lstProjets","Page","projets",menuProjet));
 		Access addProjet=accessService.create(new Access("Ajouter un projet","createprojet","Page","createprojet",menuProjet));
-		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProject","Action",listProjet));
+		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProjet","Action",listProjet));
 
+//membre
+		Access menuMembre=accessService.create(new Access("Membre","Membre","Menu"));
+		Access listMembre=accessService.create(new Access("List des Membres","membres","Page","membres",menuMembre));
+		Access addMembre=accessService.create(new Access("Ajouter un Membre","ajout-membre","Page","ajout-membre",menuMembre));
+		Access updateMembre=accessService.create(new Access("Modifier un Membre","updateMember","Action",listMembre));
 
 	}
 

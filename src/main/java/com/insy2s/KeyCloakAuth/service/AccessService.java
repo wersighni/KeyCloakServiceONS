@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +19,17 @@ public class AccessService implements IAccessService{
     }
 
     public Access create(Access access) {
+        access=accessRepository.save(access);
+        List<Access> accList = new ArrayList<>();
+
+        if (access !=null && access.getSubAccess()!=null) {
+            for (Access ac : access.getSubAccess()) {
+                ac.setParent(access);
+                Access  acc= create(ac);
+                accList.add(acc);
+            }
+        }
+        //access.setSubAccess(accList);
         return accessRepository.save(access);
     }
 

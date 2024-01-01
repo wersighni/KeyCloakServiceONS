@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,6 +23,12 @@ public class Access {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Access parent;
+
+
+
+
+    @Transient
+    private List<Access> subAccess;
 
     public Access(String name,String code, String type) {
         this.name = name;
