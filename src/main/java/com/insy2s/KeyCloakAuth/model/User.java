@@ -36,6 +36,7 @@ public class User   {
 
     private  String password;
     private  boolean enabled=true;
+    private boolean status = false;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
