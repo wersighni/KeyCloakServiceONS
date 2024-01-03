@@ -329,9 +329,17 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());   // Set the refresh token in the response
 
 
-                if(user!=null)
-				loginResponse.setAccess(accessService.findByUser(user.getId()));
+                if(user!=null) {
+					loginResponse.setAccess(accessService.findByUser(user.getId()));
+					loginResponse.setMenus(accessService.refactorByUserAndType(user.getId(),"Menu"));
+					loginResponse.setPages(accessService.refactorByUserAndType(user.getId(),"Page"));
+					loginResponse.setActions(accessService.refactorByUserAndType(user.getId(),"Action"));
 
+				}
+				else if(loginrequest.getUsername().equals("insy2s")){
+				loginResponse.setAccess(accessService.getAllAccessDto());
+				//loginResponse.setActions(accessService.f(user.getId(),"Action"));
+			    }
 
 			return ResponseEntity.ok().body(loginResponse);
 
@@ -342,29 +350,9 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 
 
 
-	private List<String> refactorAccess(List<Access> access){
-		List<String> res=new ArrayList<String>();
-		for(Access a : access){
-			if(!res.contains(a.getCode()))
-			{
-				res.add(a.getCode());
-			}
-		}
 
-		return res;
-	}
 
-	private List<Access> refactorMenu(List<Access> access,LoginResponse loginResponse){
-		List<Access> res=new ArrayList<Access>();
-		for(Access a : access){
-			if(!res.contains(a))
-			{
-				res.add(a);
-			}
-		}
 
-		return res;
-	}
 	public ResponseEntity<String> logout(String userId) {
 		// Create a Keycloak instance for logout
 		Keycloak keycloakAdmin = KeycloakBuilder.builder()

@@ -75,6 +75,39 @@ public class AccessService implements IAccessService{
         }
             return res;
     }
+
+
+    public List<String> refactorByUserAndType(  String userId,String type){
+
+        List<Access> access=new ArrayList<Access>();
+        List<String> names = new ArrayList<String>();
+        User user=userRepo.findById(userId).orElse(null);
+        if(user!=null) {
+            for (Role r : user.getRoles()) {
+                access.addAll(accessRepository.findByRoleAndType(r.getId(), "type"));
+            }
+            for (Access m : access) {
+                if (!names.contains(m.getCode())) {
+                    names.add(m.getCode());
+
+                }
+            }
+        }
+        return names;
+    }
+
+    private List<String> refactorAccess(List<Access> access){
+        List<String> res=new ArrayList<String>();
+        for(Access a : access){
+            if(!res.contains(a.getCode()))
+            {
+                res.add(a.getCode());
+            }
+        }
+
+        return res;
+    }
+
     public Access create(Access access) {
         access=accessRepository.save(access);
         List<Access> accList = new ArrayList<>();
