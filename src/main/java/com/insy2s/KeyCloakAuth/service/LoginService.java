@@ -33,6 +33,9 @@ public class LoginService {
 	UserService userService;
 	@Autowired
 	AccessRepository accessRepository;
+
+	@Autowired
+	IAccessService accessService;
 @Value("${keycloak.server-url}")
 private String serverUrl;
 
@@ -325,13 +328,9 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 			loginResponse.setAccess_token(accessTokenResponse.getToken());// Set the access token in the response
 			loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());   // Set the refresh token in the response
 
-  			//gestion des accé d'utiloisateur conecté
-			try {
 
-				loginResponse = setAccess(user, loginResponse);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+                if(user!=null)
+				loginResponse.setAccess(accessService.findByUser(user.getId()));
 
 
 			return ResponseEntity.ok().body(loginResponse);
@@ -341,108 +340,7 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 		}
 	}
 
-	private LoginResponse setAccess(User user,LoginResponse loginResponse) {
-		List<Access> menus=new ArrayList<Access>();
-		List<Access> pages=new ArrayList<Access>();
-		List<Access> actions=new ArrayList<Access>();
-		if(user!=null) {
-			for (Role r : user.getRoles()) {
 
-				menus.addAll(/*r.getAccessList());*/accessRepository.findByRoleAndType(r.getId(), "Menu"));
-				pages.addAll(accessRepository.findByRoleAndType(r.getId(), "Page"));
-				actions.addAll(accessRepository.findByRoleAndType(r.getId(), "Action"));
-			}
-
-			List<AccessDto> res = new ArrayList<AccessDto>();
-			List<String> names=new ArrayList<String>();
-			for (Access m : menus) {
-				AccessDto  mDto=new AccessDto(m.getId(),m.getName(),m.getCode(),m.getType(),m.getPath());
-
-				if (!names.contains(mDto.getCode())) {
-					names.add(mDto.getCode());
-					mDto.setSubAccess(new ArrayList<AccessDto>());
-
-					for (Access p : pages) {
-						if (p.getParent() != null && p.getParent().getId().equals(m.getId())) {
-							AccessDto  pDto=new AccessDto(p.getId(),p.getName(),p.getCode(),p.getType(),p.getPath());
-							if (mDto.getSubAccess() != null && !mDto.getSubAccess().contains(pDto)) {
-								List<AccessDto> lstP = mDto.getSubAccess();
-								pDto.setSubAccess(new ArrayList<AccessDto>());
-								for (Access a: actions) {
-
-
-
-
-									if (a.getParent() != null && a.getParent().getId().equals(p.getId())) {
-										System.out.println("action"+a+" "+a.getParent());
-										AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath());
-										if (pDto.getSubAccess() != null && !pDto.getSubAccess().contains(aDto)) {
-											List<AccessDto> lsta = pDto.getSubAccess();
-											lsta.add(aDto);
-											pDto.setSubAccess(lsta);
-										}
-									}
-								}
-
-											lstP.add(pDto);
-								mDto.setSubAccess(lstP);
-														}
-						}
-					}
-					res.add(mDto);
-				}
-
-
-
-			}
-
-
-
-
-
-	/*		List<Access> res = new ArrayList<Access>();
-			for (Access m : menus) {
-				if (!res.contains(m)) {
-                     res.add(m);
-				}
-			}
-			for (Access m : menus) {
-				if (!res.contains(m)) {
-					m.setChild(new ArrayList<Access>());
-					for (Access p : pages) {
-						if (p.getParent()!=null&&p.getParent().getId().equals(m.getId()) && !m.getChild().contains(p)) {
-							p.setChild(new ArrayList<Access>());
-							for (Access a : actions) {
-								if (a.getParent() !=null && a.getParent().getId().equals(p) && !p.getChild().contains(a)) {
-									List<Access> ap = p.getChild();
-									ap.add(a);
-									p.setChild(ap);
-								}
-							}
-							List<Access> pp = m.getChild();
-							pp.add(p);
-							m.setChild(pp);
-						}
-					}
-
-
-					res.add(m);
-				}
-			}
-
-
-			System.out.println(" ds liste menu : role " + res);
-
-		 */
-
-			loginResponse.setMenus(refactorAccess(menus));
-			loginResponse.setPages(refactorAccess(pages));
-			loginResponse.setActions(refactorAccess(actions));
-			loginResponse.setAccess(res);
-		}
-
-		return loginResponse;
-	}
 
 	private List<String> refactorAccess(List<Access> access){
 		List<String> res=new ArrayList<String>();

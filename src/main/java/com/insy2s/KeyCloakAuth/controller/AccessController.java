@@ -1,5 +1,6 @@
 package com.insy2s.KeyCloakAuth.controller;
 
+import com.insy2s.KeyCloakAuth.dto.AccessDto;
 import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.service.IAccessService;
 import org.slf4j.Logger;
@@ -23,11 +24,12 @@ public class AccessController {
         return ResponseEntity.ok(accessService.create(access));
     }
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public List<Access> getAllAccess() {
         return accessService.getAllAccess();
     }
-
+    @GetMapping("/")
+    public List<AccessDto> getAllAccessDto() {return accessService.getAllAccessDto();}
 
     @DeleteMapping("/{id}")
     public void deleteAccess(@PathVariable Long id) {
@@ -51,5 +53,13 @@ public class AccessController {
     @GetMapping("/byRoleAndType")
     public List<Access> findByRoleAndType( @RequestParam  Long roleId, @RequestParam  String type){
         return accessService.findByRoleAndType(roleId,type);
+    }
+    @GetMapping("/byRole")
+    public List<AccessDto> findByRole( @RequestParam  Long roleId){
+        return accessService.findByRole(roleId);
+    }
+    @GetMapping("/byUser")
+    public List<AccessDto> findByUser( @RequestParam  String userId){
+        return accessService.findByUser(userId);
     }
 }
