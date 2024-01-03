@@ -104,7 +104,7 @@ private IAccessService accessService;
 		Access listAssistance=accessService.create(new Access("List des Assistances","list-Assistance","Page","list-Assistance",menuAssistance));
 		Access addAssistance=accessService.create(new Access("Demande d'aide","demandeAide","Page","demandeAide",menuAssistance));
 
-		Access menuParam=accessService.create(new Access("Paramétres générales","Param","Menu"));
+		Access menuParam=accessService.create(new Access("Paramétres","Param","Menu"));
 		Access listParam=accessService.create(new Access("List des compétences","skills","Page","skills",menuParam));
 
 
