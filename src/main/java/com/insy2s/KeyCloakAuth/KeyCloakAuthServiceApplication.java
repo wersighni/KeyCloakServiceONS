@@ -34,7 +34,10 @@ private IAccessService accessService;
 			setDefaultAccess();
 			Role admin = new Role();
 			admin.setName("ADMIN");
+			admin=saveRole(admin)		;
+
 			saveRole(admin);
+
 
 			Role TuteurProfessionnel = new Role();
 			TuteurProfessionnel.setName("Tuteur Professionnel");
@@ -47,7 +50,7 @@ private IAccessService accessService;
 			saveRole(TuteurAcademique);
 			Role apprenantAide = new Role();
 			apprenantAide.setName("Apprenant d'Aide");
-			saveRole(apprenantAide)		;
+			saveRole(apprenantAide)	;
 			Role apprenantVerification = new Role();
 			apprenantVerification.setName("Apprenant de Verif");
 			saveRole(apprenantVerification)	;
@@ -65,12 +68,26 @@ private IAccessService accessService;
 		Access listProjet=accessService.create(new Access("List des projets","lstProjets","Page","projets",menuProjet));
 		Access addProjet=accessService.create(new Access("Ajouter un projet","createprojet","Page","createprojet",menuProjet));
 		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProject","Action",listProjet));
+		//membre
+		Access menuMembre=accessService.create(new Access("Membre","Membre","Menu"));
+		Access listMembre=accessService.create(new Access("List des Membres","membres","Page","membres",menuMembre));
+		Access addMembre=accessService.create(new Access("Ajouter un Membre","ajout-membre","Page","ajout-membre",menuMembre));
+		Access updateMembre=accessService.create(new Access("Modifier un Membre","updateMember","Action",listMembre));
 		//menu Roles
-		Access menuRoles=accessService.create(new Access("Roles","Roles","Menu"));
-		Access listRoles=accessService.create(new Access("List des Roles","lstRoles","Page","roles",menuRoles));
+		Access menuRole=accessService.create(new Access("Role","Role","Menu"));
+		Access listRoles=accessService.create(new Access("List des Roles","Roles","Page","roles",menuRole));
 		Access updateRoles=accessService.create(new Access("Modifier un role","updateRole","Action",listRoles));
 		Access addRoles=accessService.create(new Access("Ajouter un role","addRole","Action",listRoles));
 		Access deleteRoles=accessService.create(new Access("supprimer un role","deleteRole","Action",listRoles));
+		//menu Users
+		Access menuUser=accessService.create(new Access("Utilisateur","users","Menu"));
+		Access listUsers=accessService.create(new Access("List des utilisateurs","users","Page","users",menuUser));
+		Access updateUsers=accessService.create(new Access("Modifier un utilisateur","updateUser","Action",listUsers));
+		Access addUsers=accessService.create(new Access("Ajouter un utilisateur","addUser","Action",listUsers));
+		Access deleteUsers=accessService.create(new Access("supprimer un utilisateur","deleteUser","Action",listUsers));
+
+
+
 
 
 	}
