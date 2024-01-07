@@ -64,6 +64,11 @@ private IAccessService accessService;
 		Access listUsers=accessService.create(new Access("List des utilisateurs","users","Page","users",menuAdmin));
 		Access addAdmin=accessService.create(new Access("Ajouter un role","add-role","Page","add-role",menuAdmin));
 		Access listRoles=accessService.create(new Access("List des roles","roles","Page","roles",menuAdmin));
+		Access listGlobalAccess=accessService.create(new Access("List des accés","access","Page","access",menuAdmin));
+
+		Access updateAccess=accessService.create(new Access("Modifier un accés","updateAccess","Action",listGlobalAccess));
+		Access deleteAccess=accessService.create(new Access("Supprimer un accés","deleteAccess","Action",listGlobalAccess));
+		Access addAccess=accessService.create(new Access("Ajouter un accés","addAccess","Action",listGlobalAccess));
 		Access updateRoles=accessService.create(new Access("Modifier un role","updateRole","Action",listRoles));
 		Access addRoles=accessService.create(new Access("Ajouter un role","addRole","Action",listRoles));
 		Access deleteRoles=accessService.create(new Access("supprimer un role","deleteRole","Action",listRoles));
