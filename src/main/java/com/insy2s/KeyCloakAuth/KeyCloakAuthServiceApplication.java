@@ -82,7 +82,7 @@ private IAccessService accessService;
 		Access suivi=accessService.create(new Access("Suivre un projet","suivi","Page","suivi",menuProjet));
 		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProjet","Action",listProjet));
 
-//membre
+		//membre
 		Access menuMembre=accessService.create(new Access("Membre","Membre","Menu"));
 		Access listMembre=accessService.create(new Access("List des Membres","membres","Page","membres",menuMembre));
 		Access addMembre=accessService.create(new Access("Ajouter un Membre","ajout-membre","Page","ajout-membre",menuMembre));
@@ -90,7 +90,6 @@ private IAccessService accessService;
 		Access listpos=accessService.create(new Access("List des positions","list-position","Page","list-position",menuMembre));
 
 		 //Eval
-
 		Access menueval=accessService.create(new Access("Evaluation","Evaluation","Menu"));
 		Access listeval=accessService.create(new Access("Evaluation","eval","Page","eval",menueval));
 		Access addeval=accessService.create(new Access("Passer examin","passer_examen","Page","passer_examen",menueval));

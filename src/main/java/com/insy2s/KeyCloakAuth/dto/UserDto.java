@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+
 @Data
 public class UserDto {
     @Id
@@ -20,6 +22,8 @@ public class UserDto {
     //private String titre;
 
     private  String password;
+    @Temporal(TemporalType.TIMESTAMP) // Ajoutez cette annotation pour la date d'inscription
+    private Date dateInscription;
     private  boolean enabled=true;
     private String roles;
 

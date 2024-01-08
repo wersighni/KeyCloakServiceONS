@@ -131,74 +131,85 @@ public class UserService {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
-   public ResponseEntity <?>createUser(UserDto user) {
-       try {
-           UserRepresentation newUser = new UserRepresentation();
-           newUser.setUsername(user.getUsername());
-           newUser.setEmail(user.getEmail());
-           newUser.setFirstName(user.getFirstname());
-           newUser.setLastName(user.getLastname());
-           newUser.setEnabled(true);
+    public ResponseEntity <?>createUser(User user) {
+        try {
+            UserRepresentation newUser = new UserRepresentation();
+            newUser.setUsername(user.getUsername());
+            newUser.setEmail(user.getEmail());
+            newUser.setFirstName(user.getFirstname());
+            newUser.setLastName(user.getLastname());
+            newUser.setEnabled(true);
 
-           // Set user credentials (password)
-           CredentialRepresentation credentials = new CredentialRepresentation();
-           credentials.setTemporary(false);
-           credentials.setType(CredentialRepresentation.PASSWORD);
-           String password = generateRandomPassword();
-           user.setPassword(password);
-           System.out.println("password    "+password);
-           credentials.setValue(password); // Set the desired password
-           newUser.setCredentials(List.of(credentials));
-           Keycloak keycloak = KeycloakBuilder.builder()
-                   .serverUrl(serverUrl)
-                   .realm(realm)
-                   .clientId(clientId)
-                   .password(passwordAdmin)
-                   .username(userNameAdmin)
-                   .clientSecret(clientSecret)
-                   .build();
-           // Create the user
-
+            // Set user credentials (password)
+            CredentialRepresentation credentials = new CredentialRepresentation();
+            credentials.setTemporary(false);
+            credentials.setType(CredentialRepresentation.PASSWORD);
+            String password = generateRandomPassword();
+            user.setPassword(password);
+            credentials.setValue(password); // Set the desired password
+            newUser.setCredentials(List.of(credentials));
+            Keycloak keycloak = KeycloakBuilder.builder()
+                    .serverUrl(serverUrl)
+                    .realm(realm)
+                    .clientId(clientId)
+                    .password(passwordAdmin)
+                    .username(userNameAdmin)
+                    .clientSecret(clientSecret)
+                    .build();
+            // Create the user
            /*if(userRepository.findByUsername(user.getUsername()).isPresent()){
                ErrorResponse errorResponse = new ErrorResponse("Username déjà existant");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username déjà existant");
            }*/
-           if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-               // L'email existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
-               ErrorResponse errorResponse = new ErrorResponse("Email déjà existant");
-               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email déjà existant");
-           }
-           else {
-               Response response = keycloak.realm(realm).users().create(newUser);
+            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+                // L'email existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
+                ErrorResponse errorResponse = new ErrorResponse("Email déjà existant");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email déjà existant");
+            }
+
+            else {
+                Response response = keycloak.realm(realm).users().create(newUser);
+                System.out.println("reponse de save"+response.getStatus());
                 if(response.getStatus()==201){
                     String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
                     UserRepresentation createdUser = keycloak.realm(realm).users().get(userId).toRepresentation();
-
+                    Collection<Role> roles = user.getRoles();
+                    System.out.println("rolesssss"+roles);
                     // Assign the desired role to the user
-                    RoleRepresentation roleS = keycloak.realm(realm).roles().get(user.getRoles()).toRepresentation();
-                    keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
-                    Role role=roleRepository.findByName(user.getRoles()).get();
-                    ArrayList<Role> roles=new ArrayList<>();
-                    roles.add(role);
-                    User userSavedToBdLocal=new User(user.getUsername(),createdUser.getId(),user.getEmail(),user.getLastname(),user.getFirstname(),user.getPassword());
-                    userSavedToBdLocal.setRoles(roles);
-                    user.setId(userId);
+                    if (!roles.isEmpty()) {
+                        for (Role r : roles) {
+                            System.out.println("roleSSSSS"+r.getName());
+                            RoleRepresentation roleS = keycloak.realm(realm).roles().get(r.getName()).toRepresentation();
 
+                            keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
+                        }
+
+                    }
+                    User userSavedToBdLocal=new User(user.getUsername(),user.getFirstname(),user.getLastname(),createdUser.getId(),user.getEmail(),user.getRoles());
+                    user.setId(createdUser.getId());
+                    userSavedToBdLocal.setDateInscription(new Date());  // Définition de la date d'inscription
+                    userSavedToBdLocal.setPassword(password);
+                    user.setPassword(password);
                     User userSaved= userRepository.save(userSavedToBdLocal);
                     return ResponseEntity.status(201).body(user);
                 }
-               return ResponseEntity.status(204).body(null);
+                return ResponseEntity.status(204).body(null);
 
-               // User created successfully
+                // User created successfully
 
-           }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
 
-       } catch (Exception e) {
-           e.printStackTrace();
-           return ResponseEntity.status(500).body(null);
-       }
 
-   }
+
+
+    }
+
+
+
 
 
 
