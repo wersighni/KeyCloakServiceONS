@@ -27,5 +27,5 @@ public interface IAccessService {
     public List<AccessDto> findByRole(  Long roleId);
     public List<AccessDto> findByUser(  String userId);
     public List<String> refactorByUserAndType(  String userId,String type);
-
+    public List<String> refactorAccess(List<Access> access);
 }

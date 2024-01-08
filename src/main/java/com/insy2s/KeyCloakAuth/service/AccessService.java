@@ -96,7 +96,7 @@ public class AccessService implements IAccessService{
         return names;
     }
 
-    private List<String> refactorAccess(List<Access> access){
+    public  List<String> refactorAccess(List<Access> access){
         List<String> res=new ArrayList<String>();
         for(Access a : access){
             if(!res.contains(a.getCode()))

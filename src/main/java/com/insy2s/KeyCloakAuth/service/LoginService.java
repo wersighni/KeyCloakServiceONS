@@ -338,7 +338,8 @@ public ResponseEntity changePassword(String username,String currentPassword,Stri
 				}
 				else if(loginrequest.getUsername().equals("insy2s")){
 				loginResponse.setAccess(accessService.getAllAccessDto());
-				//loginResponse.setActions(accessService.f(user.getId(),"Action"));
+
+				loginResponse.setActions(accessService.refactorAccess(accessService.findByType("Action")));
 			    }
 
 			return ResponseEntity.ok().body(loginResponse);

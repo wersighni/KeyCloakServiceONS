@@ -71,6 +71,14 @@ private IAccessService accessService;
 		Access addUsers=accessService.create(new Access("Ajouter un utilisateur","addUser","Action",listUsers));
 		Access deleteUsers=accessService.create(new Access("supprimer un utilisateur","deleteUser","Action",listUsers));
 
+		Access listGlobalAccess=accessService.create(new Access("List des accés","access","Page","access",menuAdmin));
+
+		Access updateAccess=accessService.create(new Access("Modifier un accés","updateAccess","Action",listGlobalAccess));
+		Access deleteAccess=accessService.create(new Access("Supprimer un accés","deleteAccess","Action",listGlobalAccess));
+		Access addAccess=accessService.create(new Access("Ajouter un accés","addAccess","Action",listGlobalAccess));
+
+
+
 		//menu cours
        Access menuCours=accessService.create(new Access("Cours","Cours","Menu"));
 		Access listCours=accessService.create(new Access("List des cours","lstCours","Page","cours",menuCours));
@@ -103,7 +111,7 @@ private IAccessService accessService;
 		Access listAssistance=accessService.create(new Access("List des Assistances","list-Assistance","Page","list-Assistance",menuAssistance));
 		Access addAssistance=accessService.create(new Access("Demande d'aide","demandeAide","Page","demandeAide",menuAssistance));
 
-		Access menuParam=accessService.create(new Access("Paramétres générales","Param","Menu"));
+		Access menuParam=accessService.create(new Access("Paramétres","Param","Menu"));
 		Access listParam=accessService.create(new Access("List des compétences","skills","Page","skills",menuParam));
 
 
