@@ -114,6 +114,18 @@ private IAccessService accessService;
 		Access menuParam=accessService.create(new Access("Paramétres","Param","Menu"));
 		Access listParam=accessService.create(new Access("List des compétences","skills","Page","skills",menuParam));
 
+//notification
+
+		Access menuNotification=accessService.create(new Access("Notification","Notification","Menu"));
+		Access listTypeNotification=accessService.create(new Access("List des type de notification","typelist","Page","typelist",menuNotification));
+
+		Access listNotification=accessService.create(new Access("List des Notifications","notificationss","Page","notificationss",menuNotification));
+		Access addNotification=accessService.create(new Access("Ajpouter une notification","addnotification","Page","addnotification",menuNotification));
+
+		Access addSession=accessService.create(new Access("Ajouter une session","addSession","Page","ajoutSession",menuCours));
+		Access addProgram=accessService.create(new Access("Ajouter un programme","addProgram","Page","ajoutProgram",menuCours));
+		Access ListProgram=accessService.create(new Access("Liste des programmes","ListProgram","Page","listProgram",menuCours));
+		Access ListSession=accessService.create(new Access("Liste des sessions","ListSession","Page","listSession",menuCours));
 
 	}
 
