@@ -2,10 +2,12 @@ package com.insy2s.KeyCloakAuth.controller;
 
 import com.insy2s.KeyCloakAuth.dto.AccessDto;
 import com.insy2s.KeyCloakAuth.model.Access;
+import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.service.IAccessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,12 +56,22 @@ public class AccessController {
     public List<Access> findByRoleAndType( @RequestParam  Long roleId, @RequestParam  String type){
         return accessService.findByRoleAndType(roleId,type);
     }
-    @GetMapping("/byRole")
-    public List<AccessDto> findByRole( @RequestParam  Long roleId){
+    @GetMapping("/byRole/{roleId}")
+    public List<AccessDto> findByRole( @PathVariable  Long roleId){
         return accessService.findByRole(roleId);
     }
     @GetMapping("/byUser")
     public List<AccessDto> findByUser( @RequestParam  String userId){
         return accessService.findByUser(userId);
     }
+    @GetMapping("/addAccessRole")
+    public Access addAccessToRole(@RequestParam  Long roleId, @RequestParam Long accessId) {
+       return accessService.addAccessToRole(roleId,accessId);
+    }
+    @GetMapping("/removeAccessRole")
+    public Access removeAccessRole(@RequestParam  Long roleId, @RequestParam Long accessId) {
+        return accessService.addAccessToRole(roleId,accessId);
+    }
+
+
 }

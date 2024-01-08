@@ -28,4 +28,6 @@ public interface IAccessService {
     public List<AccessDto> findByUser(  String userId);
     public List<String> refactorByUserAndType(  String userId,String type);
     public List<String> refactorAccess(List<Access> access);
+    public Access addAccessToRole(  Long roleId,  Long accessId);
+    public Access removeAccessRole(  Long roleId,  Long accessId);
 }
