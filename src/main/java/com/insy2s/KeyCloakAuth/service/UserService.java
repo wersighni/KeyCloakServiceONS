@@ -77,8 +77,9 @@ public class UserService {
         usersResource.delete(id);
         userRepository.deleteById(id);
 
-        return ResponseEntity.status(200).body("L'utilisateur " + user.getUsername() + " a été supprimé avec succès.");
-    } catch (Exception e) {
+            return ResponseEntity.status(200).body("{\"message\": \"L'utilisateur " + user.getUsername() + " a été supprimé avec succès.\"}");
+
+        } catch (Exception e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la suppression de l'utilisateur.");
     }
