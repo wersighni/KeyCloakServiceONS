@@ -89,6 +89,10 @@ private RoleRepository roleRepository;
         return roleRepository.getAllRolesByStatusFalse();
     }
 
+    public Role findByName(String name){
+        return roleRepository.findByName(name).orElse(null);
+    }
+
     public ResponseEntity<Role> deleteRole(Long id) {
         Role role = roleRepository.findById(id).orElse(null);
         Role role1 = roleRepository.findById(id).orElseThrow((null));

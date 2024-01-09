@@ -2,6 +2,7 @@ package com.insy2s.KeyCloakAuth.controller;
 
 import com.insy2s.KeyCloakAuth.dto.RoleDto;
 import com.insy2s.KeyCloakAuth.dto.UserDto;
+import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import com.insy2s.KeyCloakAuth.service.RoleService;
@@ -41,6 +42,12 @@ public class RoleController {
         return roleService.getRoleById(id);
     }
 
+    @GetMapping("byName/{name}")
+    public Role getByName(@PathVariable String name) {
+        return roleService.findByName(name);
+    }
+
+
     @PostMapping("/{id}/update")
     public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody Role role) {
         try {
@@ -50,6 +57,8 @@ public class RoleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la modification du role.");
         }
     }
+
+
 
 
 
