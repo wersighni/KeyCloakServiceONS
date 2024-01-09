@@ -76,6 +76,14 @@ private IAccessService accessService;
 		Access addUsers=accessService.create(new Access("Ajouter un utilisateur","addUser","Action",listUsers));
 		Access deleteUsers=accessService.create(new Access("supprimer un utilisateur","deleteUser","Action",listUsers));
 
+		Access listGlobalAccess=accessService.create(new Access("List des accés","access","Page","access",menuAdmin));
+
+		Access updateAccess=accessService.create(new Access("Modifier un accés","updateAccess","Action",listGlobalAccess));
+		Access deleteAccess=accessService.create(new Access("Supprimer un accés","deleteAccess","Action",listGlobalAccess));
+		Access addAccess=accessService.create(new Access("Ajouter un accés","addAccess","Action",listGlobalAccess));
+
+
+
 		//menu cours
        Access menuCours=accessService.create(new Access("Cours","Cours","Menu"));
 		Access listCours=accessService.create(new Access("List des cours","lstCours","Page","cours",menuCours));
@@ -87,7 +95,7 @@ private IAccessService accessService;
 		Access suivi=accessService.create(new Access("Suivre un projet","suivi","Page","suivi",menuProjet));
 		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProjet","Action",listProjet));
 
-//membre
+		//membre
 		Access menuMembre=accessService.create(new Access("Membre","Membre","Menu"));
 		Access listMembre=accessService.create(new Access("List des Membres","membres","Page","membres",menuMembre));
 		Access addMembre=accessService.create(new Access("Ajouter un Membre","ajout-membre","Page","ajout-membre",menuMembre));
@@ -95,7 +103,6 @@ private IAccessService accessService;
 		Access listpos=accessService.create(new Access("List des positions","list-position","Page","list-position",menuMembre));
 
 		 //Eval
-
 		Access menueval=accessService.create(new Access("Evaluation","Evaluation","Menu"));
 		Access listeval=accessService.create(new Access("Evaluation","eval","Page","eval",menueval));
 		Access addeval=accessService.create(new Access("Passer examin","passer_examen","Page","passer_examen",menueval));
@@ -112,6 +119,18 @@ private IAccessService accessService;
 		Access menuParam=accessService.create(new Access("Paramétres","Param","Menu"));
 		Access listParam=accessService.create(new Access("List des compétences","skills","Page","skills",menuParam));
 
+//notification
+
+		Access menuNotification=accessService.create(new Access("Notification","Notification","Menu"));
+		Access listTypeNotification=accessService.create(new Access("List des type de notification","typelist","Page","typelist",menuNotification));
+
+		Access listNotification=accessService.create(new Access("List des Notifications","notificationss","Page","notificationss",menuNotification));
+		Access addNotification=accessService.create(new Access("Ajpouter une notification","addnotification","Page","addnotification",menuNotification));
+
+		Access addSession=accessService.create(new Access("Ajouter une session","addSession","Page","ajoutSession",menuCours));
+		Access addProgram=accessService.create(new Access("Ajouter un programme","addProgram","Page","ajoutProgram",menuCours));
+		Access ListProgram=accessService.create(new Access("Liste des programmes","ListProgram","Page","listProgram",menuCours));
+		Access ListSession=accessService.create(new Access("Liste des sessions","ListSession","Page","listSession",menuCours));
 
 	}
 

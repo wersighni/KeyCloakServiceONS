@@ -5,6 +5,7 @@ import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.model.User;
 import com.insy2s.KeyCloakAuth.repository.AccessRepository;
+import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import com.insy2s.KeyCloakAuth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +22,9 @@ public class AccessService implements IAccessService{
     private AccessRepository accessRepository;
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private RoleRepository roleRepo;
     public List<Access> getAllAccess() {
         return accessRepository.findAll();
     }
@@ -176,6 +180,41 @@ public class AccessService implements IAccessService{
                 }
             }
             return mDto;
+    }
+
+    public Access addAccessToRole(  Long roleId,  Long accessId){
+        Role role=roleRepo.findById(roleId).orElse(null);
+        Access access=null;
+        if(role!=null){
+             access=accessRepository.findById(accessId).orElse(null);
+            if(access!=null) {
+            List<Access>  lst=  role.getAccessList();
+            if(!lst.contains(access)) {
+                lst.add(access);
+                role.setAccessList(lst);
+                role = roleRepo.save(role);
+            }
+            }
+          }
+        return access;
+    }
+    public Access removeAccessRole(  Long roleId,  Long accessId){
+        Role role=roleRepo.findById(roleId).orElse(null);
+        Access access=null;
+        if(role!=null){
+            access=accessRepository.findById(accessId).orElse(null);
+            if(access!=null) {
+                List<Access>  lst=  role.getAccessList();
+                if(lst.contains(access)) {
+
+                    lst.remove(access);
+                   // lst.add(access);
+                    role.setAccessList(lst);
+                    role = roleRepo.save(role);
+                }
+            }
+        }
+        return access;
     }
 
 }

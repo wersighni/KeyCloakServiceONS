@@ -1,19 +1,15 @@
 package com.insy2s.KeyCloakAuth.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Setter
@@ -35,6 +31,8 @@ public class User   {
     private String docProfileId;
 
     private  String password;
+    @Temporal(TemporalType.TIMESTAMP) // Ajoutez cette annotation pour la date d'inscription
+    private Date dateInscription;
     private  boolean enabled=true;
     private boolean status = false;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -44,16 +42,25 @@ public class User   {
     private Collection<Role> roles = new ArrayList<>();
 
 
-    public User(String username, String id, String email, String lastname, String firstname, String password) {
+    public User(String username, String id, String email, String lastname, String firstname,  String password, Collection<Role> roles) {
         this.setUsername(username);
         this.setEmail(email);
         this.setId(id);
         this.setLastname(lastname);
         this.setFirstname(firstname);
         this.setPassword(password);
+        this.setRoles(roles);
 
     }
 
 
+    public User(String username, String firstname, String lastname, String id, String email, Collection<Role> roles) {
+        this.setUsername(username);
+        this.setEmail(email);
+        this.setId(id);
+        this.setLastname(lastname);
+        this.setFirstname(firstname);
+        this.setRoles(roles);
+    }
 }
 
