@@ -81,7 +81,7 @@ private IAccessService accessService;
 
 		//menu cours
        Access menuCours=accessService.create(new Access("Cours","Cours","Menu"));
-		Access listCours=accessService.create(new Access("List des cours","lstCours","Page","cours",menuCours));
+		Access listCours=accessService.create(new Access("Liste des cours","lstCours","Page","cours",menuCours));
 		Access addCours=accessService.create(new Access("Ajouter un cours","addCours","Page","ajoutcours",menuCours));
 
 		Access updateCourss=accessService.create(new Access("Modifier un Cours","updateCourses","Action",listCours));
