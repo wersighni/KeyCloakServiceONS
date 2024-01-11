@@ -42,6 +42,12 @@ public class RoleController {
         return roleService.getRoleById(id);
     }
 
+    @GetMapping("byName/{name}")
+    public Role getByName(@PathVariable String name) {
+        return roleService.findByName(name);
+    }
+
+
     @PostMapping("/{id}/update")
     public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody Role role) {
         try {

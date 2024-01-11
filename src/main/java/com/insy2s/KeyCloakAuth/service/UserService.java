@@ -77,8 +77,9 @@ public class UserService {
         usersResource.delete(id);
         userRepository.deleteById(id);
 
-        return ResponseEntity.status(200).body("L'utilisateur " + user.getUsername() + " a été supprimé avec succès.");
-    } catch (Exception e) {
+            return ResponseEntity.status(200).body("{\"message\": \"L'utilisateur " + user.getUsername() + " a été supprimé avec succès.\"}");
+
+        } catch (Exception e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la suppression de l'utilisateur.");
     }
@@ -133,6 +134,7 @@ public class UserService {
     }
     public ResponseEntity <?>createUser(User user) {
         try {
+
             UserRepresentation newUser = new UserRepresentation();
             newUser.setUsername(user.getUsername());
             newUser.setEmail(user.getEmail());
@@ -174,24 +176,29 @@ public class UserService {
                     String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
                     UserRepresentation createdUser = keycloak.realm(realm).users().get(userId).toRepresentation();
                     Collection<Role> roles = user.getRoles();
-                    System.out.println("rolesssss"+roles);
+                    if ((roles==null || roles.isEmpty()) && user.getLstRole()!=null && !user.getLstRole().isEmpty()) {
+                    Role rol=roleRepository.findByName(user.getLstRole()).orElse(null);
+                    if(rol!=null){
+                        roles=new ArrayList<Role>();
+                        roles.add(rol);
+                    }
                     // Assign the desired role to the user
                     if (!roles.isEmpty()) {
                         for (Role r : roles) {
-                            System.out.println("roleSSSSS"+r.getName());
+
                             RoleRepresentation roleS = keycloak.realm(realm).roles().get(r.getName()).toRepresentation();
 
                             keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
                         }
 
                     }
-                    User userSavedToBdLocal=new User(user.getUsername(),user.getFirstname(),user.getLastname(),createdUser.getId(),user.getEmail(),user.getRoles());
-                    user.setId(createdUser.getId());
+
+                    }
+                    User userSavedToBdLocal=new User(user.getUsername(),user.getFirstname(),user.getLastname(),createdUser.getId(),user.getEmail(),roles);
                     userSavedToBdLocal.setDateInscription(new Date());  // Définition de la date d'inscription
                     userSavedToBdLocal.setPassword(password);
-                    user.setPassword(password);
                     User userSaved= userRepository.save(userSavedToBdLocal);
-                    return ResponseEntity.status(201).body(user);
+                    return ResponseEntity.status(201).body(userSaved);
                 }
                 return ResponseEntity.status(204).body(null);
 

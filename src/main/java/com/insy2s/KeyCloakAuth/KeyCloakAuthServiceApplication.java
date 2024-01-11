@@ -61,10 +61,9 @@ private IAccessService accessService;
     private void setDefaultAccess(){
 
 		Access menuAdmin=accessService.create(new Access("Administration","Admin","Menu"));
-		Access listUsers=accessService.create(new Access("List des utilisateurs","users","Page","users",menuAdmin));
+		Access listUsers=accessService.create(new Access("Liste des utilisateurs","users","Page","users",menuAdmin));
 		Access addAdmin=accessService.create(new Access("Ajouter un role","add-role","Page","add-role",menuAdmin));
-		Access listRoles=accessService.create(new Access("List des roles","roles","Page","roles",menuAdmin));
-
+		Access listRoles=accessService.create(new Access("Liste des roles","roles","Page","roles",menuAdmin));
 		Access updateRoles=accessService.create(new Access("Modifier un role","updateRole","Action",listRoles));
 		Access addRoles=accessService.create(new Access("Ajouter un role","addRole","Action",listRoles));
 		Access deleteRoles=accessService.create(new Access("supprimer un role","deleteRole","Action",listRoles));
@@ -82,14 +81,31 @@ private IAccessService accessService;
 
 		//menu cours
        Access menuCours=accessService.create(new Access("Cours","Cours","Menu"));
-		Access listCours=accessService.create(new Access("List des cours","lstCours","Page","cours",menuCours));
+		Access listCours=accessService.create(new Access("Liste des cours","lstCours","Page","cours",menuCours));
 		Access addCours=accessService.create(new Access("Ajouter un cours","addCours","Page","ajoutcours",menuCours));
+
+		Access updateCourss=accessService.create(new Access("Modifier un Cours","updateCourses","Action",listCours));
+		Access addCourss=accessService.create(new Access("Ajouter un Cours","addCourses","Action",listCours));
+		Access deleteCourss=accessService.create(new Access("supprimer un Cours","deleteCourses","Action",listCours));
+
+
+
+		Access addSession=accessService.create(new Access("Ajouter une session","addSession","Page","ajoutSession",menuCours));
+		Access addProgram=accessService.create(new Access("Ajouter un programme","addProgram","Page","ajoutProgram",menuCours));
+		Access ListProgram=accessService.create(new Access("Liste des programmes","ListProgram","Page","listProgram",menuCours));
+		Access ListSession=accessService.create(new Access("Liste des sessions","ListSession","Page","listSession",menuCours));
+
+
 		//menu projet
 		Access menuProjet=accessService.create(new Access("Projet","Projet","Menu"));
 		Access listProjet=accessService.create(new Access("List des projets","lstProjets","Page","projets",menuProjet));
 		Access addProjet=accessService.create(new Access("Ajouter un projet","createprojet","Page","createprojet",menuProjet));
 		Access suivi=accessService.create(new Access("Suivre un projet","suivi","Page","suivi",menuProjet));
-		Access updateProjet=accessService.create(new Access("Modifier un projet","updateProjet","Action",listProjet));
+
+		Access updateProjets=accessService.create(new Access("Modifier un Projet","updateProject","Action",listProjet));
+		Access addProjets=accessService.create(new Access("Ajouter un Projet","addProject","Action",listProjet));
+		Access deleteProjets=accessService.create(new Access("supprimer un Projet","deleteProject","Action",listProjet));
+
 
 		//membre
 		Access menuMembre=accessService.create(new Access("Membre","Membre","Menu"));
@@ -123,10 +139,6 @@ private IAccessService accessService;
 		Access listNotification=accessService.create(new Access("List des Notifications","notificationss","Page","notificationss",menuNotification));
 		Access addNotification=accessService.create(new Access("Ajpouter une notification","addnotification","Page","addnotification",menuNotification));
 
-		Access addSession=accessService.create(new Access("Ajouter une session","addSession","Page","ajoutSession",menuCours));
-		Access addProgram=accessService.create(new Access("Ajouter un programme","addProgram","Page","ajoutProgram",menuCours));
-		Access ListProgram=accessService.create(new Access("Liste des programmes","ListProgram","Page","listProgram",menuCours));
-		Access ListSession=accessService.create(new Access("Liste des sessions","ListSession","Page","listSession",menuCours));
 
 	}
 

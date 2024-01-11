@@ -164,8 +164,7 @@ public class AccessService implements IAccessService{
 
 
                             if (a.getParent() != null && a.getParent().getId().equals(p.getId())) {
-                                System.out.println("action" + a + " " + a.getParent());
-                                AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath());
+                               AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath());
                                 if (pDto.getSubAccess() != null && !pDto.getSubAccess().contains(aDto)) {
                                     List<AccessDto> lsta = pDto.getSubAccess();
                                     lsta.add(aDto);
@@ -200,19 +199,21 @@ public class AccessService implements IAccessService{
         return access;
     }
     public Access removeAccessRole(  Long roleId,  Long accessId){
+
         Role role=roleRepo.findById(roleId).orElse(null);
         Access access=null;
         if(role!=null){
             access=accessRepository.findById(accessId).orElse(null);
             if(access!=null) {
+
                 List<Access>  lst=  role.getAccessList();
-                if(lst.contains(access)) {
+
 
                     lst.remove(access);
-                   // lst.add(access);
-                    role.setAccessList(lst);
+
+                    role.getAccessList().remove(access);
                     role = roleRepo.save(role);
-                }
+
             }
         }
         return access;

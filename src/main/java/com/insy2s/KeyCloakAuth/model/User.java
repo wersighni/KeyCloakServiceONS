@@ -29,7 +29,8 @@ public class User   {
     private String lastname;
     //private String titre;
     private String docProfileId;
-
+    @Transient
+    private String lstRole;
     private  String password;
     @Temporal(TemporalType.TIMESTAMP) // Ajoutez cette annotation pour la date d'inscription
     private Date dateInscription;

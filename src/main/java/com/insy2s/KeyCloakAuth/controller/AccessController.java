@@ -68,7 +68,7 @@ public class AccessController {
     public Access addAccessToRole(@RequestParam  Long roleId, @RequestParam Long accessId) {
        return accessService.addAccessToRole(roleId,accessId);
     }
-    @GetMapping("/removeAccessRole")
+    @DeleteMapping("/removeAccessRole")
     public Access removeAccessRole(@RequestParam  Long roleId, @RequestParam Long accessId) {
         return accessService.removeAccessRole(roleId,accessId);
     }

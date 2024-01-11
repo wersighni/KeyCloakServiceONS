@@ -20,7 +20,7 @@ public class Role {
     @Column(length = 20)
     private String description;
     private boolean status = false;
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "role_access",
             joinColumns = @JoinColumn(name = "role_id"),
