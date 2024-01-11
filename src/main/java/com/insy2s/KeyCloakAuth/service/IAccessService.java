@@ -13,6 +13,9 @@ public interface IAccessService {
     public Access create(Access access) ;
 
     public void deleteAccess(Long id);
+    public void archiveAccess(Long id);
+
+
 
 
     public Access findById(Long id) ;

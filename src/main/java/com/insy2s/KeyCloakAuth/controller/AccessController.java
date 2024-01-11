@@ -70,8 +70,17 @@ public class AccessController {
     }
     @GetMapping("/removeAccessRole")
     public Access removeAccessRole(@RequestParam  Long roleId, @RequestParam Long accessId) {
-        return accessService.addAccessToRole(roleId,accessId);
+        return accessService.removeAccessRole(roleId,accessId);
     }
+
+    @PutMapping(value = "/{id}")
+    public  void archiveAccess(@PathVariable Long id) {
+         accessService.archiveAccess(id);
+    }
+
+
+
+
 
 
 }

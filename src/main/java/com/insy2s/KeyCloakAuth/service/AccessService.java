@@ -9,6 +9,7 @@ import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import com.insy2s.KeyCloakAuth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -215,6 +216,11 @@ public class AccessService implements IAccessService{
             }
         }
         return access;
+    }
+    public void archiveAccess(Long id) {
+        Access access = accessRepository.findById(id).orElse(null);
+        access.setArchived(true);
+         accessRepository.save(access);
     }
 
 }
