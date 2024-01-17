@@ -1,8 +1,8 @@
 package com.insy2s.KeyCloakAuth.service;
 
 import com.insy2s.KeyCloakAuth.dto.ErrorResponse;
-import com.insy2s.KeyCloakAuth.dto.UserDto;
-import com.insy2s.KeyCloakAuth.model.*;
+import com.insy2s.KeyCloakAuth.model.Role;
+import com.insy2s.KeyCloakAuth.model.User;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import com.insy2s.KeyCloakAuth.repository.UserRepository;
 import org.keycloak.admin.client.Keycloak;
@@ -14,19 +14,13 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -36,7 +30,6 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
-
 
 
     @Value("${keycloak.server-url}")
@@ -57,34 +50,6 @@ public class UserService {
     @Value("${keycloak.admin-password}")
     private String passwordAdmin;
 
-    public ResponseEntity<String> deleteUser( String id) {
-        Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm(realm)
-                .clientId(clientId)
-                .password(passwordAdmin)
-                .username(userNameAdmin)
-                .clientSecret(clientSecret)
-                .build();
-    // Get the realm resource for the desired realm
-    RealmResource realmResource = keycloak.realm(realm);
-    // Get the users resource
-    UsersResource usersResource = realmResource.users();
-    // Delete the user by ID
-        try {
-            System.out.println("id "+id);
-        UserRepresentation user = usersResource.get(id).toRepresentation();
-        usersResource.delete(id);
-        userRepository.deleteById(id);
-
-            return ResponseEntity.status(200).body("{\"message\": \"L'utilisateur " + user.getUsername() + " a été supprimé avec succès.\"}");
-
-        } catch (Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la suppression de l'utilisateur.");
-    }
-}
-
     public static String generateRandomPassword() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder sb = new StringBuilder();
@@ -100,7 +65,36 @@ public class UserService {
 
         return sb.toString();
     }
-    public ResponseEntity<String> toggleUserEnabled( String userId) {
+
+    public ResponseEntity<String> deleteUser(String id) {
+        Keycloak keycloak = KeycloakBuilder.builder()
+                .serverUrl(serverUrl)
+                .realm(realm)
+                .clientId(clientId)
+                .password(passwordAdmin)
+                .username(userNameAdmin)
+                .clientSecret(clientSecret)
+                .build();
+        // Get the realm resource for the desired realm
+        RealmResource realmResource = keycloak.realm(realm);
+        // Get the users resource
+        UsersResource usersResource = realmResource.users();
+        // Delete the user by ID
+        try {
+            System.out.println("id " + id);
+            UserRepresentation user = usersResource.get(id).toRepresentation();
+            usersResource.delete(id);
+            userRepository.deleteById(id);
+
+            return ResponseEntity.status(200).body("{\"message\": \"L'utilisateur " + user.getUsername() + " a été supprimé avec succès.\"}");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de la suppression de l'utilisateur.");
+        }
+    }
+
+    public ResponseEntity<String> toggleUserEnabled(String userId) {
         try {
 
             Keycloak keycloak = KeycloakBuilder.builder()
@@ -122,17 +116,19 @@ public class UserService {
 
             // Update the user
             realmResource.users().get(userId).update(userRepresentation);
-                User user=userRepository.findById(userRepresentation.getId()).get();
+            User user = userRepository.findById(userRepresentation.getId()).get();
             user.setEnabled(userRepresentation.isEnabled());
             userRepository.save(user);
-                return ResponseEntity.ok().body("User enabled status toggled successfully.");
+            //ToDo : renvoyer boolean au lieu de response
+            return ResponseEntity.ok().body("User enabled status toggled successfully.");
 
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
-    public ResponseEntity <?>createUser(User user) {
+
+    public ResponseEntity<?> createUser(User user) {
         try {
 
             UserRepresentation newUser = new UserRepresentation();
@@ -167,37 +163,31 @@ public class UserService {
                 // L'email existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
                 ErrorResponse errorResponse = new ErrorResponse("Email déjà existant");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email déjà existant");
-            }
-
-            else {
+            } else {
                 Response response = keycloak.realm(realm).users().create(newUser);
-                System.out.println("reponse de save"+response.getStatus());
-                if(response.getStatus()==201){
+                System.out.println("reponse de save" + response.getStatus());
+                if (response.getStatus() == 201) {
                     String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
                     UserRepresentation createdUser = keycloak.realm(realm).users().get(userId).toRepresentation();
                     Collection<Role> roles = user.getRoles();
-                    if ((roles==null || roles.isEmpty()) && user.getLstRole()!=null && !user.getLstRole().isEmpty()) {
-                    Role rol=roleRepository.findByName(user.getLstRole()).orElse(null);
-                    if(rol!=null){
-                        roles=new ArrayList<Role>();
-                        roles.add(rol);
-                    }
-                    // Assign the desired role to the user
-                    if (!roles.isEmpty()) {
-                        for (Role r : roles) {
-
-                            RoleRepresentation roleS = keycloak.realm(realm).roles().get(r.getName()).toRepresentation();
-
-                            keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
+                    if ((roles == null || roles.isEmpty()) && user.getLstRole() != null && !user.getLstRole().isEmpty()) {
+                        Role rol = roleRepository.findByName(user.getLstRole()).orElse(null);
+                        if (rol != null) {
+                            roles = new ArrayList<Role>();
+                            roles.add(rol);
                         }
-
+                        // Assign the desired role to the user
+                        if (!roles.isEmpty()) {
+                            for (Role r : roles) {
+                                RoleRepresentation roleS = keycloak.realm(realm).roles().get(r.getName()).toRepresentation();
+                                keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
+                            }
+                        }
                     }
-
-                    }
-                    User userSavedToBdLocal=new User(user.getUsername(),user.getFirstname(),user.getLastname(),createdUser.getId(),user.getEmail(),roles);
+                    User userSavedToBdLocal = new User(user.getUsername(), user.getFirstname(), user.getLastname(), createdUser.getId(), user.getEmail(), roles);
                     userSavedToBdLocal.setDateInscription(new Date());  // Définition de la date d'inscription
                     userSavedToBdLocal.setPassword(password);
-                    User userSaved= userRepository.save(userSavedToBdLocal);
+                    User userSaved = userRepository.save(userSavedToBdLocal);
                     return ResponseEntity.status(201).body(userSaved);
                 }
                 return ResponseEntity.status(204).body(null);
@@ -210,30 +200,65 @@ public class UserService {
             return ResponseEntity.status(500).body(null);
         }
 
-
-
-
     }
-
-
-
-
-
-
-
-
 
 
     public User getUser(String username) {
         return userRepository.findByUsername(username).get();
     }
 
-/*    public ResponseEntity listUsers() {
-        List<User> usersWithAdminOrRhManagerRoles = userRepository.findByRoles_NameIn(Arrays.asList("ADMIN", "RHManager"));
-        return ResponseEntity.status(200).body(usersWithAdminOrRhManagerRoles);
-    }*/
-    public List<User>getUsers(){
-        return userRepository.findAll();}
+    public User getUserById(String id) {
+        return userRepository.findById(id).get();
+    }
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public ResponseEntity updateUser(User user) {
+        Keycloak keycloak = KeycloakBuilder.builder()
+                .serverUrl(serverUrl)
+                .realm(realm)
+                .clientId(clientId)
+                .password(passwordAdmin)
+                .username(userNameAdmin)
+                .clientSecret(clientSecret)
+                .build();
+
+        // Get the realm resource for the desired realm
+        RealmResource realmResource = keycloak.realm(realm);
+        // Get the users resource
+        UsersResource usersResource = realmResource.users();
+        // Find the user by ID or username (You may use an ID or username to identify the user)
+        String userId = user.getId(); // Replace with your method of obtaining the user's ID
+
+        UserRepresentation existingUser = usersResource.get(userId).toRepresentation();
+        // Update user attributes
+        existingUser.setFirstName(user.getFirstname());
+        existingUser.setLastName(user.getLastname());
+        existingUser.setEmail(user.getEmail());
+        // Add more attribute updates as needed
+
+        // Update the user
+        usersResource.get(userId).update(existingUser);
+
+        // Optionally, you can check if the update was successful and return an appropriate ResponseEntity
+        UserRepresentation updatedUser = usersResource.get(userId).toRepresentation();
+        if (updatedUser != null) {
+            List<RoleRepresentation> existingRoles = keycloak.realm(realm).users().get(userId).roles().realmLevel().listAll();
+            keycloak.realm(realm).users().get(userId).roles().realmLevel().remove(existingRoles);
+
+            for (Role role : user.getRoles()) {
+                System.out.println(role.getName());
+                RoleRepresentation roleS = keycloak.realm(realm).roles().get(role.getName()).toRepresentation();
+                System.out.println(roleS.getName());
+                keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
+            }
+            return ResponseEntity.status(200).body(userRepository.save(user));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User update failed");
+        }
+    }
 
 
 }
