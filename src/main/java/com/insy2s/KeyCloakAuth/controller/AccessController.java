@@ -4,6 +4,7 @@ import com.insy2s.KeyCloakAuth.dto.AccessDto;
 import com.insy2s.KeyCloakAuth.model.Access;
 import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.service.IAccessService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/keycloak/access")
 public class AccessController {
 
     Logger logger = LoggerFactory.getLogger(AccessController.class);
-    @Autowired
-    private IAccessService accessService;
+
+    private final IAccessService accessService;
 
     @PostMapping("/")
     public ResponseEntity<Access> CreateAccess(@RequestBody Access access) {

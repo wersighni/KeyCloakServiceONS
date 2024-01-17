@@ -1,7 +1,7 @@
 package com.insy2s.KeyCloakAuth.service;
 
 import com.insy2s.KeyCloakAuth.dto.ErrorResponse;
-import com.insy2s.KeyCloakAuth.model.*;
+import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.keycloak.admin.client.Keycloak;
@@ -12,16 +12,16 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RoleService {
-@Autowired
-private RoleRepository roleRepository;
+public class RoleService implements IRoleService {
+    @Autowired
+    private RoleRepository roleRepository;
     @Value("${keycloak.server-url}")
     private String serverUrl;
 
@@ -39,7 +39,9 @@ private RoleRepository roleRepository;
 
     @Value("${keycloak.admin-password}")
     private String passwordAdmin;
-    public ResponseEntity <?>createRole(Role role) {
+
+    @Override
+    public Role createRole(Role role) {
         try {
             RoleRepresentation newRole = new RoleRepresentation();
             newRole.setName(role.getName());
@@ -57,42 +59,47 @@ private RoleRepository roleRepository;
 
             Optional<Role> existingRole = roleRepository.findByName(role.getName());
             if (existingRole.isPresent() && !existingRole.get().isStatus()
-                   ) {
+            ) {
 
                 //Vérifier si  Le rôle existe soit localement (dans la base de donnée) soit dans Keycloak
                 // Le nom existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
                 ErrorResponse errorResponse = new ErrorResponse("Nom déjà existant");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nom déjà existant");
+                return null;
+            } else {
+                // Le rôle n'existe ni localement ni dans Keycloak, vous pouvez l'ajouter
+                keycloak.realm(realm).roles().create(newRole);
+                // Obtenez l'ID Keycloak du rôle nouvellement créé
+                RoleRepresentation createdRole = keycloak.realm(realm).roles().get(role.getName()).toRepresentation();
+                String keycloakRoleId = createdRole.getId();
+                // Associez l'ID Keycloak à l'ID de la base de données pour le rôle créé
+                //role.setKeycloakId(keycloakRoleId);
+                System.out.println(role);
+                Role roleSaved = roleRepository.save(role);
+                return (roleSaved);
             }
-            else {
-                    // Le rôle n'existe ni localement ni dans Keycloak, vous pouvez l'ajouter
-                    keycloak.realm(realm).roles().create(newRole);
-                    // Obtenez l'ID Keycloak du rôle nouvellement créé
-                    RoleRepresentation createdRole = keycloak.realm(realm).roles().get(role.getName()).toRepresentation();
-                    String keycloakRoleId = createdRole.getId();
-                    // Associez l'ID Keycloak à l'ID de la base de données pour le rôle créé
-                    //role.setKeycloakId(keycloakRoleId);
-                    System.out.println(role);
-                    Role roleSaved = roleRepository.save(role);
-                    return ResponseEntity.status(201).body(roleSaved);
-                }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
+            return null;
         }
     }
 
-    public List<Role>getRoles(){
-        return roleRepository.findAll();}
+    @Override
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
+    }
+
+    @Override
     public List<Role> getAllRolesStatusFalse() {
 
         return roleRepository.getAllRolesByStatusFalse();
     }
 
-    public Role findByName(String name){
+    @Override
+    public Role findByName(String name) {
         return roleRepository.findByName(name).orElse(null);
     }
 
+    @Override
     public ResponseEntity<Role> deleteRole(Long id) {
         Role role = roleRepository.findById(id).orElse(null);
         Role role1 = roleRepository.findById(id).orElseThrow((null));
@@ -123,10 +130,13 @@ private RoleRepository roleRepository;
             return ResponseEntity.ok(null);
         }
     }
+
+    @Override
     public Role getRoleById(Long id) {
         return roleRepository.findById(id).get();
     }
 
+    @Override
     public Role updateRole(Long id, Role role) {
         // Récupérer le rolee existant depuis le repository par son ID
         Role existingRole = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role non trouvé avec l'ID : " + id));
