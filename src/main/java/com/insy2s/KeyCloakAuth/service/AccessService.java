@@ -125,6 +125,7 @@ public class AccessService implements IAccessService{
             }
         }
         //access.setSubAccess(accList);
+
         return accessRepository.save(access);
     }
 
@@ -149,14 +150,14 @@ public class AccessService implements IAccessService{
     }
 
     public AccessDto refarctorMenu(Access m,List<Access> pages, List<Access> actions){
-        AccessDto mDto=new AccessDto(m.getId(),m.getName(),m.getCode(),m.getType(),m.getPath());
+        AccessDto mDto=new AccessDto(m.getId(),m.getName(),m.getCode(),m.getType(),m.getPath(),m.isArchived());
 
 
             mDto.setSubAccess(new ArrayList<AccessDto>());
 
             for (Access p : pages) {
                 if (p.getParent() != null && p.getParent().getId().equals(m.getId())) {
-                    AccessDto pDto = new AccessDto(p.getId(), p.getName(), p.getCode(), p.getType(), p.getPath());
+                    AccessDto pDto = new AccessDto(p.getId(), p.getName(), p.getCode(), p.getType(), p.getPath(),p.isArchived());
                     if (mDto.getSubAccess() != null && !mDto.getSubAccess().contains(pDto)) {
                         List<AccessDto> lstP = mDto.getSubAccess();
                         pDto.setSubAccess(new ArrayList<AccessDto>());
@@ -164,7 +165,7 @@ public class AccessService implements IAccessService{
 
 
                             if (a.getParent() != null && a.getParent().getId().equals(p.getId())) {
-                               AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath());
+                               AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath(), a.isArchived());
                                 if (pDto.getSubAccess() != null && !pDto.getSubAccess().contains(aDto)) {
                                     List<AccessDto> lsta = pDto.getSubAccess();
                                     lsta.add(aDto);
