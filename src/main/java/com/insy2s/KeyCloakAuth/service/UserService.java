@@ -5,6 +5,8 @@ import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.model.User;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import com.insy2s.KeyCloakAuth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -12,7 +14,6 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,11 @@ import java.util.*;
 
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
 
     @Value("${keycloak.server-url}")
@@ -81,7 +81,7 @@ public class UserService {
         UsersResource usersResource = realmResource.users();
         // Delete the user by ID
         try {
-            System.out.println("id " + id);
+            log.debug("id={}", id);
             UserRepresentation user = usersResource.get(id).toRepresentation();
             usersResource.delete(id);
             userRepository.deleteById(id);
@@ -154,18 +154,14 @@ public class UserService {
                     .username(userNameAdmin)
                     .clientSecret(clientSecret)
                     .build();
-            // Create the user
-           /*if(userRepository.findByUsername(user.getUsername()).isPresent()){
-               ErrorResponse errorResponse = new ErrorResponse("Username déjà existant");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username déjà existant");
-           }*/
+
             if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 // L'email existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
                 ErrorResponse errorResponse = new ErrorResponse("Email déjà existant");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email déjà existant");
             } else {
                 Response response = keycloak.realm(realm).users().create(newUser);
-                System.out.println("reponse de save" + response.getStatus());
+                log.debug("reponse de save={}", response.getStatus());
                 if (response.getStatus() == 201) {
                     String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
                     UserRepresentation createdUser = keycloak.realm(realm).users().get(userId).toRepresentation();
@@ -249,9 +245,9 @@ public class UserService {
             keycloak.realm(realm).users().get(userId).roles().realmLevel().remove(existingRoles);
 
             for (Role role : user.getRoles()) {
-                System.out.println(role.getName());
+                log.debug("get role={}", role.getName());
                 RoleRepresentation roleS = keycloak.realm(realm).roles().get(role.getName()).toRepresentation();
-                System.out.println(roleS.getName());
+                log.debug("get role={}", role.getName());
                 keycloak.realm(realm).users().get(userId).roles().realmLevel().add(Arrays.asList(roleS));
             }
             return ResponseEntity.status(200).body(userRepository.save(user));
