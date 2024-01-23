@@ -75,5 +75,14 @@ public class AccessController {
         return accessService.removeAccessRole(roleId,accessId);
     }
 
+    @PutMapping(value = "/{id}")
+    public  void archiveAccess(@PathVariable Long id) {
+         accessService.archiveAccess(id);
+    }
+
+
+
+
+
 
 }

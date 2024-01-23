@@ -21,12 +21,14 @@ public class AccessDto {
     private String path;
 
     private List<AccessDto> subAccess;
+    private boolean archived;
 
-    public AccessDto(Long id, String name, String code, String type, String path) {
+    public AccessDto(Long id, String name, String code, String type, String path,boolean archived) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.type = type;
         this.path = path;
+        this.archived= archived;
     }
 }

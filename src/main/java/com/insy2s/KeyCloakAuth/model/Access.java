@@ -23,6 +23,7 @@ public class Access {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Access parent;
+    private boolean archived;
 
 
 
@@ -49,5 +50,6 @@ public class Access {
         this.code=code;
         this.type = type;
         this.parent = parent;
+
     }
 }
