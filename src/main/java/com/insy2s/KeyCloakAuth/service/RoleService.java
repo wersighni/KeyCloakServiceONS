@@ -4,13 +4,14 @@ import com.insy2s.KeyCloakAuth.dto.ErrorResponse;
 import com.insy2s.KeyCloakAuth.model.Role;
 import com.insy2s.KeyCloakAuth.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RoleResource;
 import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class RoleService implements IRoleService {
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
     @Value("${keycloak.server-url}")
     private String serverUrl;
 
@@ -72,8 +74,7 @@ public class RoleService implements IRoleService {
                 RoleRepresentation createdRole = keycloak.realm(realm).roles().get(role.getName()).toRepresentation();
                 String keycloakRoleId = createdRole.getId();
                 // Associez l'ID Keycloak à l'ID de la base de données pour le rôle créé
-                //role.setKeycloakId(keycloakRoleId);
-                System.out.println(role);
+                log.debug("role={}", role);
                 Role roleSaved = roleRepository.save(role);
                 return (roleSaved);
             }
@@ -122,7 +123,6 @@ public class RoleService implements IRoleService {
             RoleResource roleResource = rolesResource.get(role.getName());
             // Supprimer le rôle de la keycloak
             roleResource.remove();
-            //roleRepository.deleteById(id);
             return ResponseEntity.ok(updateRole);
 
         } catch (Exception e) {
@@ -156,11 +156,11 @@ public class RoleService implements IRoleService {
 
         // Mettre à jour les détails du problème existant avec les nouvelles données
         RoleRepresentation roleToUpdate = rolesResource.get(role.getName()).toRepresentation();
-        System.out.println(roleToUpdate);
+        log.debug("roleToUpdate={}", roleToUpdate);
         roleToUpdate.setDescription(role.getDescription());
 
         RoleResource roleResource = rolesResource.get(role.getName());
-        System.out.println(roleResource);
+        log.debug("roleResource={}", roleResource);
         roleResource.update(roleToUpdate);
 
         existingRole.setDescription(role.getDescription());
