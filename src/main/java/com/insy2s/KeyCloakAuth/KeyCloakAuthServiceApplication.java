@@ -94,7 +94,7 @@ private IAccessService accessService;
 		Access addProgram=accessService.create(new Access("Ajouter un programme","addProgram","Page","ajoutProgram",menuCours));
 		Access ListProgram=accessService.create(new Access("Liste des programmes","ListProgram","Page","listProgram",menuCours));
 		Access ListSession=accessService.create(new Access("Liste des sessions","ListSession","Page","listSession",menuCours));
-
+		Access AjoutTypePhase=accessService.create(new Access("Type de phase","typePhase","Page","typePhase",menuCours));
 
 		//menu projet
 		Access menuProjet=accessService.create(new Access("Projet","Projet","Menu"));
