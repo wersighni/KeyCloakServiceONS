@@ -1,8 +1,7 @@
-package com.insy2s.KeyCloakAuth.service;
+package com.insy2s.keycloakauth.service;
 
-import com.insy2s.KeyCloakAuth.dto.ErrorResponse;
-import com.insy2s.KeyCloakAuth.model.Role;
-import com.insy2s.KeyCloakAuth.repository.RoleRepository;
+import com.insy2s.keycloakauth.model.Role;
+import com.insy2s.keycloakauth.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -63,7 +62,6 @@ public class RoleService implements IRoleService {
 
                 //Vérifier si  Le rôle existe soit localement (dans la base de donnée) soit dans Keycloak
                 // Le nom existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
-                ErrorResponse errorResponse = new ErrorResponse("Nom déjà existant");
                 return null;
             } else {
                 // Le rôle n'existe ni localement ni dans Keycloak, vous pouvez l'ajouter
@@ -165,10 +163,8 @@ public class RoleService implements IRoleService {
 
         existingRole.setDescription(role.getDescription());
 
-
         // Enregistrer les modifications dans la base de données et retourner le problème mis à jour
         return roleRepository.save(existingRole);
     }
-
 
 }

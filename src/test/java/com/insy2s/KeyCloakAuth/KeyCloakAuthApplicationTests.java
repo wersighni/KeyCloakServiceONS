@@ -1,4 +1,4 @@
-package com.insy2s.KeyCloakAuth;
+package com.insy2s.keycloakauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

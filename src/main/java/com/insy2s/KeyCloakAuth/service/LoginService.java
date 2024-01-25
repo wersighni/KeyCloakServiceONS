@@ -1,12 +1,12 @@
-package com.insy2s.KeyCloakAuth.service;
+package com.insy2s.keycloakauth.service;
 
 
 //import com.insy2s.KeyCloakAuth.ApiClient.MailingClient;
 
-import com.insy2s.KeyCloakAuth.dto.LoginRequest;
-import com.insy2s.KeyCloakAuth.dto.LoginResponse;
-import com.insy2s.KeyCloakAuth.model.User;
-import com.insy2s.KeyCloakAuth.repository.AccessRepository;
+import com.insy2s.keycloakauth.dto.LoginRequest;
+import com.insy2s.keycloakauth.dto.LoginResponse;
+import com.insy2s.keycloakauth.model.User;
+import com.insy2s.keycloakauth.repository.AccessRepository;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -53,63 +53,6 @@ public class LoginService {
     @Value("${keycloak.admin-password}")
     private String passwordAdmin;
 
-    /*	public ResponseEntity<String> findAccount( String email ) {
-            try {
-                // Create a Keycloak Admin Client instance
-                Keycloak keycloak = KeycloakBuilder.builder()
-                        .serverUrl(serverUrl)
-                        .realm(realm)
-                        .clientId(clientId)
-                        .password(passwordAdmin)
-                        .username(userNameAdmin)
-                        .clientSecret(clientSecret)
-                        .build();
-
-                // Get the realm resource
-                RealmResource realmResource = keycloak.realm(realm);
-                List<UserRepresentation> user = realmResource.users().searchByEmail(email, true);
-                if (user.isEmpty()) {
-                    return ResponseEntity.status(235).body("Vous n'avez pas de compte avec email : " + email);
-                }
-                else {
-                    String code=generateRandomCode();
-                    MailDto mailDto=new MailDto();
-                    mailDto.setTypeMail("restPasswordMail");
-                    mailDto.setBody(code);
-                    mailDto.setMailTo(email);
-                    mailDto.setSubject("Votre code de vérification de compte Upcofree");
-                    Map<String, List<String>> attributes = user.get(0).getAttributes();
-
-                    // Créer un nouvel attribut "VerificationCode" même si l'utilisateur n'a pas d'autres attributs
-                    if (attributes == null) {
-                        attributes = new HashMap<>();
-                    }
-
-                    // Ajouter l'attribut "VerificationCode" avec sa valeur
-                    attributes.put("VerificationCode", Arrays.asList(code));
-                    Date currentDate = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                    String currentDateAsString = dateFormat.format(currentDate);
-
-                    attributes.put("VerificationCodeDate", Arrays.asList(currentDateAsString));
-
-                    // Mettre à jour les attributs de l'utilisateur avec le nouvel attribut "VerificationCode"
-                    user.get(0).setAttributes(attributes);
-
-                    realmResource.users().get(user.get(0).getId()).update(user.get(0));
-
-                    boolean result =mailingClient.sendEmail(mailDto).getBody();
-                if(result==true){
-                return ResponseEntity.ok().body(" Code de vérification envoyé Vérifiez votre email :  " + email);
-
-    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.status(500).body("Error: " + e.getMessage());
-            }
-            return ResponseEntity.status(500).body("Error: ");
-        }*/
     public static String generateRandomCode() {
         String characters = "0123456789";
         StringBuilder sb = new StringBuilder();
@@ -288,7 +231,7 @@ public class LoginService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Erreur : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la modification du mot de passe : " + e.getMessage());
         }
     }
 

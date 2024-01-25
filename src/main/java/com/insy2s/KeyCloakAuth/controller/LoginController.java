@@ -1,11 +1,11 @@
-package com.insy2s.KeyCloakAuth.controller;
+package com.insy2s.keycloakauth.controller;
 
 
 //import com.insy2s.KeyCloakAuth.ApiClient.MailingClient;
 
-import com.insy2s.KeyCloakAuth.dto.ChangePasswordRequest;
-import com.insy2s.KeyCloakAuth.dto.LoginRequest;
-import com.insy2s.KeyCloakAuth.service.LoginService;
+import com.insy2s.keycloakauth.dto.ChangePasswordRequest;
+import com.insy2s.keycloakauth.dto.LoginRequest;
+import com.insy2s.keycloakauth.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,14 +1,11 @@
-package com.insy2s.KeyCloakAuth.controller;
+package com.insy2s.keycloakauth.controller;
 
-import com.insy2s.KeyCloakAuth.dto.AccessDto;
-import com.insy2s.KeyCloakAuth.model.Access;
-import com.insy2s.KeyCloakAuth.model.Role;
-import com.insy2s.KeyCloakAuth.service.IAccessService;
+import com.insy2s.keycloakauth.dto.AccessDto;
+import com.insy2s.keycloakauth.model.Access;
+import com.insy2s.keycloakauth.service.IAccessService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

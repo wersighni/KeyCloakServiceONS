@@ -1,10 +1,9 @@
-package com.insy2s.KeyCloakAuth.service;
+package com.insy2s.keycloakauth.service;
 
-import com.insy2s.KeyCloakAuth.dto.ErrorResponse;
-import com.insy2s.KeyCloakAuth.model.Role;
-import com.insy2s.KeyCloakAuth.model.User;
-import com.insy2s.KeyCloakAuth.repository.RoleRepository;
-import com.insy2s.KeyCloakAuth.repository.UserRepository;
+import com.insy2s.keycloakauth.model.Role;
+import com.insy2s.keycloakauth.model.User;
+import com.insy2s.keycloakauth.repository.RoleRepository;
+import com.insy2s.keycloakauth.repository.UserRepository;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -161,7 +160,6 @@ public class UserService {
            }*/
             if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 // L'email existe déjà, renvoyez une erreur avec le statut HTTP 400 et un message approprié
-                ErrorResponse errorResponse = new ErrorResponse("Email déjà existant");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email déjà existant");
             } else {
                 Response response = keycloak.realm(realm).users().create(newUser);
@@ -201,7 +199,6 @@ public class UserService {
         }
 
     }
-
 
     public User getUser(String username) {
         return userRepository.findByUsername(username).get();

@@ -1,6 +1,6 @@
-package com.insy2s.KeyCloakAuth.service;
+package com.insy2s.keycloakauth.service;
 
-import com.insy2s.KeyCloakAuth.model.Role;
+import com.insy2s.keycloakauth.model.Role;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

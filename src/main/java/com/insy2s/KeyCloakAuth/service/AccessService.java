@@ -1,16 +1,14 @@
-package com.insy2s.KeyCloakAuth.service;
+package com.insy2s.keycloakauth.service;
 
-import com.insy2s.KeyCloakAuth.dto.AccessDto;
-import com.insy2s.KeyCloakAuth.model.Access;
-import com.insy2s.KeyCloakAuth.model.Role;
-import com.insy2s.KeyCloakAuth.model.User;
-import com.insy2s.KeyCloakAuth.repository.AccessRepository;
-import com.insy2s.KeyCloakAuth.repository.RoleRepository;
-import com.insy2s.KeyCloakAuth.repository.UserRepository;
+import com.insy2s.keycloakauth.dto.AccessDto;
+import com.insy2s.keycloakauth.model.Access;
+import com.insy2s.keycloakauth.model.Role;
+import com.insy2s.keycloakauth.model.User;
+import com.insy2s.keycloakauth.repository.AccessRepository;
+import com.insy2s.keycloakauth.repository.RoleRepository;
+import com.insy2s.keycloakauth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;

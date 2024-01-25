@@ -1,7 +1,7 @@
-package com.insy2s.KeyCloakAuth.controller;
+package com.insy2s.keycloakauth.controller;
 
-import com.insy2s.KeyCloakAuth.model.User;
-import com.insy2s.KeyCloakAuth.service.UserService;
+import com.insy2s.keycloakauth.model.User;
+import com.insy2s.keycloakauth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

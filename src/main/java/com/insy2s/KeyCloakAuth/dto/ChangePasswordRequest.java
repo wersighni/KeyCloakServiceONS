@@ -1,18 +1,21 @@
-package com.insy2s.KeyCloakAuth.dto;
+package com.insy2s.keycloakauth.dto;
 
-import lombok.Data;
-import org.keycloak.representations.idm.CredentialRepresentation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChangePasswordRequest {
+
     private String userId;
     private String currentPassword;
     private String newPassword;
     private String username;
+    //TODO: correct the email field in front end before correcting this
     private String Email;
-
-
-
-
 
 }
