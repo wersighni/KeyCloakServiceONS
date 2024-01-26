@@ -200,11 +200,11 @@ public class UserService {
 
 
     public User getUser(String username) {
-        return userRepository.findByUsername(username).get();
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     public User getUserById(String id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElse(null);
     }
 
     public List<User> getUsers() {
