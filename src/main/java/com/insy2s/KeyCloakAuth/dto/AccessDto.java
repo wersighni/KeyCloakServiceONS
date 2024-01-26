@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,7 +20,7 @@ public class AccessDto {
     private String type;
     private String path;
 
-    private List<AccessDto> subAccess;
+    private List<AccessDto> subAccess = new ArrayList<>();
 
     public AccessDto(Long id, String name, String code, String type, String path) {
         this.id = id;

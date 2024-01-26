@@ -5,27 +5,39 @@ import com.insy2s.keycloakauth.model.Access;
 
 import java.util.List;
 
+/**
+ * Interface Service for {@link Access} entity.
+ */
 public interface IAccessService {
 
-    public List<Access> getAllAccess();
-    public Access create(Access access) ;
+    List<Access> getAllAccess();
 
-    public void deleteAccess(Long id);
+    Access create(Access access);
 
+    void deleteAccess(Long id);
 
-    public Access findById(Long id) ;
+    Access findById(Long id);
 
-    public List<Access> findByParentId(Long id) ;
-    public List<Access>  findByType(String type) ;
+    List<Access> findByParentId(Long id);
 
-    List<Access> findByRoleAndType(Long roleId,  String type);
-    public AccessDto refarctorMenu(Access m, List<Access> pages, List<Access> actions);
+    List<Access> findByType(String type);
 
-    public List<AccessDto> getAllAccessDto() ;
-    public List<AccessDto> findByRole(  Long roleId);
-    public List<AccessDto> findByUser(  String userId);
-    public List<String> refactorByUserAndType(  String userId,String type);
-    public List<String> refactorAccess(List<Access> access);
-    public Access addAccessToRole(  Long roleId,  Long accessId);
-    public Access removeAccessRole(  Long roleId,  Long accessId);
+    List<Access> findByRoleAndType(Long roleId, String type);
+
+    AccessDto refactorMenu(Access access, List<Access> pages, List<Access> actions);
+
+    List<AccessDto> getAllAccessDto();
+
+    List<AccessDto> findByRole(Long roleId);
+
+    List<AccessDto> findByUser(String userId);
+
+    List<String> refactorByUserAndType(String userId, String type);
+
+    List<String> refactorAccess(List<Access> access);
+
+    Access addAccessToRole(Long roleId, Long accessId);
+
+    Access removeAccessRole(Long roleId, Long accessId);
+
 }
