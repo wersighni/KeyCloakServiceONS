@@ -127,7 +127,12 @@ private IAccessService accessService;
 		Access menuAssistance=accessService.create(new Access("Assistance","Assistance","Menu"));
 		Access listAssistance=accessService.create(new Access("List des Assistances","list-Assistance","Page","list-Assistance",menuAssistance));
 		Access addAssistance=accessService.create(new Access("Demande d'aide","demandeAide","Page","demandeAide",menuAssistance));
+//Forum
 
+		Access menuForum=accessService.create(new Access("Forum","Forum","Menu"));
+		Access pageForum=accessService.create(new Access("Forum","forum-main","Page","forum-main",menuForum));
+
+		//Paramétre
 		Access menuParam=accessService.create(new Access("Paramétres","Param","Menu"));
 		Access listParam=accessService.create(new Access("List des compétences","skills","Page","skills",menuParam));
 
