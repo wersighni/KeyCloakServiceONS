@@ -125,10 +125,12 @@ private IAccessService accessService;
 //assistance
 
 		Access menuAssistance=accessService.create(new Access("Assistance","Assistance","Menu"));
-		Access listAssistance=accessService.create(new Access("List des Assistances","list-Assistance","Page","list-Assistance",menuAssistance));
-		Access addAssistance=accessService.create(new Access("Demande d'aide","demandeAide","Page","demandeAide",menuAssistance));
-//Forum
 
+
+		Access listAssistance=accessService.create(new Access("Demande d'aide","list-Assistance","Page","list-Assistance",menuAssistance));
+		Access addAssistance=accessService.create(new Access("Demande de vérification","list-Verification","Page","list-Verification",menuAssistance));
+
+//Forum
 		Access menuForum=accessService.create(new Access("Forum","Forum","Menu"));
 		Access pageForum=accessService.create(new Access("Forum","forum-main","Page","forum-main",menuForum));
 
