@@ -1,47 +1,10 @@
-#server:
-#  port: 8082
-#spring:
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://keycloak.fethi.synology.me/auth/realms/KeyClock-INSY2S-E-LEARING
-#          jwk-set-uri: https://keycloak.fethi.synology.me/auth/realms/KeyClock-INSY2S-E-LEARING/protocol/openid-connect/certs
-
-#  application:
-#    name: Security_Service
-  # Database
-#  datasource:
-#    type: com.zaxxer.hikari.HikariDataSource
-#    hikari:
-#      pool-name: ':::::::::::: Hikari DS Spades_1-MS POOL ::::::::::::'
-#      connection-timeout: 60000
-#      maximum-pool-size: 30
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5432/SecurityKeycloak
-#    username: postgres
-#
-#    password: admin
-
-
-
-#  jpa:
-#    hibernate:
-#      ddl-auto: update # When you launch the application for the first time - switch "none" at "create"
-#    database: postgresql
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#    generate-ddl: false
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
-#email:
-#  url: http://localhost:8090/api/mail
-
-#keycloak:
-#  server-url: "https://keycloak.fethi.synology.me/auth"
-#  realm: "KeyClock-INSY2S-E-LEARING"
-#  client-id: "E_Learning"
-#  client-secret: "Ri61AzG26JE9Bzl99z8cOmEqPbri7Lk5"
-#  admin-username: "insy2s"
-#  admin-password: "insy2s"
+spring:
+  application:
+    name: security_service
+  config:
+    import: optional:configserver:http://localhost:8888/
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: "*"
