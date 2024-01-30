@@ -4,6 +4,7 @@ import com.insy2s.keycloakauth.dto.AccessDto;
 import com.insy2s.keycloakauth.dto.CreateAccess;
 import com.insy2s.keycloakauth.model.Access;
 import com.insy2s.keycloakauth.service.IAccessService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AccessController {
      * or with status {@code 400 (Bad Request)} if the Access data are not valid.
      */
     @PostMapping
-    public ResponseEntity<AccessDto> create(@RequestBody CreateAccess access) {
+    public ResponseEntity<AccessDto> create(@RequestBody @Valid CreateAccess access) {
         log.debug("REST request to save a new Access : {}", access);
         AccessDto result = accessService.create(access);
         return ResponseEntity.ok(result);

@@ -3,7 +3,6 @@ package com.insy2s.keycloakauth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insy2s.keycloakauth.dto.CreateAccess;
 import com.insy2s.keycloakauth.model.Access;
-import com.insy2s.keycloakauth.repository.IAccessRepository;
 import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,11 @@ class AccessControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
-    IAccessRepository accessRepository;
+    private ObjectMapper objectMapper;
 
-//////////////////////////////////////////////////////////////////////
-// POST /api/keycloak/access : create
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // POST /api/keycloak/access : create
+    //////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testCreate_noParent_noChildren() throws Exception {
@@ -51,8 +48,8 @@ class AccessControllerTest {
         );
 
         mockMvc.perform(post("/api/keycloak/access")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createAccess)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createAccess)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(createAccess.name()))
@@ -80,8 +77,8 @@ class AccessControllerTest {
         );
 
         mockMvc.perform(post("/api/keycloak/access")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createAccess)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createAccess)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(createAccess.name()))
@@ -96,36 +93,36 @@ class AccessControllerTest {
                 .andExpect(jsonPath("$.subAccess[0].subAccess", hasSize(0)));
     }
 
-//////////////////////////////////////////////////////////////////////
-// DELETE /api/keycloak/access/:id : deleteById
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // DELETE /api/keycloak/access/:id : deleteById
+    //////////////////////////////////////////////////////////////////////
 
     @Test
     @Transactional
-    void testDeleteById_idExist_shouldReturnNoContent() throws Exception  {
+    void testDeleteById_idExist_shouldReturnNoContent() throws Exception {
         mockMvc.perform(delete("/api/keycloak/access/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @Transactional
-    void testDeleteById_idDoesntExist_shouldReturnNotFound() throws Exception  {
+    void testDeleteById_idDoesntExist_shouldReturnNotFound() throws Exception {
         mockMvc.perform(delete("/api/keycloak/access/10000"))
                 .andExpect(status().isNotFound());
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access : getAllMenusWithChildren
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access : getAllMenusWithChildren
+    //////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testGetAllMenusWithChildren() throws Exception {
         getAllMenusWithChildren("/api/keycloak/access");
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/all : getAllWithoutChildren
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/all : getAllWithoutChildren
+    //////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testGetAllWithoutChildren() throws Exception {
@@ -135,9 +132,9 @@ class AccessControllerTest {
                 .andExpect(jsonPath("$", hasSize(51)));
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/byRole/:id : getAllMenusWithChildren
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/byRole/:id : getAllMenusWithChildren
+    //////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testGetAllMenusByRole_adminShouldHaveAll() throws Exception {
@@ -151,9 +148,9 @@ class AccessControllerTest {
     }
 
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/:id : getById
-/////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/:id : getById
+    /////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testGetById_idExist_shouldReturnOk() throws Exception {
@@ -174,9 +171,9 @@ class AccessControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/byParentId/:id : getAllByParentId
-/////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/byParentId/:id : getAllByParentId
+    /////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testGetAllByParentId_idExist() throws Exception {
@@ -221,9 +218,9 @@ class AccessControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/byType/:type : getAllByType
-/////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/byType/:type : getAllByType
+    /////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testGetAllByType_typeExist() throws Exception {
@@ -240,9 +237,9 @@ class AccessControllerTest {
 
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/byRoleAndType?roleId&type : getAllByRoleAndType
-/////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/byRoleAndType?roleId&type : getAllByRoleAndType
+    /////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void getAllByRoleAndType() throws Exception {
@@ -267,9 +264,9 @@ class AccessControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
-//////////////////////////////////////////////////////////////////////
-// GET /api/keycloak/access/addAccessRole?roleId&accessId : addAccessToRole
-/////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // GET /api/keycloak/access/addAccessRole?roleId&accessId : addAccessToRole
+    /////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void testAddAccessToRole_bothIdsExist() throws Exception {
@@ -296,9 +293,9 @@ class AccessControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//////////////////////////////////////////////////////////////////////
-// DELETE /api/keycloak/access/removeAccessRole?roleId&accessId : removeAccessToRole
-/////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // DELETE /api/keycloak/access/removeAccessRole?roleId&accessId : removeAccessToRole
+    /////////////////////////////////////////////////////////////////////
     @Test
     @Transactional
     void removeAccessToRole_bothIdsExist() throws Exception {
@@ -325,9 +322,9 @@ class AccessControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//////////////////////////////////////////////////////////////////////
-// UTILS METHODS
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // UTILS METHODS
+    //////////////////////////////////////////////////////////////////////
     private void getAllMenusWithChildren(String path) throws Exception {
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())

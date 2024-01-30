@@ -26,7 +26,7 @@ public class Role {
     private Long id;
 
     //TODO: add data verification on database and using spring-boot-starter-validation
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     //TODO: add data verification on database and using spring-boot-starter-validation
@@ -35,7 +35,7 @@ public class Role {
 
     //TODO: add data verification on database and using spring-boot-starter-validation
     @Column(name = "status")
-    private boolean status = false;
+    private boolean status = true;
 
     @ManyToMany()
     @JoinTable(
