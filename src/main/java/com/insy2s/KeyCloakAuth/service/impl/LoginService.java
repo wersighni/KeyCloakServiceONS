@@ -1,8 +1,10 @@
 package com.insy2s.keycloakauth.service.impl;
 
 import com.insy2s.keycloakauth.config.KeycloakConfig;
+import com.insy2s.keycloakauth.dto.AccessDto;
 import com.insy2s.keycloakauth.dto.LoginRequest;
 import com.insy2s.keycloakauth.dto.LoginResponse;
+import com.insy2s.keycloakauth.dto.mapper.IAccessMapper;
 import com.insy2s.keycloakauth.error.exception.BadRequestException;
 import com.insy2s.keycloakauth.error.exception.NotAuthorizedException;
 import com.insy2s.keycloakauth.error.exception.NotFoundException;
@@ -39,6 +41,7 @@ public class LoginService implements ILoginService {
     private final IAccessService accessService;
     private final RealmResource realmResource;
     private final KeycloakConfig keycloakConfig;
+    private final IAccessMapper accessMapper;
 
     private static long getDifferenceInMinutes(String codeVerifyTime) {
         try {
@@ -159,19 +162,17 @@ public class LoginService implements ILoginService {
             loginResponse.setAccess_token(accessTokenResponse.getToken());
             loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());
             if (user != null) {
-                loginResponse.setAccess(accessService.findByUser(user.getId()));
+                loginResponse.setAccess(accessService.findAllMenusByUserId(user.getId()));
                 loginResponse.setMenus(accessService.refactorByUserAndType(user.getId(), "Menu"));
                 loginResponse.setPages(accessService.refactorByUserAndType(user.getId(), "Page"));
                 loginResponse.setActions(accessService.refactorByUserAndType(user.getId(), "Action"));
 
             } else if (loginrequest.getUsername().equals("insy2s")) {
-                loginResponse.setAccess(accessService.getAllAccessDto());
-                loginResponse.setActions(accessService.refactorAccess(accessService.findByType("Action")));
+                loginResponse.setAccess(accessService.findAllMenusAndChildren());
+                List<AccessDto> menus = accessService.findByType("Action");
+                loginResponse.setActions(accessService.refactorAccess(accessMapper.toEntity(menus)));
             }
             return loginResponse;
-
-        } catch (Exception e) {
-            throw new BadRequestException("Le nom utilisateur ou le mot de passe est incorrect");
         }
     }
 

@@ -29,4 +29,5 @@ public class AccessDto {
         this.type = type;
         this.path = path;
     }
+
 }

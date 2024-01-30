@@ -2,7 +2,7 @@ package com.insy2s.keycloakauth.error;
 
 import com.insy2s.keycloakauth.error.exception.BadRequestException;
 import com.insy2s.keycloakauth.error.exception.NotAuthorizedException;
-import jakarta.ws.rs.NotFoundException;
+import com.insy2s.keycloakauth.error.exception.NotFoundException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

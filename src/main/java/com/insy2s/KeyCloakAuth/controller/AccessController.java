@@ -1,6 +1,7 @@
 package com.insy2s.keycloakauth.controller;
 
 import com.insy2s.keycloakauth.dto.AccessDto;
+import com.insy2s.keycloakauth.dto.CreateAccess;
 import com.insy2s.keycloakauth.model.Access;
 import com.insy2s.keycloakauth.service.IAccessService;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,10 @@ public class AccessController {
      * or with status {@code 400 (Bad Request)} if the Access data are not valid.
      */
     @PostMapping
-    public ResponseEntity<Access> create(@RequestBody Access access) {
+    public ResponseEntity<AccessDto> create(@RequestBody CreateAccess access) {
         log.debug("REST request to save a new Access : {}", access);
-        return ResponseEntity.ok(accessService.create(access));
+        AccessDto result = accessService.create(access);
+        return ResponseEntity.ok(result);
     }
 
     /**
@@ -38,9 +40,9 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access.
      */
     @GetMapping("/all")
-    public List<Access> getAll() {
+    public List<Access> getAllWithoutChildren() {
         log.debug("REST request to get all Access");
-        return accessService.getAllAccess();
+        return accessService.findAllWithoutChildren();
     }
 
     /**
@@ -48,9 +50,9 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access DTO.
      */
     @GetMapping
-    public List<AccessDto> getAllDto() {
+    public List<AccessDto> getAllMenusWithChildren() {
         log.debug("REST request to get all Access DTO");
-        return accessService.getAllAccessDto();
+        return accessService.findAllMenusAndChildren();
     }
 
     /**
@@ -59,9 +61,9 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccess(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         log.debug("REST request to delete Access : {}", id);
-        accessService.deleteAccess(id);
+        accessService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -72,7 +74,7 @@ public class AccessController {
      * or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public Access getById(@PathVariable Long id) {
+    public AccessDto getById(@PathVariable Long id) {
         log.debug("REST request to get Access : {}", id);
         return accessService.findById(id);
     }
@@ -83,7 +85,7 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by parent id.
      */
     @GetMapping("/byParentId/{id}")
-    public List<Access> getAllByParentId(@PathVariable Long id) {
+    public List<AccessDto> getAllByParentId(@PathVariable Long id) {
         log.debug("REST request to get all Access by parent id : {}", id);
         return accessService.findByParentId(id);
     }
@@ -94,7 +96,7 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by type.
      */
     @GetMapping("/byType/{type}")
-    public List<Access> getAllByParentId(@PathVariable String type) {
+    public List<AccessDto> getAllByType(@PathVariable String type) {
         log.debug("REST request to get all Access by type : {}", type);
         return accessService.findByType(type);
     }
@@ -106,7 +108,7 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by role id and type.
      */
     @GetMapping("/byRoleAndType")
-    public List<Access> getAllByRoleAndType(@RequestParam Long roleId, @RequestParam String type) {
+    public List<AccessDto> getAllByRoleAndType(@RequestParam Long roleId, @RequestParam String type) {
         log.debug("REST request to get all Access by role id : {} and type : {}", roleId, type);
         return accessService.findByRoleAndType(roleId, type);
     }
@@ -117,9 +119,9 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by role id.
      */
     @GetMapping("/byRole/{roleId}")
-    public List<AccessDto> getAllByRole(@PathVariable Long roleId) {
+    public List<AccessDto> getAllMenusByRole(@PathVariable Long roleId) {
         log.debug("REST request to get all Access by role id : {}", roleId);
-        return accessService.findByRole(roleId);
+        return accessService.findAllMenusByRole(roleId);
     }
 
     /**
@@ -130,14 +132,15 @@ public class AccessController {
     @GetMapping("/byUser")
     public List<AccessDto> getAllByUser(@RequestParam String userId) {
         log.debug("REST request to get all Access by user id : {}", userId);
-        return accessService.findByUser(userId);
+        return accessService.findAllMenusByUserId(userId);
     }
 
+    //TODO: change GET to PUT
     /**
-     * GET /api/keycloak/access/byUserAndType : get all the Access by user id and type.
+     * GET /api/keycloak/access/addAccessRole : add the Access to role.
      * @param roleId the id of the user.
      * @param accessId the id of the Access.
-     * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by user id and type.
+     * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the Access added to role.
      */
     @GetMapping("/addAccessRole")
     public Access addAccessToRole(@RequestParam Long roleId, @RequestParam Long accessId) {
@@ -154,7 +157,7 @@ public class AccessController {
     @DeleteMapping("/removeAccessRole")
     public Access removeAccessToRole(@RequestParam Long roleId, @RequestParam Long accessId) {
         log.debug("REST request to remove Access : {} from role : {}", accessId, roleId);
-        return accessService.removeAccessRole(roleId, accessId);
+        return accessService.removeAccessFromRole(roleId, accessId);
     }
 
 }

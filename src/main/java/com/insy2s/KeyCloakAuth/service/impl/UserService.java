@@ -3,8 +3,8 @@ package com.insy2s.keycloakauth.service.impl;
 import com.insy2s.keycloakauth.error.exception.BadRequestException;
 import com.insy2s.keycloakauth.model.Role;
 import com.insy2s.keycloakauth.model.User;
-import com.insy2s.keycloakauth.repository.RoleRepository;
-import com.insy2s.keycloakauth.repository.UserRepository;
+import com.insy2s.keycloakauth.repository.IRoleRepository;
+import com.insy2s.keycloakauth.repository.IUserRepository;
 import com.insy2s.keycloakauth.utils.RandomUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +31,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService implements com.insy2s.keycloakauth.service.IUserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
     private final RealmResource realmResource;
 
     @Override

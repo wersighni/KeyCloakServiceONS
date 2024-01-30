@@ -1,7 +1,7 @@
 package com.insy2s.keycloakauth.service.impl;
 
 import com.insy2s.keycloakauth.model.Role;
-import com.insy2s.keycloakauth.repository.RoleRepository;
+import com.insy2s.keycloakauth.repository.IRoleRepository;
 import com.insy2s.keycloakauth.service.IRoleService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoleService implements IRoleService {
 
-    private final RoleRepository roleRepository;
+    private final IRoleRepository roleRepository;
     private final RealmResource realmResource;
 
     @Override

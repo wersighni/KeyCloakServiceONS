@@ -1,5 +1,6 @@
 package com.insy2s.keycloakauth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -32,7 +33,7 @@ public class Access {
     //TODO: add data verification on database and using spring-boot-starter-validation
     @Size(min = 2)
     @NotBlank
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     //TODO: add data verification on database and using spring-boot-starter-validation
@@ -52,27 +53,15 @@ public class Access {
     @JoinColumn(name = "parent_id")
     private Access parent;
 
-    @Transient
+    @JsonIgnore
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Access> subAccess = new ArrayList<>();
-
-    public Access(String name, String code, String type) {
-        this.name = name;
-        this.type = type;
-        this.code = code;
-    }
 
     public Access(String name, String code, String type, String path, Access parent) {
         this.name = name;
         this.code = code;
         this.type = type;
         this.path = path;
-        this.parent = parent;
-    }
-
-    public Access(String name, String code, String type, Access parent) {
-        this.name = name;
-        this.code = code;
-        this.type = type;
         this.parent = parent;
     }
 

@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Repository for {@link User} entity.
  */
-public interface UserRepository extends JpaRepository<User, String> {
+public interface IUserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByUsername(String username);
 

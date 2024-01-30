@@ -59,7 +59,7 @@ public class User {
     private String password;
 
     //TODO: add data verification on database and using spring-boot-starter-validation
-    @Column(name = "phone")
+    @Column(name = "date_inscription")
     @Temporal(TemporalType.TIMESTAMP) // Ajoutez cette annotation pour la date d'inscription
     private Date dateInscription;
 

@@ -1,12 +1,15 @@
 package com.insy2s.keycloakauth.service.impl;
 
 import com.insy2s.keycloakauth.dto.AccessDto;
+import com.insy2s.keycloakauth.dto.CreateAccess;
+import com.insy2s.keycloakauth.dto.mapper.IAccessMapper;
+import com.insy2s.keycloakauth.error.exception.NotFoundException;
 import com.insy2s.keycloakauth.model.Access;
 import com.insy2s.keycloakauth.model.Role;
 import com.insy2s.keycloakauth.model.User;
-import com.insy2s.keycloakauth.repository.AccessRepository;
-import com.insy2s.keycloakauth.repository.RoleRepository;
-import com.insy2s.keycloakauth.repository.UserRepository;
+import com.insy2s.keycloakauth.repository.IAccessRepository;
+import com.insy2s.keycloakauth.repository.IRoleRepository;
+import com.insy2s.keycloakauth.repository.IUserRepository;
 import com.insy2s.keycloakauth.service.IAccessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementation of {@link IAccessService}.
@@ -25,81 +29,83 @@ import java.util.List;
 @Transactional
 public class AccessService implements IAccessService {
 
-    private final AccessRepository accessRepository;
-    private final UserRepository userRepo;
-    private final RoleRepository roleRepo;
+    private static final String MENU = "Menu";
+    private final IAccessRepository accessRepository;
+    private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
+    private final IAccessMapper accessMapper;
 
-    public List<Access> getAllAccess() {
-        log.debug("SERVICE request to get all Access");
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Access> findAllWithoutChildren() {
+        log.debug("SERVICE to find all Access");
         return accessRepository.findAll();
     }
 
-    public List<AccessDto> getAllAccessDto() {
-        List<Access> menus = accessRepository.findByType("Menu");
-        List<Access> actions = accessRepository.findByType("Action");
-        List<AccessDto> res = new ArrayList<>();
-        for (Access m : menus) {
-            AccessDto mdto = refactorMenu(m, accessRepository.findByParentId(m.getId()), actions);
-            res.add(mdto);
-        }
-        return res;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccessDto> findAllMenusAndChildren() {
+        log.debug("SERVICE to find all Access DTO");
+        List<Access> menus = accessRepository.findByType(MENU);
+        return accessMapper.toDto(menus);
     }
 
-    public List<AccessDto> findByRole(Long roleId) {
-        List<Access> menus = accessRepository.findByRoleAndType(roleId, "Menu");
-        List<Access> pages = accessRepository.findByRoleAndType(roleId, "Page");
-        List<Access> actions = accessRepository.findByRoleAndType(roleId, "Action");
-        List<AccessDto> res = new ArrayList<>();
-        for (Access m : menus) {
-            AccessDto mdto = refactorMenu(m, pages, actions);
-            res.add(mdto);
-        }
-        return res;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccessDto> findAllMenusByRole(Long roleId) {
+        log.debug("SERVICE to find all Access DTO by role");
+        List<Access> menus = accessRepository.findAllByRoleAndType(roleId, MENU);
+        return accessMapper.toDto(menus);
     }
 
-    public List<AccessDto> findByUser(String userId) {
-        List<Access> menus = new ArrayList<>();
-        List<Access> pages = new ArrayList<>();
-        List<Access> actions = new ArrayList<>();
-        List<AccessDto> res = new ArrayList<>();
-        User user = userRepo.findById(userId).orElse(null);
-        if (user != null) {
-            for (Role r : user.getRoles()) {
-                menus.addAll(accessRepository.findByRoleAndType(r.getId(), "Menu"));
-                pages.addAll(accessRepository.findByRoleAndType(r.getId(), "Page"));
-                actions.addAll(accessRepository.findByRoleAndType(r.getId(), "Action"));
-            }
-            List<String> names = new ArrayList<>();
-            for (Access m : menus) {
-                if (!names.contains(m.getCode())) {
-                    names.add(m.getCode());
-                    AccessDto mdto = refactorMenu(m, pages, actions);
-                    res.add(mdto);
-                }
-            }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccessDto> findAllMenusByUserId(String userId) {
+        log.debug("SERVICE to find all Access DTO by user id {}", userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        if (user.getRoles().isEmpty()) {
+            return new ArrayList<>();
         }
-        return res;
+        List<Access> menus = accessRepository.findByUserAndType(userId, MENU);
+        return accessMapper.toDto(menus);
     }
 
+    // TODO: see the usage of this method to refactor it
+    @Override
     public List<String> refactorByUserAndType(String userId, String type) {
-        List<Access> access = new ArrayList<Access>();
-        List<String> names = new ArrayList<String>();
-        User user = userRepo.findById(userId).orElse(null);
-        if (user != null) {
-            for (Role r : user.getRoles()) {
-                access.addAll(accessRepository.findByRoleAndType(r.getId(), "type"));
-            }
-            for (Access m : access) {
-                if (!names.contains(m.getCode())) {
-                    names.add(m.getCode());
-                }
+        List<Access> access = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        if (user.getRoles().isEmpty()) {
+            return new ArrayList<>();
+        }
+        for (Role r : user.getRoles()) {
+            access.addAll(accessRepository.findAllByRoleAndType(r.getId(), "type"));
+        }
+        for (Access m : access) {
+            if (!names.contains(m.getCode())) {
+                names.add(m.getCode());
             }
         }
         return names;
     }
 
+    //TODO: see the usage of this method to refactor it
+    @Override
     public List<String> refactorAccess(List<Access> access) {
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         for (Access a : access) {
             if (!res.contains(a.getCode())) {
                 res.add(a.getCode());
@@ -108,94 +114,118 @@ public class AccessService implements IAccessService {
         return res;
     }
 
-    public Access create(Access access) {
-        access.setId(null);
-        access = accessRepository.save(access);
-        if (!access.getSubAccess().isEmpty()) {
-            for (Access accessChildren : access.getSubAccess()) {
-                accessChildren.setParent(access);
-                create(accessChildren);
+    /**
+     * {@inheritDoc}
+     */
+    //TODO: can children be created before parent? should they be created in the same time? both possible?
+    @Override
+    public AccessDto create(CreateAccess access) {
+        log.debug("SERVICE to create Access : {}", access);
+        Access entity = accessMapper.toEntity(access);
+        entity.setId(null);
+
+        if (access.parent() != null) {
+            Optional<Access> parent = accessRepository.findById(access.parent().getId());
+            if (parent.isEmpty()) {
+                throw new NotFoundException("Access parent not found");
             }
+            entity.setParent(parent.get());
         }
-        return accessRepository.save(access);
+
+        entity = accessRepository.save(entity);
+        return accessMapper.toDto(entity);
     }
 
-    public void deleteAccess(Long id) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void delete(Long id) {
+        log.debug("SERVICE to delete Access : {}", id);
+        Optional<Access> access = accessRepository.findById(id);
+        if (access.isEmpty()) {
+            throw new NotFoundException("Access " + id + " not found");
+        }
         accessRepository.deleteById(id);
     }
 
-    public Access findById(Long id) {
-        return accessRepository.findById(id).orElse(null);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public AccessDto findById(Long id) {
+        log.debug("SERVICE to find Access by id : {}", id);
+        Access access =
+                accessRepository.findById(id).orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
+        return accessMapper.toDto(access);
     }
 
-    public List<Access> findByParentId(Long id) {
-        return accessRepository.findByParentId(id);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccessDto> findByParentId(Long id) {
+        log.debug("SERVICE to find all Access by parent id : {}", id);
+        List<Access> accesses = accessRepository.findByParentId(id);
+        return accessMapper.toDto(accesses);
     }
 
-    public List<Access> findByType(String type) {
-        return accessRepository.findByType(type);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccessDto> findByType(String type) {
+        log.debug("SERVICE to find all Access by type : {}", type);
+        List<Access> accesses = accessRepository.findByType(type);
+        return accessMapper.toDto(accesses);
     }
 
-    public List<Access> findByRoleAndType(Long roleId, String type) {
-        return accessRepository.findByRoleAndType(roleId, type);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccessDto> findByRoleAndType(Long roleId, String type) {
+        log.debug("SERVICE to find all Access by role id : {} and type : {}", roleId, type);
+        List<Access> accesses = accessRepository.findAllByRoleAndType(roleId, type);
+        return accessMapper.toDto(accesses);
     }
 
-    //TODO: should unit test this method before refactoring it
-    public AccessDto refactorMenu(Access m, List<Access> pages, List<Access> actions) {
-        AccessDto mDto = new AccessDto(m.getId(), m.getName(), m.getCode(), m.getType(), m.getPath());
-
-        for (Access p : pages) {
-            if (p.getParent() != null && p.getParent().getId().equals(m.getId())) {
-                AccessDto pDto = new AccessDto(p.getId(), p.getName(), p.getCode(), p.getType(), p.getPath());
-                if (!mDto.getSubAccess().contains(pDto)) {
-                    List<AccessDto> lstP = mDto.getSubAccess();
-                    for (Access a : actions) {
-                        if (a.getParent() != null && a.getParent().getId().equals(p.getId())) {
-                            AccessDto aDto = new AccessDto(a.getId(), a.getName(), a.getCode(), a.getType(), a.getPath());
-                            if (!pDto.getSubAccess().contains(aDto)) {
-                                List<AccessDto> lsta = pDto.getSubAccess();
-                                lsta.add(aDto);
-                                pDto.setSubAccess(lsta);
-                            }
-                        }
-                    }
-                    lstP.add(pDto);
-                    mDto.setSubAccess(lstP);
-                }
-            }
-        }
-        return mDto;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Access addAccessToRole(Long roleId, Long accessId) {
-        Role role = roleRepo.findById(roleId).orElse(null);
-        Access access = null;
-        if (role != null) {
-            access = accessRepository.findById(accessId).orElse(null);
-            if (access != null) {
-                List<Access> lst = role.getAccessList();
-                if (!lst.contains(access)) {
-                    lst.add(access);
-                    role.setAccessList(lst);
-                    roleRepo.save(role);
-                }
-            }
+        log.debug("SERVICE to add Access to role id : {} and access id : {}", roleId, accessId);
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new NotFoundException("Role not found"));
+        Access access = accessRepository.findById(accessId)
+                .orElseThrow(() -> new NotFoundException("Access not found"));
+
+        if (!role.getAccessList().contains(access)) {
+            role.getAccessList().add(access);
+            roleRepository.save(role);
         }
+
         return access;
     }
 
-    public Access removeAccessRole(Long roleId, Long accessId) {
-        Role role = roleRepo.findById(roleId).orElse(null);
-        Access access = null;
-        if (role != null) {
-            access = accessRepository.findById(accessId).orElse(null);
-            if (access != null) {
-                List<Access> lst = role.getAccessList();
-                lst.remove(access);
-                role.getAccessList().remove(access);
-                roleRepo.save(role);
-            }
-        }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Access removeAccessFromRole(Long roleId, Long accessId) {
+        log.debug("SERVICE to remove Access from role id : {} and access id : {}", roleId, accessId);
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new NotFoundException("Role not found"));
+        Access access = accessRepository.findById(accessId)
+                .orElseThrow(() -> new NotFoundException("Access not found"));
+
+        role.getAccessList().remove(access);
+        roleRepository.save(role);
         return access;
     }
 

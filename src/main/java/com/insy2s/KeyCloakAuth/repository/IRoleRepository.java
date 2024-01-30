@@ -11,7 +11,7 @@ import java.util.Optional;
  * Repository for {@link Role} entity.
  */
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface IRoleRepository extends JpaRepository<Role, Long> {
 
     List<Role> getAllRolesByStatusFalse();
 
