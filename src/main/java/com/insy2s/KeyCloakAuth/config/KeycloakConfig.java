@@ -45,7 +45,7 @@ public class KeycloakConfig {
     @Bean
     protected RealmResource initRealmResource() {
         log.info("Initializing Keycloak admin");
-        try(Keycloak keycloak = KeycloakBuilder.builder()
+        try (Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm(realm)
                 .grantType(OAuth2Constants.PASSWORD)

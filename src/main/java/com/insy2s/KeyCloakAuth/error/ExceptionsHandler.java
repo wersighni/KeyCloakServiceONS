@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Exceptions handler class.
  * Made to handle Exceptions thrown by the application, and return a proper response to the client.
+ *
  * @author Peter Mollet
  */
 @Slf4j
@@ -30,9 +31,10 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     /**
      * Handle MethodArgumentNotValidException.
      * This is thrown when a request body is not valid.
-     * @param ex MethodArgumentNotValidException
+     *
+     * @param ex      MethodArgumentNotValidException
      * @param headers HttpHeaders
-     * @param status HttpStatusCode
+     * @param status  HttpStatusCode
      * @param request WebRequest
      * @return Response entity with a list of FieldError and a BAD_REQUEST status.
      * @author Peter Mollet
@@ -76,6 +78,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
     /**
      * Handle BadRequestException so that it returns a proper response to the client.
+     *
      * @param ex BadRequestException
      * @return Response entity with an ErrorResponse and a BAD_REQUEST status.
      * @author Peter Mollet
@@ -94,6 +97,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
     /**
      * Handle NotAuthorizedException so that it returns a proper response to the client.
+     *
      * @param ex NotAuthorizedException
      * @return Response entity with an ErrorResponse and a UNAUTHORIZED status.
      */

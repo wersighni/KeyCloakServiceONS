@@ -9,9 +9,9 @@ import com.insy2s.keycloakauth.error.exception.BadRequestException;
 import com.insy2s.keycloakauth.error.exception.NotAuthorizedException;
 import com.insy2s.keycloakauth.error.exception.NotFoundException;
 import com.insy2s.keycloakauth.model.User;
+import com.insy2s.keycloakauth.repository.IUserRepository;
 import com.insy2s.keycloakauth.service.IAccessService;
 import com.insy2s.keycloakauth.service.ILoginService;
-import com.insy2s.keycloakauth.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
@@ -37,7 +37,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class LoginService implements ILoginService {
 
-    private final IUserService userService;
+    private final IUserRepository userRepository;
     private final IAccessService accessService;
     private final RealmResource realmResource;
     private final KeycloakConfig keycloakConfig;
@@ -66,45 +66,45 @@ public class LoginService implements ILoginService {
     }
 
     @Override
-    public void testVerificationCode(String email, String code) {
-        try {
-            List<UserRepresentation> users = realmResource.users().searchByEmail(email, true);
-            if (users.isEmpty()) {
-                throw new NotAuthorizedException("Aucun utilisateur avec l'adresse e-mail : " + email);
-            }
-            Map<String, List<String>> attributes = getAttributesFromUser(users.get(0));
-            List<String> codeVerify = attributes.get("VerificationCode");
-            List<String> codeVerifyTime = attributes.get("VerificationCodeDate");
-            if (CollectionUtils.isEmpty(codeVerify) || CollectionUtils.isEmpty(codeVerifyTime)) {
-                throw new NotAuthorizedException("L'utilisateur n'a pas encore d'attribut VerificationCode.");
-            }
-            final String verificationCode = codeVerify.get(0);
-            final String verificationCodeTime = codeVerifyTime.get(0);
-            final long differenceInMinutes = getDifferenceInMinutes(verificationCodeTime);
-            if (!verificationCode.equals(code)) {
-                throw new NotAuthorizedException("Le code de vérification invalide.");
-            }
-            if (differenceInMinutes > 30) {
-                throw new NotAuthorizedException("Le code de vérification a expiré.");
-            }
-        } catch (Exception e) {
-            log.error("Erreur lors de la vérification du code de vérification : " + e.getMessage());
-            throw new BadRequestException("Erreur : " + e.getMessage());
+    public void checkVerificationCode(String email, String code) {
+        log.debug("SERVICE to check verification code {} of {}", code, email);
+        List<UserRepresentation> users = realmResource.users().searchByEmail(email, true);
+        if (users.isEmpty()) {
+            throw new NotAuthorizedException("Aucun utilisateur avec l'adresse e-mail");
+        }
+        Map<String, List<String>> attributes = getAttributesFromUser(users.get(0));
+        List<String> codeVerify = attributes.get("VerificationCode");
+        List<String> codeVerifyTime = attributes.get("VerificationCodeDate");
+        if (CollectionUtils.isEmpty(codeVerify) || CollectionUtils.isEmpty(codeVerifyTime)) {
+            throw new NotAuthorizedException("L'utilisateur n'a pas encore d'attribut VerificationCode.");
+        }
+        final String verificationCode = codeVerify.get(0);
+        final String verificationCodeTime = codeVerifyTime.get(0);
+        if (!verificationCode.equals(code)) {
+            throw new NotAuthorizedException("Le code de vérification invalide.");
+        }
+        final long differenceInMinutes = getDifferenceInMinutes(verificationCodeTime);
+        if (differenceInMinutes > 30) {
+            throw new NotAuthorizedException("Le code de vérification a expiré.");
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resetPassword(String email, String password) {
+        log.debug("SERVICE to reset password of {}", email);
         try {
             List<UserRepresentation> users = realmResource.users().searchByEmail(email, true);
             if (users.isEmpty()) {
-                throw new NotFoundException("Aucun utilisateur avec l'adresse e-mail : " + email);
+                throw new NotFoundException("");
             }
             UserRepresentation user = users.get(0);
             CredentialRepresentation newCredential = toCredentialRepresentation(password);
             user.setCredentials(Collections.singletonList(newCredential));
             realmResource.users().get(user.getId()).update(user);
-        } catch (javax.ws.rs.NotFoundException notFoundEx) {
+        } catch (NotFoundException notFoundEx) {
             throw new NotFoundException("Aucun utilisateur avec l'adresse e-mail : " + email);
         } catch (javax.ws.rs.BadRequestException badRequestEx) {
             throw new BadRequestException("Requête incorrecte lors de la mise à jour de l'utilisateur : " +
@@ -125,32 +125,35 @@ public class LoginService implements ILoginService {
     @Override
     public void changePassword(String username, String currentPassword, String newPassword) {
         try {
-            List<UserRepresentation> users = realmResource.users().search(username);
-            if (users.isEmpty()) {
-                throw new BadRequestException("Utilisateur non trouvé.");
+            List<UserRepresentation> usersByUsername = realmResource.users().search(username);
+            if (usersByUsername.isEmpty()) {
+                throw new NotFoundException("");
             }
             LoginRequest loginRequest = new LoginRequest(username, currentPassword);
             login(loginRequest);
-            UserResource userResource = realmResource.users().get(users.get(0).getId());
+            UserResource userToUpdate = realmResource.users().get(usersByUsername.get(0).getId());
             CredentialRepresentation credentials = new CredentialRepresentation();
             credentials.setType(CredentialRepresentation.PASSWORD);
             credentials.setValue(newPassword);
-            userResource.resetPassword(credentials);
+            userToUpdate.resetPassword(credentials);
+        } catch (NotFoundException notFoundEx) {
+            throw new NotFoundException("Aucun utilisateur avec le nom d'utilisateur : " + username);
         } catch (Exception e) {
-            log.error("Erreur lors de la modification du mot de passe : " + e.getMessage());
-            throw new BadRequestException("\"Erreur lors de la modification du mot de passe");
+            throw new BadRequestException("Erreur lors de la modification du mot de passe : " + e.getMessage());
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LoginResponse login(LoginRequest loginrequest) {
+        log.debug("SERVICE to login {}", loginrequest.getUsername());
         User user = null;
 
         if (!loginrequest.getUsername().equals("insy2s")) {
-            user = userService.getUser(loginrequest.getUsername());
-            if (user == null) {
-                throw new BadRequestException("Le nom d'utilisateur ou le mot de passe est incorrect");
-            }
+            user = userRepository.findByUsername(loginrequest.getUsername())
+                    .orElseThrow(() -> new NotAuthorizedException("Utilisateur non trouvé avec le nom d'utilisateur"));
         }
 
         try (Keycloak instanceKeycloakUser = keycloakConfig.instantiateKeycloakUser(
@@ -163,10 +166,9 @@ public class LoginService implements ILoginService {
             loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());
             if (user != null) {
                 loginResponse.setAccess(accessService.findAllMenusByUserId(user.getId()));
-                loginResponse.setMenus(accessService.refactorByUserAndType(user.getId(), "Menu"));
-                loginResponse.setPages(accessService.refactorByUserAndType(user.getId(), "Page"));
-                loginResponse.setActions(accessService.refactorByUserAndType(user.getId(), "Action"));
-
+                loginResponse.setMenus(accessService.findAllAccessCodeOfUserIdAndByType(user.getId(), "Menu"));
+                loginResponse.setPages(accessService.findAllAccessCodeOfUserIdAndByType(user.getId(), "Page"));
+                loginResponse.setActions(accessService.findAllAccessCodeOfUserIdAndByType(user.getId(), "Action"));
             } else if (loginrequest.getUsername().equals("insy2s")) {
                 loginResponse.setAccess(accessService.findAllMenusAndChildren());
                 List<AccessDto> menus = accessService.findByType("Action");
@@ -176,8 +178,12 @@ public class LoginService implements ILoginService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void logout(String userId) {
+        log.debug("SERVICE to logout {}", userId);
         try {
             realmResource.users().get(userId).logout();
         } catch (Exception e) {

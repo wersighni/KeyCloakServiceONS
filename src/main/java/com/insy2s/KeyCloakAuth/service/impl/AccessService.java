@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Implementation of {@link IAccessService}.
@@ -82,24 +83,15 @@ public class AccessService implements IAccessService {
         return accessMapper.toDto(menus);
     }
 
-    // TODO: see the usage of this method to refactor it
     @Override
-    public List<String> refactorByUserAndType(String userId, String type) {
-        List<Access> access = new ArrayList<>();
-        List<String> names = new ArrayList<>();
+    public List<String> findAllAccessCodeOfUserIdAndByType(String userId, String type) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         if (user.getRoles().isEmpty()) {
             return new ArrayList<>();
         }
-        for (Role r : user.getRoles()) {
-            access.addAll(accessRepository.findAllByRoleAndType(r.getId(), "type"));
-        }
-        for (Access m : access) {
-            if (!names.contains(m.getCode())) {
-                names.add(m.getCode());
-            }
-        }
-        return names;
+        List<Long> roleIds = user.getRoles().stream().map(Role::getId).toList();
+        Set<Access> accessSet = accessRepository.findAllByRolesInAndType(roleIds, type);
+        return accessSet.stream().map(Access::getCode).toList();
     }
 
     //TODO: see the usage of this method to refactor it

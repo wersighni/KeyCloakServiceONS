@@ -25,6 +25,7 @@ public class AccessController {
 
     /**
      * POST /api/keycloak/access : Create a new Access.
+     *
      * @param access {@link Access} to create.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the new Access,
      * or with status {@code 400 (Bad Request)} if the Access data are not valid.
@@ -38,6 +39,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/all : get all the Access.
+     *
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access.
      */
     @GetMapping("/all")
@@ -48,6 +50,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access : get all the Access DTO.
+     *
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access DTO.
      */
     @GetMapping
@@ -58,6 +61,7 @@ public class AccessController {
 
     /**
      * DELETE /api/keycloak/access/{id} : delete the "id" Access.
+     *
      * @param id the id of the Access to delete.
      * @return {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
@@ -70,6 +74,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/{id} : get the "id" Access.
+     *
      * @param id the id of the Access to retrieve.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the Access,
      * or with status {@code 404 (Not Found)}.
@@ -82,6 +87,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/byParentId/{id} : get all the Access by parent id.
+     *
      * @param id the id of the parent Access.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by parent id.
      */
@@ -93,6 +99,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/byType/{type} : get all the Access by type.
+     *
      * @param type the type of the Access.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by type.
      */
@@ -104,8 +111,9 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/byRoleAndType : get all the Access by role id and type.
+     *
      * @param roleId the id of the role.
-     * @param type the type of the Access.
+     * @param type   the type of the Access.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by role id and type.
      */
     @GetMapping("/byRoleAndType")
@@ -116,6 +124,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/byRole/{roleId} : get all the Access by role id.
+     *
      * @param roleId the id of the role.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by role id.
      */
@@ -127,6 +136,7 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/byUser : get all the Access by user id.
+     *
      * @param userId the id of the user.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access by user id.
      */
@@ -137,9 +147,11 @@ public class AccessController {
     }
 
     //TODO: change GET to PUT
+
     /**
      * GET /api/keycloak/access/addAccessRole : add the Access to role.
-     * @param roleId the id of the user.
+     *
+     * @param roleId   the id of the user.
      * @param accessId the id of the Access.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the Access added to role.
      */
@@ -151,7 +163,8 @@ public class AccessController {
 
     /**
      * GET /api/keycloak/access/removeAccessRole : remove the Access from role.
-     * @param roleId the id of the role.
+     *
+     * @param roleId   the id of the role.
      * @param accessId the id of the Access.
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the Access from role.
      */

@@ -12,6 +12,7 @@ public interface IRoleService {
 
     /**
      * Create a new {@link Role}
+     *
      * @param role the {@link Role} to create
      * @return the created {@link Role} with id
      */
@@ -19,18 +20,21 @@ public interface IRoleService {
 
     /**
      * Get all {@link Role}
+     *
      * @return the list of {@link Role}
      */
     List<Role> getRoles();
 
     /**
      * Get all {@link Role} with status false
+     *
      * @return the list of {@link Role}
      */
     List<Role> getAllRolesWithStatusFalse();
 
     /**
      * Find a {@link Role} by name
+     *
      * @param name the name of the {@link Role} to find
      * @return the {@link Role} found
      * @throws NotFoundException if the {@link Role} is not found
@@ -41,6 +45,7 @@ public interface IRoleService {
 
     /**
      * Find a {@link Role} by id
+     *
      * @param id the id of the {@link Role} to find
      * @return the {@link Role} found
      * @throws NotFoundException if the {@link Role} is not found
@@ -49,7 +54,8 @@ public interface IRoleService {
 
     /**
      * Update a {@link Role}
-     * @param id the id of the {@link Role} to update
+     *
+     * @param id   the id of the {@link Role} to update
      * @param role the {@link Role} to update
      * @return the updated {@link Role}
      * @throws NotFoundException if the {@link Role} is not found

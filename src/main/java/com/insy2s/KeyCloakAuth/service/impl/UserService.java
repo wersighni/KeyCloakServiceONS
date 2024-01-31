@@ -1,6 +1,7 @@
 package com.insy2s.keycloakauth.service.impl;
 
 import com.insy2s.keycloakauth.error.exception.BadRequestException;
+import com.insy2s.keycloakauth.error.exception.NotFoundException;
 import com.insy2s.keycloakauth.model.Role;
 import com.insy2s.keycloakauth.model.User;
 import com.insy2s.keycloakauth.repository.IRoleRepository;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 

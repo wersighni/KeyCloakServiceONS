@@ -23,6 +23,7 @@ public class RoleController {
 
     /**
      * POST /api/keycloak/roles : create a new role.
+     *
      * @param role the role to create.
      * @return the ResponseEntity with status 201 (Created) and with body the new role,
      * or with status 400 (Bad Request) if the role already exists.
@@ -36,6 +37,7 @@ public class RoleController {
 
     /**
      * GET /api/keycloak/roles : get all roles.
+     *
      * @return the ResponseEntity with status 200 (OK) and the list of roles in body.
      */
     @GetMapping
@@ -46,6 +48,7 @@ public class RoleController {
 
     /**
      * GET /api/keycloak/roles/statusFalse : get all roles with status false.
+     *
      * @return the ResponseEntity with status 200 (OK) and the list of roles in body.
      */
     @GetMapping("/statusFalse")
@@ -56,6 +59,7 @@ public class RoleController {
 
     /**
      * GET /api/keycloak/roles/:id : get the "id" role.
+     *
      * @param id the id of the role to retrieve.
      * @return the ResponseEntity with status 200 (OK) and with body the role,
      * or with status 404 (Not Found).
@@ -69,6 +73,7 @@ public class RoleController {
 
     /**
      * GET /api/keycloak/roles/byName/:name : get the "name" role.
+     *
      * @param name the name of the role to retrieve.
      * @return the ResponseEntity with status 200 (OK) and with body the role,
      */
@@ -80,9 +85,11 @@ public class RoleController {
     }
 
     //TODO: change Post to Put
+
     /**
      * POST /api/keycloak/roles/:id/update : update the "id" role.
-     * @param id the id of the role to update.
+     *
+     * @param id   the id of the role to update.
      * @param role the role to update.
      * @return the ResponseEntity with status 200 (OK) and with body the updated role,
      * or with status 404 (Not Found) if the role is not found.

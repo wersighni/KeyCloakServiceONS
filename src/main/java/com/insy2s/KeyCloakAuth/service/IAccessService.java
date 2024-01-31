@@ -96,7 +96,7 @@ public interface IAccessService {
      */
     List<AccessDto> findAllMenusByUserId(String userId);
 
-    List<String> refactorByUserAndType(String userId, String type);
+    List<String> findAllAccessCodeOfUserIdAndByType(String userId, String type);
 
     List<String> refactorAccess(List<Access> access);
 

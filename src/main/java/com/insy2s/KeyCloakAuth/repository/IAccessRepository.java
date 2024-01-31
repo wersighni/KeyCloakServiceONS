@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Repository for {@link Access} entity.
@@ -19,18 +20,25 @@ public interface IAccessRepository extends JpaRepository<Access, Long> {
     List<Access> findByParentId(Long id);
 
     @Query("""
-        SELECT a FROM Role r
-        JOIN r.accessList a
-        WHERE r.id = :roleId AND a.type = :type
-    """)
+                SELECT a FROM Role r
+                JOIN r.accessList a
+                WHERE r.id = :roleId AND a.type = :type
+            """)
     List<Access> findAllByRoleAndType(@Param("roleId") Long roleId, @Param("type") String type);
 
     @Query("""
-        SELECT a FROM User u
-        JOIN u.roles r
-        JOIN r.accessList a
-        WHERE u.id = :userId AND a.type = :type
-    """)
+                SELECT a FROM User u
+                JOIN u.roles r
+                JOIN r.accessList a
+                WHERE u.id = :userId AND a.type = :type
+            """)
     List<Access> findByUserAndType(@Param("userId") String userId, @Param("type") String type);
+
+    @Query("""
+                SELECT a FROM Role r
+                JOIN r.accessList a
+                WHERE r.id IN :roles AND a.type = :type
+            """)
+    Set<Access> findAllByRolesInAndType(List<Long> roles, String type);
 
 }

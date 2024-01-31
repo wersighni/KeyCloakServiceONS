@@ -4,7 +4,6 @@ import com.insy2s.keycloakauth.model.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IUserService {
 
