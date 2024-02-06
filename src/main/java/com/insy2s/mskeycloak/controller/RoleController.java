@@ -95,7 +95,7 @@ public class RoleController {
      * or with status 404 (Not Found) if the role is not found.
      */
     @PostMapping("/{id}/update")
-    public ResponseEntity<Role> update(@PathVariable Long id, @RequestBody Role role) {
+    public ResponseEntity<Role> update(@PathVariable Long id, @RequestBody @Valid Role role) {
         log.debug("REST request to update Role : {}", role);
         Role updatedRole = roleService.update(id, role);
         return ResponseEntity.ok(updatedRole);

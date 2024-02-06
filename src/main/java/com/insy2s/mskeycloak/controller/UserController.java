@@ -2,6 +2,7 @@ package com.insy2s.mskeycloak.controller;
 
 import com.insy2s.mskeycloak.model.User;
 import com.insy2s.mskeycloak.service.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,7 @@ public class UserController {
      * or status {@code 400 (Bad Request)} if the email or username is already in use.
      */
     @PostMapping("/create")
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@RequestBody @Valid User user) {
         log.debug("REST request to save User : {}", user.getUsername());
         User userCreated = userService.create(user);
         return ResponseEntity.status(201).body(userCreated);
@@ -116,7 +117,7 @@ public class UserController {
      * or status {@code 404 (Not Found)} if the user couldn't be found.
      */
     @PostMapping("/update")
-    public ResponseEntity<User> update(@RequestBody User user) {
+    public ResponseEntity<User> update(@RequestBody @Valid User user) {
         log.debug("REST request to update User : {}", user.getUsername());
         User updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);

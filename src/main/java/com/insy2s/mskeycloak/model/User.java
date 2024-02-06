@@ -1,5 +1,6 @@
 package com.insy2s.mskeycloak.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -60,6 +61,7 @@ public class User {
 
     //TODO: add data verification on database and using spring-boot-starter-validation
     // or delete this field?
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 

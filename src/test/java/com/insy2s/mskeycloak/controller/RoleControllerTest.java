@@ -225,9 +225,13 @@ class RoleControllerTest {
         when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName).toRepresentation())
                 .thenReturn(new RoleRepresentation());
 
+        Role role = new Role();
+        role.setName(roleName);
+        role.setDescription("testDescription");
+
         mockMvc.perform(post("/api/keycloak/roles/1000000/update")
                         .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(new Role())))
+                        .content(objectMapper.writeValueAsString(role)))
                 .andExpect(status().isNotFound());
     }
 
@@ -242,6 +246,7 @@ class RoleControllerTest {
 
         Role role = new Role();
         role.setName(roleName);
+        role.setDescription("testDescription");
 
         mockMvc.perform(post("/api/keycloak/roles/1/update")
                         .contentType("application/json")

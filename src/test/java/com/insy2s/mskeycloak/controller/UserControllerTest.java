@@ -93,7 +93,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.firstname").value(user.getFirstname()))
                 .andExpect(jsonPath("$.lastname").value(user.getLastname()))
                 .andExpect(jsonPath("$.docProfileId").value(user.getDocProfileId()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.enabled").value(user.isEnabled()))
                 .andExpect(jsonPath("$.status").value(user.isStatus()));
     }
@@ -122,7 +121,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.firstname").value(user.getFirstname()))
                 .andExpect(jsonPath("$.lastname").value(user.getLastname()))
                 .andExpect(jsonPath("$.docProfileId").value(user.getDocProfileId()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.enabled").value(user.isEnabled()))
                 .andExpect(jsonPath("$.status").value(user.isStatus()));
     }
@@ -157,7 +155,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].firstname").value(user.getFirstname()))
                 .andExpect(jsonPath("$[0].lastname").value(user.getLastname()))
                 .andExpect(jsonPath("$[0].docProfileId").value(user.getDocProfileId()))
-                .andExpect(jsonPath("$[0].password").value(user.getPassword()))
                 .andExpect(jsonPath("$[0].enabled").value(user.isEnabled()))
                 .andExpect(jsonPath("$[0].status").value(user.isStatus()));
     }
@@ -413,4 +410,5 @@ class UserControllerTest {
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value(user.getId()));
     }
+
 }
