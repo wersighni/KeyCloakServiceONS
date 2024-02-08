@@ -55,7 +55,7 @@ public class UserController {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of users in body.
      */
-    @GetMapping
+    @GetMapping("/")
     public List<User> getAll() {
         log.debug("REST request to get all Users");
         return userService.findAll();

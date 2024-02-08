@@ -28,7 +28,7 @@ public class RoleController {
      * @return the ResponseEntity with status 201 (Created) and with body the new role,
      * or with status 400 (Bad Request) if the role already exists.
      */
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Role> create(@RequestBody @Valid Role role) {
         log.debug("REST request to save Role : {}", role);
         Role roleCreated = roleService.create(role);
@@ -40,7 +40,7 @@ public class RoleController {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of roles in body.
      */
-    @GetMapping
+    @GetMapping("/")
     public List<Role> getAll() {
         log.debug("REST request to get all Roles");
         return roleService.getRoles();

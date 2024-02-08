@@ -53,7 +53,7 @@ class AccessControllerTest {
                 new ArrayList<>()
         );
 
-        mockMvc.perform(post("/api/keycloak/access")
+        mockMvc.perform(post("/api/keycloak/access/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createAccess)))
                 .andExpect(status().isOk())
@@ -82,7 +82,7 @@ class AccessControllerTest {
                 List.of(child)
         );
 
-        mockMvc.perform(post("/api/keycloak/access")
+        mockMvc.perform(post("/api/keycloak/access/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createAccess)))
                 .andExpect(status().isOk())
@@ -123,7 +123,7 @@ class AccessControllerTest {
     @Test
     @Transactional
     void testGetAllMenusWithChildren() throws Exception {
-        getAllMenusWithChildren("/api/keycloak/access");
+        getAllMenusWithChildren("/api/keycloak/access/");
     }
 
     //////////////////////////////////////////////////////////////////////

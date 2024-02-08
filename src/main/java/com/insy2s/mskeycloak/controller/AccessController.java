@@ -30,7 +30,7 @@ public class AccessController {
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the new Access,
      * or with status {@code 400 (Bad Request)} if the Access data are not valid.
      */
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<AccessDto> create(@RequestBody @Valid CreateAccess access) {
         log.debug("REST request to save a new Access : {}", access);
         AccessDto result = accessService.create(access);
@@ -53,7 +53,7 @@ public class AccessController {
      *
      * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body all the Access DTO.
      */
-    @GetMapping
+    @GetMapping("/")
     public List<AccessDto> getAllMenusWithChildren() {
         log.debug("REST request to get all Access DTO");
         return accessService.findAllMenusAndChildren();

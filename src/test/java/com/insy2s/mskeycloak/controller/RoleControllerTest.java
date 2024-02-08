@@ -67,7 +67,7 @@ class RoleControllerTest {
         role.setName(roleName);
         role.setDescription("testDescription");
 
-        mockMvc.perform(post("/api/keycloak/roles")
+        mockMvc.perform(post("/api/keycloak/roles/")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(role)))
                 .andExpect(status().isBadRequest());
@@ -78,15 +78,14 @@ class RoleControllerTest {
     void testCreate_roleExistInDB_shouldReturn400() throws Exception {
         String roleName = "ADMIN";
         when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName))
-                .thenReturn(Mockito.mock(RoleResource.class));
-        when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName).toRepresentation())
-                .thenReturn(null);
+                .thenThrow(new javax.ws.rs.NotFoundException());
+
 
         Role role = new Role();
         role.setName(roleName);
         role.setDescription("testDescription");
 
-        mockMvc.perform(post("/api/keycloak/roles")
+        mockMvc.perform(post("/api/keycloak/roles/")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(role)))
                 .andExpect(status().isBadRequest());
@@ -97,15 +96,12 @@ class RoleControllerTest {
     void testCreat_success() throws Exception {
         String roleName = "testRole";
         when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName))
-                .thenReturn(Mockito.mock(RoleResource.class));
-        when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName).toRepresentation())
-                .thenReturn(null);
-
+                .thenThrow(new javax.ws.rs.NotFoundException());
         Role role = new Role();
         role.setName(roleName);
         role.setDescription("testDescription");
 
-        mockMvc.perform(post("/api/keycloak/roles")
+        mockMvc.perform(post("/api/keycloak/roles/")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(role)))
                 .andExpect(status().isCreated())
@@ -121,7 +117,7 @@ class RoleControllerTest {
     @Test
     @Transactional
     void getAll() throws Exception {
-        mockMvc.perform(get("/api/keycloak/roles"))
+        mockMvc.perform(get("/api/keycloak/roles/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(6)))

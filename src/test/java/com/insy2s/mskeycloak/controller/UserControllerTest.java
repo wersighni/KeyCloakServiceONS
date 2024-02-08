@@ -131,7 +131,7 @@ class UserControllerTest {
     @Test
     @Transactional
     void testGetAll_noUser() throws Exception {
-        mockMvc.perform(get("/api/keycloak/users"))
+        mockMvc.perform(get("/api/keycloak/users/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").isArray())
@@ -143,7 +143,7 @@ class UserControllerTest {
     void testGetAll_oneUser() throws Exception {
         userRepository.saveAndFlush(user);
 
-        mockMvc.perform(get("/api/keycloak/users"))
+        mockMvc.perform(get("/api/keycloak/users/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").isArray())

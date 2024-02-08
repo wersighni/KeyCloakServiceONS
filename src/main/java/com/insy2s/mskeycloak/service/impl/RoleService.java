@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service Implementation for {@link Role} entity.
@@ -37,17 +36,24 @@ public class RoleService implements IRoleService {
     public Role create(Role role) {
         log.debug("Request to create Role : {}", role);
         role.setId(null);
-        Optional<Role> existingRole = roleRepository.findByName(role.getName());
-        RoleRepresentation existingRoleInKeyCloak = keycloak.realm(keycloakConfig.getRealm()).roles().get(role.getName()).toRepresentation();
-        if (existingRole.isPresent() || existingRoleInKeyCloak != null) {
-            throw new BadRequestException("Le rôle existe déjà");
+        try {
+            keycloak.realm(keycloakConfig.getRealm()).roles().get(role.getName()).toRepresentation();
+        } catch (Exception e) {
+            if (!e.getMessage().equals("HTTP 404 Not Found")) {
+                throw new BadRequestException("Role existe  dans keycloak");
+            }
+            if (roleRepository.findByName(role.getName()).isPresent()) {
+                throw new BadRequestException("Role existe  dans la base locale");
+            }
+            RoleRepresentation newRole = new RoleRepresentation();
+            newRole.setName(role.getName());
+            newRole.setDescription(role.getDescription());
+            keycloak.realm(keycloakConfig.getRealm()).roles().create(newRole);
+            return roleRepository.save(role);
         }
-        RoleRepresentation newRole = new RoleRepresentation();
-        newRole.setName(role.getName());
-        newRole.setDescription(role.getDescription());
-        keycloak.realm(keycloakConfig.getRealm()).roles().create(newRole);
-        return roleRepository.save(role);
+        throw new BadRequestException("Role existe ");
     }
+
 
     /**
      * {@inheritDoc}
