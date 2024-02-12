@@ -1,10 +1,5 @@
 spring:
   application:
-    name: security_service
-  config:
-    import: optional:configserver:http://localhost:8888/
-management:
-  endpoints:
-    web:
-      exposure:
-        exclude: "*"
+    name: keycloak-service
+  profiles:
+    active: @activatedProperties@

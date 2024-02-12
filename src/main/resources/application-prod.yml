@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: security_service
+  config:
+    import: optional:configserver:http://localhost:8888/
+
+allowed:
+  origins: http://localhost:4200
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
