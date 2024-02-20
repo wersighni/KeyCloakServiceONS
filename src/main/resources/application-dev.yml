@@ -50,3 +50,7 @@ keycloak:
 logging:
   level:
     com.insy2s: DEBUG
+
+feign:
+  name: "mail"
+  url: "http://localhost:8090/api/mail"
