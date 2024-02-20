@@ -42,7 +42,7 @@ public class Role {
     private String description;
 
     @Column(name = "status")
-    private boolean status = true;
+    private boolean status = false;
 
     @ManyToMany()
     @JoinTable(
