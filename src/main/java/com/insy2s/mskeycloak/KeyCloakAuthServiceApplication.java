@@ -3,6 +3,7 @@ package com.insy2s.mskeycloak;
 import com.insy2s.mskeycloak.dto.AccessDto;
 import com.insy2s.mskeycloak.dto.CreateAccess;
 import com.insy2s.mskeycloak.dto.mapper.IAccessMapper;
+import com.insy2s.mskeycloak.model.Access;
 import com.insy2s.mskeycloak.model.Role;
 import com.insy2s.mskeycloak.repository.IRoleRepository;
 import com.insy2s.mskeycloak.repository.IUserRepository;
@@ -121,14 +122,22 @@ public class KeyCloakAuthServiceApplication {
         AccessDto menuAssistance = accessService.create(new CreateAccess("Assistance", "Assistance", "Menu", null, null, new ArrayList<>()));
         accessService.create(new CreateAccess("List des Assistances", "list-Assistance", "Page", "list-Assistance", accessMapper.toEntity(menuAssistance), new ArrayList<>()));
         accessService.create(new CreateAccess("Demande d'aide", "demandeAide", "Page", "demandeAide", accessMapper.toEntity(menuAssistance), new ArrayList<>()));
+       //paramétre
         AccessDto menuParam = accessService.create(new CreateAccess("Paramétres", "Param", "Menu", null, null, new ArrayList<>()));
         accessService.create(new CreateAccess("List des compétences", "skills", "Page", "skills", accessMapper.toEntity(menuParam), new ArrayList<>()));
-
+        accessService.create(new CreateAccess("List des thèmes","themeList","Page","themeList", accessMapper.toEntity(menuParam), new ArrayList<>()));
         //notification
         AccessDto menuNotification = accessService.create(new CreateAccess("Notification", "Notification", "Menu", null, null, new ArrayList<>()));
         accessService.create(new CreateAccess("List des type de notification", "typelist", "Page", "typelist", accessMapper.toEntity(menuNotification), new ArrayList<>()));
         accessService.create(new CreateAccess("List des Notifications", "notificationss", "Page", "notificationss", accessMapper.toEntity(menuNotification), new ArrayList<>()));
         accessService.create(new CreateAccess("Ajpouter une notification", "addnotification", "Page", "addnotification", accessMapper.toEntity(menuNotification), new ArrayList<>()));
+
+
+//Forum
+        AccessDto   menuForum=accessService.create(new CreateAccess("Forum","Forum","Menu",null, null, new ArrayList<>()));
+        accessService.create(new CreateAccess("Forum","forum-main","Page","forum-main", accessMapper.toEntity(menuForum), new ArrayList<>()));
+
+
     }
 
     private void saveRole(Role role) {

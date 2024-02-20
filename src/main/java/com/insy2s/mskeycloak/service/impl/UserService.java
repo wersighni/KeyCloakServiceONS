@@ -1,6 +1,7 @@
 package com.insy2s.mskeycloak.service.impl;
 
 import com.insy2s.mskeycloak.config.KeycloakConfig;
+import com.insy2s.mskeycloak.dto.IMailClient;
 import com.insy2s.mskeycloak.error.exception.BadRequestException;
 import com.insy2s.mskeycloak.error.exception.NotFoundException;
 import com.insy2s.mskeycloak.model.Role;
@@ -40,6 +41,9 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
     private final IRoleRepository roleRepository;
     private final Keycloak keycloak;
     private final KeycloakConfig keycloakConfig;
+
+   // private final IMailClient mailClient;
+    //private final JwtAuthenticationFilter jwtAuthFilter;
 
     /**
      * {@inheritDoc}
@@ -99,6 +103,7 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
         user.setPassword(password);
         credentials.setValue(password);
         newUser.setCredentials(List.of(credentials));
+
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new BadRequestException("Email déjà existant");
         }
