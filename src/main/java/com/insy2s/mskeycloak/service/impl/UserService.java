@@ -2,6 +2,7 @@ package com.insy2s.mskeycloak.service.impl;
 
 import com.insy2s.mskeycloak.config.KeycloakConfig;
 import com.insy2s.mskeycloak.dto.IMailClient;
+import com.insy2s.mskeycloak.dto.MailDto;
 import com.insy2s.mskeycloak.error.exception.BadRequestException;
 import com.insy2s.mskeycloak.error.exception.NotFoundException;
 import com.insy2s.mskeycloak.model.Role;
@@ -42,7 +43,7 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
     private final Keycloak keycloak;
     private final KeycloakConfig keycloakConfig;
 
-   // private final IMailClient mailClient;
+    private final IMailClient mailClient;
     //private final JwtAuthenticationFilter jwtAuthFilter;
 
     /**
@@ -147,7 +148,10 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
                 .dateInscription(new Date())
                 .password(password)
                 .build();
-        return userRepository.save(userToCreateInLocalDb);
+        userToCreateInLocalDb=userRepository.save(userToCreateInLocalDb);
+       // String fullname, String mailTo, String subject, String username, String password, String body)
+       mailClient.sendEmail(new MailDto("creationAccount",user.getFirstname(),user.getEmail(),"test",user.getUsername(),password,"email de test"));
+        return userToCreateInLocalDb;
     }
 
     /**
