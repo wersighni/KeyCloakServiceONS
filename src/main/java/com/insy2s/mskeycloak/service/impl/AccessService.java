@@ -257,4 +257,15 @@ public class AccessService implements IAccessService {
         return access;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public AccessDto findByCode(String code) {
+        log.debug("SERVICE to find Access by id : {}", code);
+        Access access = accessRepository.findByCode(code).orElse(null);
+        return accessMapper.toDto(access);
+    }
+
 }

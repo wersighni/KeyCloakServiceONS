@@ -24,7 +24,7 @@ spring:
   jpa:
     hibernate:
 # TODO: needs to disable ddl-auto and use a database migration tool like liquibase
-      ddl-auto: create-drop
+      ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: false

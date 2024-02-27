@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -18,6 +19,8 @@ public interface IAccessRepository extends JpaRepository<Access, Long> {
     List<Access> findByType(@Param("type") String type);
 
     List<Access> findByParentId(Long id);
+
+    Optional<Access> findByCode(@Param("Code") String code);
 
     @Query("""
                 SELECT a FROM Role r
