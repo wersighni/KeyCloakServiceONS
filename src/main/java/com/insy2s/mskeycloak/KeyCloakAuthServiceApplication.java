@@ -14,15 +14,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @EnableDiscoveryClient
 @SpringBootApplication
 @RequiredArgsConstructor
+@EnableFeignClients
 public class KeyCloakAuthServiceApplication {
 
     private final IRoleRepository roleRepository;
@@ -67,79 +70,84 @@ public class KeyCloakAuthServiceApplication {
     }
 
     private void setDefaultAccess() {
-        AccessDto menuAdmin = accessService.create(new CreateAccess("Administration", "Admin", "Menu", null, null, new ArrayList<>()));
-        AccessDto listUsers = accessService.create(new CreateAccess("Liste des utilisateurs", "users", "Page", "users", accessMapper.toEntity(menuAdmin), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un role", "add-role", "Page", "add-role", accessMapper.toEntity(menuAdmin), new ArrayList<>()));
-        AccessDto listRoles = accessService.create(new CreateAccess("Liste des roles", "roles", "Page", "roles", accessMapper.toEntity(menuAdmin), new ArrayList<>()));
-        accessService.create(new CreateAccess("Modifier un role", "updateRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un role", "addRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>()));
-        accessService.create(new CreateAccess("supprimer un role", "deleteRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>()));
-        accessService.create(new CreateAccess("Modifier un utilisateur", "updateUser", "Action", null, accessMapper.toEntity(listUsers), new ArrayList<>()));
-        accessService.create( new CreateAccess("Ajouter un utilisateur", "addUser", "Action", null, accessMapper.toEntity(listUsers), new ArrayList<>()));
-        accessService.create(new CreateAccess("supprimer un utilisateur", "deleteUser", "Action", null, accessMapper.toEntity(listUsers), new ArrayList<>()));
-        AccessDto listGlobalAccess = accessService.create( new CreateAccess("List des accés", "access", "Page", "access", accessMapper.toEntity(menuAdmin), new ArrayList<>()));
-        accessService.create(new CreateAccess("Modifier un accés", "updateAccess", "Action", null, accessMapper.toEntity(listGlobalAccess), new ArrayList<>()));
-        accessService.create(new CreateAccess("Supprimer un accés", "deleteAccess", "Action", null, accessMapper.toEntity(listGlobalAccess), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un accés", "addAccess", "Action", null, accessMapper.toEntity(listGlobalAccess), new ArrayList<>()));
+        AccessDto menuAdmin = saveAccess("Administration", "Admin", "Menu", null, null, new ArrayList<>());
+        AccessDto listUsers = saveAccess("Liste des utilisateurs", "users", "Page", "users", accessMapper.toEntity(menuAdmin), new ArrayList<>());
+        saveAccess("Ajouter un role", "add-role", "Page", "add-role", accessMapper.toEntity(menuAdmin), new ArrayList<>());
+        AccessDto listRoles = saveAccess("Liste des roles", "roles", "Page", "roles", accessMapper.toEntity(menuAdmin), new ArrayList<>());
+        saveAccess("Modifier un role", "updateRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>());
+        saveAccess("Ajouter un role", "addRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>());
+        saveAccess("supprimer un role", "deleteRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>());
+        saveAccess("Modifier un utilisateur", "updateUser", "Action", null, accessMapper.toEntity(listUsers), new ArrayList<>());
+        saveAccess("Ajouter un utilisateur", "addUser", "Action", null, accessMapper.toEntity(listUsers), new ArrayList<>());
+        saveAccess("supprimer un utilisateur", "deleteUser", "Action", null, accessMapper.toEntity(listUsers), new ArrayList<>());
+        AccessDto listGlobalAccess = saveAccess("List des accés", "access", "Page", "access", accessMapper.toEntity(menuAdmin), new ArrayList<>());
+        saveAccess("Modifier un accés", "updateAccess", "Action", null, accessMapper.toEntity(listGlobalAccess), new ArrayList<>());
+        saveAccess("Supprimer un accés", "deleteAccess", "Action", null, accessMapper.toEntity(listGlobalAccess), new ArrayList<>());
+        saveAccess("Ajouter un accés", "addAccess", "Action", null, accessMapper.toEntity(listGlobalAccess), new ArrayList<>());
 
         //menu cours
-        AccessDto menuCours = accessService.create(new CreateAccess("Cours", "Cours", "Menu", null, null, new ArrayList<>()));
-        AccessDto listCours = accessService.create(new CreateAccess("Liste des cours", "lstCours", "Page", "cours", accessMapper.toEntity(menuCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un cours", "addCours", "Page", "ajoutcours", accessMapper.toEntity(menuCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Modifier un Cours", "updateCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un Cours", "addCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("supprimer un Cours", "deleteCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter une session", "addSession", "Page", "ajoutSession", accessMapper.toEntity(menuCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un programme", "addProgram", "Page", "ajoutProgram", accessMapper.toEntity(menuCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Liste des programmes", "ListProgram", "Page", "listProgram", accessMapper.toEntity(menuCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Liste des sessions", "ListSession", "Page", "listSession", accessMapper.toEntity(menuCours), new ArrayList<>()));
-        accessService.create(new CreateAccess("Type de phase", "typePhase", "Page", "typePhase", accessMapper.toEntity(menuCours), new ArrayList<>()));
+        AccessDto menuCours = saveAccess("Cours", "Cours", "Menu", null, null, new ArrayList<>());
+        AccessDto listCours = saveAccess("Liste des cours", "lstCours", "Page", "cours", accessMapper.toEntity(menuCours), new ArrayList<>());
+        saveAccess("Ajouter un cours", "addCours", "Page", "ajoutcours", accessMapper.toEntity(menuCours), new ArrayList<>());
+        saveAccess("Modifier un Cours", "updateCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>());
+        saveAccess("Ajouter un Cours", "addCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>());
+        saveAccess("supprimer un Cours", "deleteCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>());
+        saveAccess("Ajouter une session", "addSession", "Page", "ajoutSession", accessMapper.toEntity(menuCours), new ArrayList<>());
+        saveAccess("Ajouter un programme", "addProgram", "Page", "ajoutProgram", accessMapper.toEntity(menuCours), new ArrayList<>());
+        saveAccess("Liste des programmes", "ListProgram", "Page", "listProgram", accessMapper.toEntity(menuCours), new ArrayList<>());
+        saveAccess("Liste des sessions", "ListSession", "Page", "listSession", accessMapper.toEntity(menuCours), new ArrayList<>());
+        saveAccess("Type de phase", "typePhase", "Page", "typePhase", accessMapper.toEntity(menuCours), new ArrayList<>());
 
         //menu projet
-        AccessDto menuProjet = accessService.create(new CreateAccess("Projet", "Projet", "Menu", null, null, new ArrayList<>()));
-        AccessDto listProjet = accessService.create(new CreateAccess("List des projets", "lstProjets", "Page", "projets", accessMapper.toEntity(menuProjet), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un projet", "createprojet", "Page", "createprojet", accessMapper.toEntity(menuProjet), new ArrayList<>()));
-        accessService.create(new CreateAccess("Suivre un projet", "suivi", "Page", "suivi", accessMapper.toEntity(menuProjet), new ArrayList<>()));
-        accessService.create(new CreateAccess("Modifier un Projet", "updateProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un Projet", "addProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>()));
-        accessService.create(new CreateAccess("supprimer un Projet", "deleteProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>()));
+        AccessDto menuProjet = saveAccess("Projet", "Projet", "Menu", null, null, new ArrayList<>());
+        AccessDto listProjet = saveAccess("List des projets", "lstProjets", "Page", "projets", accessMapper.toEntity(menuProjet), new ArrayList<>());
+        saveAccess("Ajouter un projet", "createprojet", "Page", "createprojet", accessMapper.toEntity(menuProjet), new ArrayList<>());
+        saveAccess("Suivre un projet", "suivi", "Page", "suivi", accessMapper.toEntity(menuProjet), new ArrayList<>());
+        saveAccess("Modifier un Projet", "updateProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>());
+        saveAccess("Ajouter un Projet", "addProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>());
+        saveAccess("supprimer un Projet", "deleteProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>());
 
         //membre
-        AccessDto menuMembre = accessService.create(new CreateAccess("Membre", "Membre", "Menu", null, null, new ArrayList<>()));
-        AccessDto listMembre = accessService.create(new CreateAccess("List des Membres", "membres", "Page", "membres", accessMapper.toEntity(menuMembre), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajouter un Membre", "ajout-membre", "Page", "ajout-membre", accessMapper.toEntity(menuMembre), new ArrayList<>()));
-        accessService.create(new CreateAccess("Modifier un Membre", "updateMember", "Action", null, accessMapper.toEntity(listMembre), new ArrayList<>()));
-        accessService.create(new CreateAccess("List des positions", "list-position", "Page", "list-position", accessMapper.toEntity(menuMembre), new ArrayList<>()));
+        AccessDto menuMembre = saveAccess("Membre", "Membre", "Menu", null, null, new ArrayList<>());
+        AccessDto listMembre = saveAccess("List des Membres", "membres", "Page", "membres", accessMapper.toEntity(menuMembre), new ArrayList<>());
+        saveAccess("Ajouter un Membre", "ajout-membre", "Page", "ajout-membre", accessMapper.toEntity(menuMembre), new ArrayList<>());
+        saveAccess("Modifier un Membre", "updateMember", "Action", null, accessMapper.toEntity(listMembre), new ArrayList<>());
+        saveAccess("List des positions", "list-position", "Page", "list-position", accessMapper.toEntity(menuMembre), new ArrayList<>());
 
         //Eval
-        AccessDto menueval = accessService.create(new CreateAccess("Evaluation", "Evaluation", "Menu", null, null, new ArrayList<>()));
-        accessService.create(new CreateAccess("Evaluation", "eval", "Page", "eval", accessMapper.toEntity(menueval), new ArrayList<>()));
-        accessService.create(new CreateAccess("Passer examin", "passer_examen", "Page", "passer_examen", accessMapper.toEntity(menueval), new ArrayList<>()));
-        accessService.create(new CreateAccess("Quiz", "quizz", "Page", "quizz", accessMapper.toEntity(menueval), new ArrayList<>()));
-        accessService.create(new CreateAccess("Aspace tuteur", "tuteur", "Page", "tuteur", accessMapper.toEntity(menueval), new ArrayList<>()));
+        AccessDto menueval = saveAccess("Evaluation", "Evaluation", "Menu", null, null, new ArrayList<>());
+        saveAccess("Evaluation", "eval", "Page", "eval", accessMapper.toEntity(menueval), new ArrayList<>());
+        saveAccess("Passer examin", "passer_examen", "Page", "passer_examen", accessMapper.toEntity(menueval), new ArrayList<>());
+        saveAccess("Quiz", "quizz", "Page", "quizz", accessMapper.toEntity(menueval), new ArrayList<>());
+        saveAccess("Aspace tuteur", "tuteur", "Page", "tuteur", accessMapper.toEntity(menueval), new ArrayList<>());
 
         //assistance
-        AccessDto menuAssistance = accessService.create(new CreateAccess("Assistance", "Assistance", "Menu", null, null, new ArrayList<>()));
-        accessService.create(new CreateAccess("List des Assistances", "list-Assistance", "Page", "list-Assistance", accessMapper.toEntity(menuAssistance), new ArrayList<>()));
-        accessService.create(new CreateAccess("Demande d'aide", "demandeAide", "Page", "demandeAide", accessMapper.toEntity(menuAssistance), new ArrayList<>()));
-       //paramétre
-        AccessDto menuParam = accessService.create(new CreateAccess("Paramétres", "Param", "Menu", null, null, new ArrayList<>()));
-        accessService.create(new CreateAccess("List des compétences", "skills", "Page", "skills", accessMapper.toEntity(menuParam), new ArrayList<>()));
-        accessService.create(new CreateAccess("List des thèmes","themeList","Page","themeList", accessMapper.toEntity(menuParam), new ArrayList<>()));
+        AccessDto menuAssistance = saveAccess("Assistance", "Assistance", "Menu", null, null, new ArrayList<>());
+        saveAccess("List des Assistances", "list-Assistance", "Page", "list-Assistance", accessMapper.toEntity(menuAssistance), new ArrayList<>());
+        saveAccess("Demande d'aide", "demandeAide", "Page", "demandeAide", accessMapper.toEntity(menuAssistance), new ArrayList<>());
+        //paramétre
+        AccessDto menuParam = saveAccess("Paramétres", "Param", "Menu", null, null, new ArrayList<>());
+        saveAccess("List des compétences", "skills", "Page", "skills", accessMapper.toEntity(menuParam), new ArrayList<>());
+        saveAccess("List des thèmes","themeList","Page","themeList", accessMapper.toEntity(menuParam), new ArrayList<>());
         //notification
-        AccessDto menuNotification = accessService.create(new CreateAccess("Notification", "Notification", "Menu", null, null, new ArrayList<>()));
-        accessService.create(new CreateAccess("List des type de notification", "typelist", "Page", "typelist", accessMapper.toEntity(menuNotification), new ArrayList<>()));
-        accessService.create(new CreateAccess("List des Notifications", "notificationss", "Page", "notificationss", accessMapper.toEntity(menuNotification), new ArrayList<>()));
-        accessService.create(new CreateAccess("Ajpouter une notification", "addnotification", "Page", "addnotification", accessMapper.toEntity(menuNotification), new ArrayList<>()));
+        AccessDto menuNotification = saveAccess("Notification", "Notification", "Menu", null, null, new ArrayList<>());
+        saveAccess("List des type de notification", "typelist", "Page", "typelist", accessMapper.toEntity(menuNotification), new ArrayList<>());
+        saveAccess("List des Notifications", "notificationss", "Page", "notificationss", accessMapper.toEntity(menuNotification), new ArrayList<>());
+        saveAccess("Ajpouter une notification", "addnotification", "Page", "addnotification", accessMapper.toEntity(menuNotification), new ArrayList<>());
 
 
 //Forum
-        AccessDto   menuForum=accessService.create(new CreateAccess("Forum","Forum","Menu",null, null, new ArrayList<>()));
-        accessService.create(new CreateAccess("Forum","forum-main","Page","forum-main", accessMapper.toEntity(menuForum), new ArrayList<>()));
+        AccessDto   menuForum=saveAccess("Forum","Forum","Menu",null, null, new ArrayList<>());
+        saveAccess("Forum","forum-main","Page","forum-main", accessMapper.toEntity(menuForum), new ArrayList<>());
 
 
     }
-
+    private AccessDto saveAccess(String name, String code, String type, String path, Access parent, List<Access> lst){
+        AccessDto acc=accessService.findByCode(code);
+        if(acc==null)
+            return  accessService.create(new CreateAccess(name,code,type,path, parent, lst));
+        return acc;
+    }
     private void saveRole(Role role) {
         Optional<Role> roleSearched = roleRepository.findByName(role.getName());
         if (roleSearched.isEmpty()) {

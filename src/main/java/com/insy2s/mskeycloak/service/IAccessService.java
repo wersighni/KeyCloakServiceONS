@@ -120,4 +120,12 @@ public interface IAccessService {
      */
     Access removeAccessFromRole(Long roleId, Long accessId);
 
+    /**
+     * Find {@link Access} by code.
+     *
+     * @param code {@link Access} code.
+     * @return {@link AccessDto}
+     * @throws NotFoundException if {@link Access} not found.
+     */
+    AccessDto findByCode(String code) ;
 }

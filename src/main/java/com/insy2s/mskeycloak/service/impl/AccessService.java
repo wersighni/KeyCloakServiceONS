@@ -37,6 +37,36 @@ public class AccessService implements IAccessService {
     private final IAccessMapper accessMapper;
 
     /**
+     * Filter the sub-access of an access by the roles of the user.
+     * Use recursive to filter the sub-access of the sub-access. etc.
+     * Meaning if a Role has Access Menu1 and Menu1 has Access Page1,
+     * but the Role doesn't have Access Page1,
+     * then Page1 should not be in the result.
+     *
+     * @param accesses the list of Access to filter
+     * @param roles    the list of Role to filter
+     * @return the list of Access filtered
+     */
+    private List<Access> filterSubAccessOfAccessByRoles(List<Access> accesses, List<Role> roles) {
+        List<Access> res = accesses;
+
+        res = res.stream()
+                .map(access -> {
+                    List<Access> subAccesses = access.getSubAccess()
+                            .stream()
+                            .filter(subAccess -> roles.stream()
+                                    .anyMatch(role -> role.getAccessList().contains(subAccess)))
+                            .toList();
+                    subAccesses = filterSubAccessOfAccessByRoles(subAccesses, roles);
+                    access.setSubAccess(subAccesses);
+                    return access;
+                })
+                .toList();
+
+        return res;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -65,6 +95,8 @@ public class AccessService implements IAccessService {
     public List<AccessDto> findAllMenusByRole(Long roleId) {
         log.debug("SERVICE to find all Access DTO by role");
         List<Access> menus = accessRepository.findAllByRoleAndType(roleId, MENU);
+        Role role = roleRepository.findById(roleId).orElseThrow(() -> new NotFoundException("The role is not found"));
+        menus = filterSubAccessOfAccessByRoles(menus, List.of(role));
         return accessMapper.toDto(menus);
     }
 
@@ -80,6 +112,8 @@ public class AccessService implements IAccessService {
             return new ArrayList<>();
         }
         List<Access> menus = accessRepository.findByUserAndType(userId, MENU);
+        List<Role> roles = user.getRoles().stream().toList();
+        menus = filterSubAccessOfAccessByRoles(menus, roles);
         return accessMapper.toDto(menus);
     }
 
@@ -148,8 +182,8 @@ public class AccessService implements IAccessService {
     @Transactional(readOnly = true)
     public AccessDto findById(Long id) {
         log.debug("SERVICE to find Access by id : {}", id);
-        Access access =
-                accessRepository.findById(id).orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
+        Access access = accessRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
         return accessMapper.toDto(access);
     }
 
@@ -183,6 +217,8 @@ public class AccessService implements IAccessService {
     public List<AccessDto> findByRoleAndType(Long roleId, String type) {
         log.debug("SERVICE to find all Access by role id : {} and type : {}", roleId, type);
         List<Access> accesses = accessRepository.findAllByRoleAndType(roleId, type);
+        Role role = roleRepository.findById(roleId).orElseThrow(() -> new NotFoundException("The role is not found"));
+        accesses = filterSubAccessOfAccessByRoles(accesses, List.of(role));
         return accessMapper.toDto(accesses);
     }
 
@@ -219,6 +255,17 @@ public class AccessService implements IAccessService {
         role.getAccessList().remove(access);
         roleRepository.save(role);
         return access;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public AccessDto findByCode(String code) {
+        log.debug("SERVICE to find Access by id : {}", code);
+        Access access = accessRepository.findByCode(code).orElse(null);
+        return accessMapper.toDto(access);
     }
 
 }
