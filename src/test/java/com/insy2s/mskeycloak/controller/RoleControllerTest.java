@@ -123,22 +123,22 @@ class RoleControllerTest {
                 .andExpect(jsonPath("$", hasSize(6)))
                 .andExpect(jsonPath("$.[0].id").value(1))
                 .andExpect(jsonPath("$.[0].name").value("ADMIN"))
-                .andExpect(jsonPath("$.[0].accessList", hasSize(51)))
+                .andExpect(jsonPath("$.[0].accessList", hasSize(54)))
                 .andExpect(jsonPath("$.[1].id").value(2))
                 .andExpect(jsonPath("$.[1].name").value("Tuteur Professionnel"))
-                .andExpect(jsonPath("$.[1].accessList", hasSize(51)))
+                .andExpect(jsonPath("$.[1].accessList", hasSize(54)))
                 .andExpect(jsonPath("$.[2].id").value(3))
                 .andExpect(jsonPath("$.[2].name").value("Apprenant"))
-                .andExpect(jsonPath("$.[2].accessList", hasSize(51)))
+                .andExpect(jsonPath("$.[2].accessList", hasSize(54)))
                 .andExpect(jsonPath("$.[3].id").value(4))
                 .andExpect(jsonPath("$.[3].name").value("Tuteur Academique"))
-                .andExpect(jsonPath("$.[3].accessList", hasSize(51)))
+                .andExpect(jsonPath("$.[3].accessList", hasSize(54)))
                 .andExpect(jsonPath("$.[4].id").value(5))
                 .andExpect(jsonPath("$.[4].name").value("Apprenant d'Aide"))
-                .andExpect(jsonPath("$.[4].accessList", hasSize(51)))
+                .andExpect(jsonPath("$.[4].accessList", hasSize(54)))
                 .andExpect(jsonPath("$.[5].id").value(6))
                 .andExpect(jsonPath("$.[5].name").value("Apprenant de Verif"))
-                .andExpect(jsonPath("$.[5].accessList", hasSize(51)));
+                .andExpect(jsonPath("$.[5].accessList", hasSize(54)));
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -178,7 +178,7 @@ class RoleControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("ADMIN"))
-                .andExpect(jsonPath("$.accessList", hasSize(51)));
+                .andExpect(jsonPath("$.accessList", hasSize(54)));
     }
 
     @Test
@@ -199,7 +199,7 @@ class RoleControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("ADMIN"))
-                .andExpect(jsonPath("$.accessList", hasSize(51)));
+                .andExpect(jsonPath("$.accessList", hasSize(54)));
     }
 
     @Test

@@ -135,7 +135,7 @@ class AccessControllerTest {
         mockMvc.perform(get("/api/keycloak/access/all"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(51)));
+                .andExpect(jsonPath("$", hasSize(54)));
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -252,11 +252,10 @@ class AccessControllerTest {
 
     @Test
     @Transactional
-    void testGetAllByType_typeDoesntExist_shouldReturnEmptyList() throws Exception {
+    void testGetAllByType_typeDoesntExist() throws Exception {
         mockMvc.perform(get("/api/keycloak/access/byType/NotExistingType"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
     }
 
@@ -273,9 +272,9 @@ class AccessControllerTest {
     @Transactional
     void getAllByRoleAndType_roleIdDoesntExist() throws Exception {
         mockMvc.perform(get("/api/keycloak/access/byRoleAndType?roleId=10000000&type=Menu"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.message").value("The role is not found"));
     }
 
     @Test
@@ -352,7 +351,7 @@ class AccessControllerTest {
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(8)))
+                .andExpect(jsonPath("$", hasSize(9)))
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].subAccess", hasSize(4)))
                 .andExpect(jsonPath("$[0].subAccess[0].id").value(2))
@@ -444,16 +443,16 @@ class AccessControllerTest {
                 .andExpect(jsonPath("$[5].subAccess[1].id").value(45))
                 .andExpect(jsonPath("$[5].subAccess[1].subAccess", hasSize(0)))
                 .andExpect(jsonPath("$[6].id").value(46))
-                .andExpect(jsonPath("$[6].subAccess", hasSize(1)))
+                .andExpect(jsonPath("$[6].subAccess", hasSize(2)))
                 .andExpect(jsonPath("$[6].subAccess[0].id").value(47))
                 .andExpect(jsonPath("$[6].subAccess[0].subAccess", hasSize(0)))
-                .andExpect(jsonPath("$[7].id").value(48))
+                .andExpect(jsonPath("$[7].id").value(49))
                 .andExpect(jsonPath("$[7].subAccess", hasSize(3)))
-                .andExpect(jsonPath("$[7].subAccess[0].id").value(49))
+                .andExpect(jsonPath("$[7].subAccess[0].id").value(50))
                 .andExpect(jsonPath("$[7].subAccess[0].subAccess", hasSize(0)))
-                .andExpect(jsonPath("$[7].subAccess[1].id").value(50))
+                .andExpect(jsonPath("$[7].subAccess[1].id").value(51))
                 .andExpect(jsonPath("$[7].subAccess[1].subAccess", hasSize(0)))
-                .andExpect(jsonPath("$[7].subAccess[2].id").value(51))
+                .andExpect(jsonPath("$[7].subAccess[2].id").value(52))
                 .andExpect(jsonPath("$[7].subAccess[2].subAccess", hasSize(0)));
     }
 

@@ -1,7 +1,7 @@
 package com.insy2s.mskeycloak.service.impl;
 
 import com.insy2s.mskeycloak.config.KeycloakConfig;
-import com.insy2s.mskeycloak.dto.IMailClient;
+import com.insy2s.mskeycloak.client.IMailClient;
 import com.insy2s.mskeycloak.dto.MailDto;
 import com.insy2s.mskeycloak.error.exception.BadRequestException;
 import com.insy2s.mskeycloak.error.exception.NotFoundException;
@@ -44,7 +44,6 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
     private final KeycloakConfig keycloakConfig;
 
     private final IMailClient mailClient;
-    //private final JwtAuthenticationFilter jwtAuthFilter;
 
     /**
      * {@inheritDoc}
