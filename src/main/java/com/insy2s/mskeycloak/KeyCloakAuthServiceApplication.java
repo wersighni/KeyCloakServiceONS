@@ -66,6 +66,7 @@ public class KeyCloakAuthServiceApplication {
             apprenantVerification.setName("Apprenant de Verif");
             apprenantVerification.setDescription("Apprenant de Verif");
             saveRole(apprenantVerification);
+
         };
     }
 
