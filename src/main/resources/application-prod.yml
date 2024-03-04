@@ -3,4 +3,4 @@ spring:
     import: optional:configserver:http://config-service:8888/security-service
   cloud:
     config:
-      profile: prod
+      profile: main
