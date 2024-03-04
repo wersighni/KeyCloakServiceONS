@@ -9,10 +9,11 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.insy2s</groupId>
-	<artifactId>KeyCloakAuthService</artifactId>
+	<artifactId>security-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>KeyCloakAuthService</name>
+	<name>security-service</name>
 	<description>Service for the security part of the application</description>
+
 	<organization>
 		<name>INSY2S</name>
 		<url>https://www.insy2s.com</url>
@@ -160,7 +161,7 @@
 	</dependencyManagement>
 
 	<build>
-		<finalName>KeyCloakAuthService</finalName>
+		<finalName>security-service</finalName>
 		<defaultGoal>spring-boot:run</defaultGoal>
 		<resources>
 			<resource>

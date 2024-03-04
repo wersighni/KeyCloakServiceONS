@@ -1,53 +1,6 @@
-server:
-  port: 8082
-
 spring:
+  config:
+    import: optional:configserver:http://localhost:8888/security-service
   cloud:
     config:
-      enabled: false
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://keycloak.fethi.synology.me/auth/realms/KeyClock-INSY2S-E-LEARING
-          jwk-set-uri: https://keycloak.fethi.synology.me/auth/realms/KeyClock-INSY2S-E-LEARING/protocol/openid-connect/certs
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    hikari:
-      pool-name: ':::::::::::: Hikari DS Spades_1-MS POOL ::::::::::::'
-      connection-timeout: 60000
-      maximum-pool-size: 30
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/SecurityKeycloak
-    username: postgres
-    password: admin
-  jpa:
-    hibernate:
-# TODO: needs to disable ddl-auto and use a database migration tool like liquibase
-      ddl-auto: update
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: false
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: false
-
-allowed:
-  origins: http://localhost:4200
-
-email:
-  url: http://localhost:9090/api/mail
-
-keycloak:
-  server-url: "https://keycloak.fethi.synology.me/auth"
-  realm: "KeyClock-INSY2S-E-LEARING"
-  client-id: "E_Learning"
-  client-secret: "RVnyYQwYPkfgYGLMOQ8j7wJrw00ejzA6"
-  admin-username: "insy2s"
-  admin-password: "insy2s"
-
-logging:
-  level:
-    com.insy2s: DEBUG
-
+      profile: dev
