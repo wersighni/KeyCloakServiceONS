@@ -43,7 +43,10 @@ public class SecurityConfig {
             "/api/keycloak/users/findById",
             "/api/keycloak/users/create",
             "/api/member/member/create",
-            "/api/mail"
+            "/api/mail",
+
+
+
     };
 
     @Value("${allowed.origins}")
