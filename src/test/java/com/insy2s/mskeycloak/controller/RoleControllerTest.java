@@ -78,7 +78,7 @@ class RoleControllerTest {
     void testCreate_roleExistInDB_shouldReturn400() throws Exception {
         String roleName = "ADMIN";
         when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName))
-                .thenThrow(new javax.ws.rs.NotFoundException());
+                .thenThrow(new jakarta.ws.rs.NotFoundException());
 
 
         Role role = new Role();
@@ -96,7 +96,7 @@ class RoleControllerTest {
     void testCreat_success() throws Exception {
         String roleName = "testRole";
         when(keycloak.realm(keycloakConfig.getRealm()).roles().get(roleName))
-                .thenThrow(new javax.ws.rs.NotFoundException());
+                .thenThrow(new jakarta.ws.rs.NotFoundException());
         Role role = new Role();
         role.setName(roleName);
         role.setDescription("testDescription");

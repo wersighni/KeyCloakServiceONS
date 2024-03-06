@@ -1,7 +1,7 @@
 package com.insy2s.mskeycloak.service.impl;
 
-import com.insy2s.mskeycloak.config.KeycloakConfig;
 import com.insy2s.mskeycloak.client.IMailClient;
+import com.insy2s.mskeycloak.config.KeycloakConfig;
 import com.insy2s.mskeycloak.dto.MailDto;
 import com.insy2s.mskeycloak.error.exception.BadRequestException;
 import com.insy2s.mskeycloak.error.exception.NotFoundException;
@@ -10,6 +10,7 @@ import com.insy2s.mskeycloak.model.User;
 import com.insy2s.mskeycloak.repository.IRoleRepository;
 import com.insy2s.mskeycloak.repository.IUserRepository;
 import com.insy2s.mskeycloak.utils.RandomUtils;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
