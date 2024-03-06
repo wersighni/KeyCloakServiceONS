@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "EmailService", url = "${email.url}")
+@FeignClient(value = "Email-Service", url = "${email.url}")
 public interface IMailClient {
 
     @PostMapping("/")
