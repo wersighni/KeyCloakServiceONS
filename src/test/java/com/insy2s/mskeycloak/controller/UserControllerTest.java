@@ -2,6 +2,7 @@ package com.insy2s.mskeycloak.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insy2s.mskeycloak.config.KeycloakConfig;
+import com.insy2s.mskeycloak.client.IMailClient;
 import com.insy2s.mskeycloak.model.User;
 import com.insy2s.mskeycloak.repository.IUserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.sql.Date;
 
@@ -46,6 +48,8 @@ class UserControllerTest {
     private Keycloak keycloak;
     @MockBean
     private KeycloakConfig keycloakConfig;
+    @MockBean
+    private IMailClient mailClient;
 
     private User user;
 
@@ -65,6 +69,9 @@ class UserControllerTest {
                 .status(true)
                 .dateInscription(Date.valueOf("2021-01-01"))
                 .build();
+
+        when(mailClient.sendEmail(any())).thenReturn(ResponseEntity.ok(true));
+
     }
 
     //////////////////////////////////////////////////////////////////////
