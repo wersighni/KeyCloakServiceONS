@@ -5,14 +5,15 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.1</version>
+		<version>3.2.3</version>
 		<relativePath/>
 	</parent>
 	<groupId>com.insy2s</groupId>
-	<artifactId>KeyCloakAuthService</artifactId>
+	<artifactId>security-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>KeyCloakAuthService</name>
+	<name>security-service</name>
 	<description>Service for the security part of the application</description>
+
 	<organization>
 		<name>INSY2S</name>
 		<url>https://www.insy2s.com</url>
@@ -78,10 +79,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
@@ -89,16 +86,16 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-spring-boot-starter</artifactId>
-			<version>21.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<version>22.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-admin-client</artifactId>
-			<version>21.0.2</version>
+			<version>22.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -148,7 +145,6 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 	</dependencies>
 
 	<dependencyManagement>
@@ -164,7 +160,7 @@
 	</dependencyManagement>
 
 	<build>
-		<finalName>KeyCloakAuthService</finalName>
+		<finalName>security-service</finalName>
 		<defaultGoal>spring-boot:run</defaultGoal>
 		<resources>
 			<resource>
@@ -213,6 +209,10 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
 			</plugin>
 		</plugins>
 	</build>

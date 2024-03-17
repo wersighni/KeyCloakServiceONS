@@ -111,7 +111,7 @@ public class LoginService implements ILoginService {
             keycloak.realm(keycloakConfig.getRealm()).users().get(user.getId()).update(user);
         } catch (NotFoundException notFoundEx) {
             throw new NotFoundException("Aucun utilisateur avec l'adresse e-mail : " + email);
-        } catch (javax.ws.rs.BadRequestException badRequestEx) {
+        } catch (jakarta.ws.rs.BadRequestException badRequestEx) {
             throw new BadRequestException("Requête incorrecte lors de la mise à jour de l'utilisateur : " +
                     badRequestEx.getMessage());
         } catch (Exception e) {
