@@ -118,25 +118,27 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
                 .users()
                 .get(userId)
                 .toRepresentation();
+        log.info("SERVICE : user.getRoles : {}" , user.getRoles());
         Collection<Role> roles = user.getRoles();
-        if (CollectionUtils.isEmpty(roles) && StringUtils.isNotBlank(user.getLstRole())) {
-            Role roleInDb = roleRepository.findByName(user.getLstRole()).orElse(null);
-            if (roleInDb != null) {
-                roles = Collections.singletonList(roleInDb);
-                for (Role r : roles) {
-                    RoleRepresentation roleRepresentation = keycloak
-                            .realm(keycloakConfig.getRealm())
-                            .roles()
-                            .get(r.getName())
-                            .toRepresentation();
-                    keycloak.realm(keycloakConfig.getRealm()).users()
-                            .get(userId)
-                            .roles()
-                            .realmLevel()
-                            .add(Collections.singletonList(roleRepresentation));
-                }
+        // Assign the desired role to the user
+        if (!roles.isEmpty()) {
+
+            for (Role r : roles) {
+                RoleRepresentation roleRepresentation = keycloak
+                        .realm(keycloakConfig.getRealm())
+                        .roles()
+                        .get(r.getName())
+                        .toRepresentation();
+                log.info("SERVICE : roleRepresentation : {}" , roleRepresentation);
+                keycloak.realm(keycloakConfig.getRealm()).users()
+                        .get(userId)
+                        .roles()
+                        .realmLevel()
+                        .add(Collections.singletonList(roleRepresentation));
             }
         }
+
+
         User userToCreateInLocalDb = User.builder()
                 .username(user.getUsername())
                 .firstname(user.getFirstname())
@@ -149,7 +151,7 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
                 .build();
         userToCreateInLocalDb=userRepository.save(userToCreateInLocalDb);
        // String fullname, String mailTo, String subject, String username, String password, String body)
-       mailClient.sendEmail(new MailDto("creationAccount",user.getFirstname(),user.getEmail(),"test",user.getUsername(),password,"email de test"));
+       mailClient.sendEmail(new MailDto("creationAccount",user.getFirstname(),user.getEmail(),"Création du compte",user.getUsername(),password,"Création du compte"));
         return userToCreateInLocalDb;
     }
 

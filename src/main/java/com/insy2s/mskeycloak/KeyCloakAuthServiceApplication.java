@@ -93,11 +93,12 @@ public class KeyCloakAuthServiceApplication {
         saveAccess("Modifier un Cours", "updateCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>());
         saveAccess("Ajouter un Cours", "addCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>());
         saveAccess("supprimer un Cours", "deleteCourses", "Action", null, accessMapper.toEntity(listCours), new ArrayList<>());
-        saveAccess("Ajouter une session", "addSession", "Page", "ajoutSession", accessMapper.toEntity(menuCours), new ArrayList<>());
-        saveAccess("Ajouter un programme", "addProgram", "Page", "ajoutProgram", accessMapper.toEntity(menuCours), new ArrayList<>());
-        saveAccess("Liste des programmes", "ListProgram", "Page", "listProgram", accessMapper.toEntity(menuCours), new ArrayList<>());
-        saveAccess("Liste des sessions", "ListSession", "Page", "listSession", accessMapper.toEntity(menuCours), new ArrayList<>());
-        saveAccess("Type de phase", "typePhase", "Page", "typePhase", accessMapper.toEntity(menuCours), new ArrayList<>());
+        //session
+        AccessDto menuSession = saveAccess("Session", "Session", "Menu", null, null, new ArrayList<>());
+        saveAccess("Ajouter une session", "addSession", "Page", "ajoutSession", accessMapper.toEntity(menuSession), new ArrayList<>());
+        saveAccess("Ajouter un programme", "addProgram", "Page", "ajoutProgram", accessMapper.toEntity(menuSession), new ArrayList<>());
+        saveAccess("Liste des programmes", "ListProgram", "Page", "listProgram", accessMapper.toEntity(menuSession), new ArrayList<>());
+        saveAccess("Liste des sessions", "ListSession", "Page", "listSession", accessMapper.toEntity(menuSession), new ArrayList<>());
 
         //menu projet
         AccessDto menuProjet = saveAccess("Projet", "Projet", "Menu", null, null, new ArrayList<>());
@@ -130,6 +131,8 @@ public class KeyCloakAuthServiceApplication {
         AccessDto menuParam = saveAccess("Paramétres", "Param", "Menu", null, null, new ArrayList<>());
         saveAccess("List des compétences", "skills", "Page", "skills", accessMapper.toEntity(menuParam), new ArrayList<>());
         saveAccess("List des thèmes","themeList","Page","themeList", accessMapper.toEntity(menuParam), new ArrayList<>());
+        saveAccess("Type de phase", "typePhase", "Page", "typePhase", accessMapper.toEntity(menuParam), new ArrayList<>());
+
         //notification
         AccessDto menuNotification = saveAccess("Notification", "Notification", "Menu", null, null, new ArrayList<>());
         saveAccess("List des type de notification", "typelist", "Page", "typelist", accessMapper.toEntity(menuNotification), new ArrayList<>());

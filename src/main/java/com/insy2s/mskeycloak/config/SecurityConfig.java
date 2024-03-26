@@ -35,8 +35,10 @@ public class SecurityConfig {
             "/api/keycloak/users/findById",
             "/api/keycloak/users/create",
             "/api/member/member/create",
-            "/api/member/member/ajout",
-            "/api/mail"
+            "/api/mail",
+
+
+
     };
 
     @Bean
