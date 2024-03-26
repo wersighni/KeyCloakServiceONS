@@ -69,8 +69,8 @@ public class User {
     private String docProfileId;
 
     // TODO: delete this field?
-    @Transient
-    private String lstRole;
+/*    @Transient
+    private String lstRole;*/
 
     @Column(name = "date_inscription")
     @Temporal(TemporalType.TIMESTAMP) // Ajoutez cette annotation pour la date d'inscription
