@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 @FeignClient(value = "email-service")
+
 public interface IMailClient {
 
     @PostMapping("/api/mail/")
