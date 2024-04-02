@@ -73,7 +73,7 @@ public class UserController {
      */
     @PostMapping("/create")
     public ResponseEntity<User> create(@RequestBody @Valid User user) {
-        log.debug("REST request to save User : {}", user.getUsername());
+        log.info("REST request to save User : {}", user.getRoles());
         User userCreated = userService.create(user);
         return ResponseEntity.status(201).body(userCreated);
     }
