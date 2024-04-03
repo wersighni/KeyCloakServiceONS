@@ -6,7 +6,7 @@ import com.insy2s.mskeycloak.dto.mapper.IAccessMapper;
 import com.insy2s.mskeycloak.model.Access;
 import com.insy2s.mskeycloak.model.Role;
 import com.insy2s.mskeycloak.repository.IRoleRepository;
-import com.insy2s.mskeycloak.repository.IUserRepository;
+
 import com.insy2s.mskeycloak.service.IAccessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,6 @@ public class KeyCloakAuthServiceApplication {
 
     private final IRoleRepository roleRepository;
     private final IAccessService accessService;
-    private final IUserRepository userRepository;
     private final IAccessMapper accessMapper;
 
     public static void main(String[] args) {
