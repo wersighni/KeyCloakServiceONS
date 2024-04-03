@@ -42,4 +42,5 @@ public interface ILoginService {
      */
     void logout(String userId);
 
+    String findAccount(String email);
 }
