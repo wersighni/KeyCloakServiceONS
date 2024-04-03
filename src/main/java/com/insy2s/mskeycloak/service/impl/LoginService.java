@@ -1,9 +1,11 @@
 package com.insy2s.mskeycloak.service.impl;
 
+import com.insy2s.mskeycloak.client.IMailClient;
 import com.insy2s.mskeycloak.config.KeycloakConfig;
 import com.insy2s.mskeycloak.dto.AccessDto;
 import com.insy2s.mskeycloak.dto.LoginRequest;
 import com.insy2s.mskeycloak.dto.LoginResponse;
+import com.insy2s.mskeycloak.dto.MailDto;
 import com.insy2s.mskeycloak.dto.mapper.IAccessMapper;
 import com.insy2s.mskeycloak.error.exception.BadRequestException;
 import com.insy2s.mskeycloak.error.exception.NotAuthorizedException;
@@ -15,14 +17,17 @@ import com.insy2s.mskeycloak.service.ILoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,6 +40,7 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class LoginService implements ILoginService {
+    private final IMailClient iMailClient;
 
     private final IUserRepository userRepository;
     private final IAccessService accessService;
@@ -193,5 +199,64 @@ public class LoginService implements ILoginService {
             throw new BadRequestException("Échec de la déconnexion");
         }
     }
+    public String findAccount(String email ) {
+        try {
 
+            // Get the realm resource
+            RealmResource realmResource = keycloak.realm(keycloakConfig.getRealm());
+            List<UserRepresentation> user = realmResource.users().searchByEmail(email, true);
+            if (user.isEmpty()) {
+                return "pas de compte avec email : " + email;
+            }
+            else {
+                String code=generateRandomCode();
+                MailDto mailDto=new MailDto();
+                mailDto.setTypeMail("restPasswordMail");
+                mailDto.setBody(code);
+                mailDto.setMailTo(email);
+                mailDto.setSubject("Votre code de vérification de compte Eleapp");
+                Map<String, List<String>> attributes = user.get(0).getAttributes();
+
+                if (attributes == null) {
+                    attributes = new HashMap<>();
+                }
+
+                // Ajouter l'attribut "VerificationCode" avec sa valeur
+                attributes.put("VerificationCode", Arrays.asList(code));
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy", Locale.US);
+                String currentDateAsString = dateFormat.format(currentDate);
+
+                attributes.put("VerificationCodeDate", Arrays.asList(currentDateAsString));
+
+                // Mettre à jour les attributs de l'utilisateur avec le nouvel attribut "VerificationCode"
+                user.get(0).setAttributes(attributes);
+
+                realmResource.users().get(user.get(0).getId()).update(user.get(0));
+
+                boolean result =iMailClient.sendEmail(mailDto).getBody();
+                if(result==true){
+                    return " Code de vérification envoyé Vérifiez votre email :  " + email;
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: " + e.getMessage();
+        }
+        return "Error: ";
+    }
+    public static String generateRandomCode() {
+        String characters = "123456789";
+        StringBuilder sb = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+        int length = 8;
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(characters.length());
+            char randomChar = characters.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
+    }
 }
