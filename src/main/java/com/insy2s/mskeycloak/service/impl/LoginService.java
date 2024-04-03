@@ -175,16 +175,7 @@ public class LoginService implements ILoginService {
             AccessTokenResponse accessTokenResponse = instanceKeycloakUser.tokenManager().grantToken();
             loginResponse.setAccess_token(accessTokenResponse.getToken());
             loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());
-            if (user != null) {
-                loginResponse.setAccess(accessService.findAllMenusByUserId(user.getId()));
-                loginResponse.setMenus(accessService.findAllAccessCodeOfUserIdAndByType(user.getId(), "Menu"));
-                loginResponse.setPages(accessService.findAllAccessCodeOfUserIdAndByType(user.getId(), "Page"));
-                loginResponse.setActions(accessService.findAllAccessCodeOfUserIdAndByType(user.getId(), "Action"));
-            } else if (loginrequest.getUsername().equals("insy2s")) {
-                loginResponse.setAccess(accessService.findAllMenusAndChildren());
-                List<AccessDto> menus = accessService.findByType("Action");
-                loginResponse.setActions(accessService.refactorAccess(accessMapper.toEntity(menus)));
-            }
+
             return loginResponse;
         }
     }
