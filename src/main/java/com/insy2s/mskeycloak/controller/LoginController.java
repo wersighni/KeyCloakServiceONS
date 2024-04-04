@@ -62,9 +62,11 @@ public class LoginController {
      * @return the ResponseEntity with status 200 (OK) and the tokens in body,
      * or with status 401 (Unauthorized) if the code or email are incorrect.
      */
+
     @PostMapping("/findAccount/verificationCode")
     public ResponseEntity<String> checkVerificationCode(@RequestParam String email, @RequestParam String code) {
-        log.debug("REST request to check verification code {} of {}", code, email);
+        System.out.println(email+code);
+        log.info("REST request to check verification code {} of {}", code, email);
         loginService.checkVerificationCode(email, code);
         return ResponseEntity.ok("Code valide");
     }
@@ -91,7 +93,10 @@ public class LoginController {
         loginService.resetPassword(email, password);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/findAccount/{email}")
+    public ResponseEntity<String> findAccount(@PathVariable String email ) {
+        return ResponseEntity.status(200).body(loginService.findAccount(email));
+    }
     @PostMapping("/changePassword")
     public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request) {
         log.debug("REST request to change password of {}", request.getUsername());

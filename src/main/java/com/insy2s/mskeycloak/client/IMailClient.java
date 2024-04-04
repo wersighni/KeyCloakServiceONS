@@ -13,5 +13,4 @@ public interface IMailClient {
 
     @PostMapping("/api/mail/")
     ResponseEntity<Boolean> sendEmail(@RequestBody MailDto mailDto);
-
 }

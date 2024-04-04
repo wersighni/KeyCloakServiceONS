@@ -107,13 +107,24 @@ public class AccessService implements IAccessService {
     @Transactional(readOnly = true)
     public List<AccessDto> findAllMenusByUserId(String userId) {
         log.debug("SERVICE to find all Access DTO by user id {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElse(null);
+        List<Access> menus=null;
+        List<Role> roles = null;
+        if(user==null){
+            menus=accessRepository.findByType(MENU);
+            roles=new ArrayList<Role>();
+            roles.add(roleRepository.findByName("ADMIN").orElse(null));
+        }else
         if (user.getRoles().isEmpty()) {
             return new ArrayList<>();
         }
-        List<Access> menus = accessRepository.findByUserAndType(userId, MENU);
-        List<Role> roles = user.getRoles().stream().toList();
-        menus = filterSubAccessOfAccessByRoles(menus, roles);
+        else
+        {
+            menus = accessRepository.findByUserAndType(userId, MENU);
+
+            roles = user.getRoles().stream().toList();
+            menus = filterSubAccessOfAccessByRoles(menus, roles);
+        }
         return accessMapper.toDto(menus);
     }
 

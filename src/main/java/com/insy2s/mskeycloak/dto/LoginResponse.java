@@ -17,10 +17,7 @@ import java.util.List;
 public class LoginResponse {
 
     Collection<Role> roles = new ArrayList<>();
-    List<AccessDto> access = new ArrayList<>();
-    List<String> menus = new ArrayList<>();
-    List<String> pages = new ArrayList<>();
-    List<String> actions = new ArrayList<>();
+
 
     private String access_token;
     private String refresh_token;
