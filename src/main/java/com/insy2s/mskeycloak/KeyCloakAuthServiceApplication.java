@@ -119,7 +119,9 @@ public class KeyCloakAuthServiceApplication {
         AccessDto menueval = saveAccess("Evaluation", "Evaluation", "Menu", null, null, new ArrayList<>());
         saveAccess("Evaluation", "eval", "Page", "eval", accessMapper.toEntity(menueval), new ArrayList<>());
         saveAccess("Passer l'examen", "passer_examen", "Page", "passer_examen", accessMapper.toEntity(menueval), new ArrayList<>());
-        saveAccess("Quiz", "quizz", "Page", "quizz", accessMapper.toEntity(menueval), new ArrayList<>());
+        saveAccess("Liste des quiz", "list_quiz_apprenant", "Page", "list_quiz_apprenant", accessMapper.toEntity(menueval), new ArrayList<>());
+        saveAccess("Gérer quiz", "list_quiz", "Page", "list_quiz", accessMapper.toEntity(menueval), new ArrayList<>());
+
         saveAccess("Espace tuteur", "tuteur", "Page", "tuteur", accessMapper.toEntity(menueval), new ArrayList<>());
 
         //assistance
