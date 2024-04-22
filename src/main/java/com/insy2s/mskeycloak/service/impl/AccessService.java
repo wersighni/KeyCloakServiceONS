@@ -13,6 +13,7 @@ import com.insy2s.mskeycloak.repository.IUserRepository;
 import com.insy2s.mskeycloak.service.IAccessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -196,6 +197,24 @@ public class AccessService implements IAccessService {
         Access access = accessRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
         return accessMapper.toDto(access);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Access findByIdForUpdate(Long id){
+        log.debug("SERVICE to find Access by id : {}", id);
+        Access access = accessRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
+        return access;
+    }
+
+    @Override
+    public Access update(Long id, Access access) {
+
+             access.setId(id);
+            Access updateAccess = accessRepository.save( access);
+            return updateAccess;
+
     }
 
     /**

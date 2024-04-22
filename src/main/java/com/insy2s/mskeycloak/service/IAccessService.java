@@ -6,6 +6,9 @@ import com.insy2s.mskeycloak.error.exception.NotFoundException;
 import com.insy2s.mskeycloak.model.Access;
 import com.insy2s.mskeycloak.model.Role;
 import com.insy2s.mskeycloak.model.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -46,6 +49,17 @@ public interface IAccessService {
      * @throws NotFoundException if {@link Access} not found.
      */
     AccessDto findById(Long id);
+
+    /**
+     * Find {@link Access} by id.
+     *
+     * @param id {@link Access} id.
+     * @return {@link AccessDto}
+     * @throws NotFoundException if {@link Access} not found.
+     */
+    Access findByIdForUpdate(Long id);
+
+    public Access update( Long id,  Access access) ;
 
     /**
      * Find {@link Access} by parent id.
