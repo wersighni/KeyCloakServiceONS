@@ -173,11 +173,15 @@ public class LoginService implements ILoginService {
                     .orElseThrow(() -> new NotAuthorizedException("Utilisateur non trouvé avec le nom d'utilisateur"));
         }
 
-        try (Keycloak instanceKeycloakUser = keycloakConfig.instantiateKeycloakUser(
+        try (
+                Keycloak instanceKeycloakUser = keycloakConfig.instantiateKeycloakUser(
                 loginrequest.getUsername(),
-                loginrequest.getPassword()
-        )) {
-            LoginResponse loginResponse = new LoginResponse();
+                loginrequest.getPassword())
+
+        )
+                {
+
+                    LoginResponse loginResponse = new LoginResponse();
             AccessTokenResponse accessTokenResponse = instanceKeycloakUser.tokenManager().grantToken();
             loginResponse.setAccess_token(accessTokenResponse.getToken());
             loginResponse.setRefresh_token(accessTokenResponse.getRefreshToken());
