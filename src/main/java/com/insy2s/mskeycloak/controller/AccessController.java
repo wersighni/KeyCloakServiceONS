@@ -86,6 +86,19 @@ public class AccessController {
     }
 
     /**
+     * GET /api/keycloak/access/{id} : get the "id" Access.
+     *
+     * @param id the id of the Access to retrieve.
+     * @return {@link ResponseEntity} with status {@code 200 (OK)} and with body the Access,
+     * or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/forUpdate/{id}")
+    public Access getForUpdateById(@PathVariable Long id) {
+        log.debug("REST request to get Access : {}", id);
+        return accessService.findByIdForUpdate(id);
+    }
+
+    /**
      * GET /api/keycloak/access/byParentId/{id} : get all the Access by parent id.
      *
      * @param id the id of the parent Access.
@@ -172,6 +185,14 @@ public class AccessController {
     public Access removeAccessToRole(@RequestParam Long roleId, @RequestParam Long accessId) {
         log.debug("REST request to remove Access : {} from role : {}", accessId, roleId);
         return accessService.removeAccessFromRole(roleId, accessId);
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Access> update(@PathVariable Long id, @RequestBody Access access) {
+        log.debug("REST request to update Access : {}", access);
+        Access updateAccess = accessService.update(id, access);
+        return ResponseEntity.ok(updateAccess);
     }
 
 }

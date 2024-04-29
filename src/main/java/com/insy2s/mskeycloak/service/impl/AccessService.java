@@ -13,6 +13,7 @@ import com.insy2s.mskeycloak.repository.IUserRepository;
 import com.insy2s.mskeycloak.service.IAccessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,13 +108,24 @@ public class AccessService implements IAccessService {
     @Transactional(readOnly = true)
     public List<AccessDto> findAllMenusByUserId(String userId) {
         log.debug("SERVICE to find all Access DTO by user id {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElse(null);
+        List<Access> menus=null;
+        List<Role> roles = null;
+        if(user==null){
+            menus=accessRepository.findByType(MENU);
+            roles=new ArrayList<Role>();
+            roles.add(roleRepository.findByName("ADMIN").orElse(null));
+        }else
         if (user.getRoles().isEmpty()) {
             return new ArrayList<>();
         }
-        List<Access> menus = accessRepository.findByUserAndType(userId, MENU);
-        List<Role> roles = user.getRoles().stream().toList();
-        menus = filterSubAccessOfAccessByRoles(menus, roles);
+        else
+        {
+            menus = accessRepository.findByUserAndType(userId, MENU);
+
+            roles = user.getRoles().stream().toList();
+            menus = filterSubAccessOfAccessByRoles(menus, roles);
+        }
         return accessMapper.toDto(menus);
     }
 
@@ -185,6 +197,24 @@ public class AccessService implements IAccessService {
         Access access = accessRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
         return accessMapper.toDto(access);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Access findByIdForUpdate(Long id){
+        log.debug("SERVICE to find Access by id : {}", id);
+        Access access = accessRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Access " + id + " not found"));
+        return access;
+    }
+
+    @Override
+    public Access update(Long id, Access access) {
+
+             access.setId(id);
+            Access updateAccess = accessRepository.save( access);
+            return updateAccess;
+
     }
 
     /**

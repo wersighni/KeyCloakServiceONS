@@ -118,7 +118,7 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
                 .users()
                 .get(userId)
                 .toRepresentation();
-        log.info("SERVICE : user.getRoles : {}" , user.getRoles());
+
         Collection<Role> roles = user.getRoles();
         // Assign the desired role to the user
         if (!roles.isEmpty()) {
