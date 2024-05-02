@@ -52,14 +52,16 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
     public void deleteUser(String id) {
         log.debug("SERVICE : deleteUser : {}", id);
         UsersResource usersResource = keycloak.realm(keycloakConfig.getRealm()).users();
-        UserRepresentation user = usersResource.get(id).toRepresentation();
-        if (user == null) {
-            throw new NotFoundException("Utilisateur non trouvé");
-        }
-        try (Response response = usersResource.delete(id)) {
-            if (response.getStatus() != 204) {
-                throw new BadRequestException("Erreur lors de la suppression de l'utilisateur");
+        try {
+            UserRepresentation user = usersResource.get(id).toRepresentation();
+
+            try (Response response = usersResource.delete(id)) {
+                if (user!=null && response.getStatus() != 204) {
+                    throw new BadRequestException("Erreur lors de la suppression de l'utilisateur");
+                }
             }
+        }catch (Exception e){
+
         }
         userRepository.deleteById(id);
     }
