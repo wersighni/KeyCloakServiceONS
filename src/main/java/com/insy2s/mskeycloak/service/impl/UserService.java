@@ -61,7 +61,7 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
                 }
             }
         }catch (Exception e){
-
+            log.error("Utilisateur introuvable dans serveur Keycloak : {}", id);
         }
         userRepository.deleteById(id);
     }
