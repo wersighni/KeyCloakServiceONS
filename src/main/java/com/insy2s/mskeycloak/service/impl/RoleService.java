@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for {@link Role} entity.
@@ -42,8 +43,10 @@ public class RoleService implements IRoleService {
             if (!e.getMessage().equals("HTTP 404 Not Found")) {
                 throw new BadRequestException("Role existe  dans keycloak");
             }
-            if (roleRepository.findByName(role.getName()).isPresent()) {
-                throw new BadRequestException("Role existe  dans la base locale");
+            Optional<Role> existingRole = roleRepository.findByName(role.getName());
+
+            if (existingRole.isPresent() && !existingRole.get().isStatus()) {
+                throw new BadRequestException("Role existe  dans la base locale avec le status false");
             }
             RoleRepresentation newRole = new RoleRepresentation();
             newRole.setName(role.getName());
