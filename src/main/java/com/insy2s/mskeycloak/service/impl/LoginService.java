@@ -234,17 +234,17 @@ public class LoginService implements ILoginService {
 
                 realmResource.users().get(user.get(0).getId()).update(user.get(0));
 
-                boolean result =iMailClient.sendEmail(mailDto).getBody();
-                if(result==true){
+                iMailClient.sendResetEmail(mailDto).getBody();
+
                     return " Code de vérification envoyé Vérifiez votre email :  " + email;
 
-                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
             return "Error: " + e.getMessage();
         }
-        return "Error: ";
+
     }
     public static String generateRandomCode() {
         String characters = "123456789";

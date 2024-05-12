@@ -153,7 +153,12 @@ public class UserService implements com.insy2s.mskeycloak.service.IUserService {
                 .build();
         userToCreateInLocalDb=userRepository.save(userToCreateInLocalDb);
        // String fullname, String mailTo, String subject, String username, String password, String body)
-       mailClient.sendEmail(new MailDto("creationAccount",user.getFirstname(),user.getEmail(),"Création du compte",user.getUsername(),password,"Création du compte"));
+        MailDto mail=new MailDto("creationAccount",user.getFirstname(),user.getEmail(),"Création du compte",user.getUsername(),password,"Création du compte");
+      mail.setUsername(user.getUsername());
+      mail.setPassword(password);
+       mail.setMailTo(user.getEmail());
+        System.out.println("mail ds qu"+mail.getMailTo());
+        mailClient.sendAddEmail(mail);
         return userToCreateInLocalDb;
     }
 
