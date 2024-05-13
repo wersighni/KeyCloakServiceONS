@@ -72,7 +72,7 @@ public class KeyCloakAuthServiceApplication {
     private void setDefaultAccess() {
         AccessDto menuAdmin = saveAccess("Administration", "Admin", "Menu", null, null, new ArrayList<>());
         AccessDto listUsers = saveAccess("Liste des utilisateurs", "users", "Page", "users", accessMapper.toEntity(menuAdmin), new ArrayList<>());
-        saveAccess("Ajouter un role", "add-role", "Page", "add-role", accessMapper.toEntity(menuAdmin), new ArrayList<>());
+       // saveAccess("Ajouter un role", "add-role", "Page", "add-role", accessMapper.toEntity(menuAdmin), new ArrayList<>());
         AccessDto listRoles = saveAccess("Liste des roles", "roles", "Page", "roles", accessMapper.toEntity(menuAdmin), new ArrayList<>());
         saveAccess("Modifier un role", "updateRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>());
         saveAccess("Ajouter un role", "addRole", "Action", null, accessMapper.toEntity(listRoles), new ArrayList<>());
@@ -97,7 +97,11 @@ public class KeyCloakAuthServiceApplication {
         saveAccess("Ajouter une session", "addSession", "Page", "ajoutSession", accessMapper.toEntity(menuSession), new ArrayList<>());
         saveAccess("Ajouter un programme", "addProgram", "Page", "ajoutProgram", accessMapper.toEntity(menuSession), new ArrayList<>());
         saveAccess("Liste des programmes", "ListProgram", "Page", "listProgram", accessMapper.toEntity(menuSession), new ArrayList<>());
-        saveAccess("Liste des sessions", "ListSession", "Page", "listSession", accessMapper.toEntity(menuSession), new ArrayList<>());
+        AccessDto listSession=   saveAccess("Liste des sessions", "ListSession", "Page", "listSession", accessMapper.toEntity(menuSession), new ArrayList<>());
+
+        saveAccess("Modifier séance", "updateSeance", "Action", null, accessMapper.toEntity(listSession), new ArrayList<>());
+
+
 
         //menu projet
         AccessDto menuProjet = saveAccess("Projet", "Projet", "Menu", null, null, new ArrayList<>());

@@ -32,13 +32,13 @@ public class Role {
     @NotBlank
     @Size(min = 2, max = 50)
     @Pattern(regexp = "^[ A-zÀ-ÿ'-]+$")
-    @Column(name = "name", unique = true, nullable = false, length = 50)
+    @Column(name = "name",  nullable = false, length = 50)
     private String name;
 
-    @NotBlank
-    @Size(min = 2, max = 255)
-    @Pattern(regexp = "^[ A-zÀ-ÿ'-]+$")
-    @Column(name = "description", nullable = false)
+
+    @Size(min = 0, max = 255)
+    @Pattern(regexp = "^[ A-zÀ-ÿ'-]*$")
+    @Column(name = "description", nullable = true)
     private String description;
 
     @Column(name = "status")
