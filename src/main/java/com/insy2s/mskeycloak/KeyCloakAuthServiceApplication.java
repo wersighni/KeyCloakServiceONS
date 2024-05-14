@@ -101,12 +101,16 @@ public class KeyCloakAuthServiceApplication {
 
         saveAccess("Modifier séance", "updateSeance", "Action", null, accessMapper.toEntity(listSession), new ArrayList<>());
 
-
+        saveAccess("Ajouter séance", "ajouterSeance", "Action", null, accessMapper.toEntity(listSession), new ArrayList<>());
+        saveAccess("Supprimer séance", "deleteSeance", "Action", null, accessMapper.toEntity(listSession), new ArrayList<>());
 
         //menu projet
         AccessDto menuProjet = saveAccess("Projet", "Projet", "Menu", null, null, new ArrayList<>());
         AccessDto listProjet = saveAccess("Liste des projets", "lstProjets", "Page", "projets", accessMapper.toEntity(menuProjet), new ArrayList<>());
         saveAccess("Ajouter un projet", "createprojet", "Page", "createprojet", accessMapper.toEntity(menuProjet), new ArrayList<>());
+
+        saveAccess("Suivre un projet", "suivi", "Page", "suivi", accessMapper.toEntity(menuProjet), new ArrayList<>());
+
         saveAccess("Suivre un projet", "suiviProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>());
         saveAccess("Modifier un Projet", "updateProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>());
         saveAccess("Ajouter un Projet", "addProject", "Action", null, accessMapper.toEntity(listProjet), new ArrayList<>());
