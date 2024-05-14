@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface IMailClient {
 
     @PostMapping("/api/mail/creationAccount")
-    ResponseEntity<Boolean> sendAddEmail(@RequestBody MailDto mailDto);
+    ResponseEntity<Void> sendAddEmail(@RequestBody MailDto mailDto);
 
     @PostMapping("/api/mail/resetPassword")
     ResponseEntity<Void> sendResetEmail(@RequestBody MailDto mailDto);
