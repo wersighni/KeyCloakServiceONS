@@ -2,17 +2,14 @@ package com.insy2s.mskeycloak.service.impl;
 
 import com.insy2s.mskeycloak.client.IMailClient;
 import com.insy2s.mskeycloak.config.KeycloakConfig;
-import com.insy2s.mskeycloak.dto.AccessDto;
 import com.insy2s.mskeycloak.dto.LoginRequest;
 import com.insy2s.mskeycloak.dto.LoginResponse;
 import com.insy2s.mskeycloak.dto.MailDto;
-import com.insy2s.mskeycloak.dto.mapper.IAccessMapper;
 import com.insy2s.mskeycloak.error.exception.BadRequestException;
 import com.insy2s.mskeycloak.error.exception.NotAuthorizedException;
 import com.insy2s.mskeycloak.error.exception.NotFoundException;
 import com.insy2s.mskeycloak.model.User;
 import com.insy2s.mskeycloak.repository.IUserRepository;
-import com.insy2s.mskeycloak.service.IAccessService;
 import com.insy2s.mskeycloak.service.ILoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +19,6 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -43,10 +39,8 @@ public class LoginService implements ILoginService {
     private final IMailClient iMailClient;
 
     private final IUserRepository userRepository;
-    private final IAccessService accessService;
     private final Keycloak keycloak;
     private final KeycloakConfig keycloakConfig;
-    private final IAccessMapper accessMapper;
 
     private static long getDifferenceInMinutes(String codeVerifyTime) {
         try {

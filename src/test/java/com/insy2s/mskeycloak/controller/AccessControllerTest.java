@@ -1,8 +1,6 @@
 package com.insy2s.mskeycloak.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.insy2s.mskeycloak.dto.CreateAccess;
-import com.insy2s.mskeycloak.model.Access;
 import com.insy2s.mskeycloak.model.Role;
 import com.insy2s.mskeycloak.model.User;
 import com.insy2s.mskeycloak.repository.IUserRepository;

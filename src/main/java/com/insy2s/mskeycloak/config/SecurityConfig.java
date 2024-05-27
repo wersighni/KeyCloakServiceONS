@@ -27,7 +27,6 @@ public class SecurityConfig {
             "/api/keycloak/auth/login",
             "/api/keycloak/auth/findAccount/*",
 
-// TODO: check that all these endpoints should really be public
             "/api/keycloak/roles/create",
             "/api/keycloak/roles/**",
 

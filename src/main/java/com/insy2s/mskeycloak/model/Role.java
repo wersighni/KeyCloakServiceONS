@@ -44,13 +44,6 @@ public class Role {
     @Column(name = "status")
     private boolean status = false;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "role_access",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "access_id")
-    )
-    @ToString.Exclude
-    private List<Access> accessList = new ArrayList<>();
+
 
 }
