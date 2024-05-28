@@ -1,5 +1,52 @@
+eureka:
+  instance:
+    client:
+      serviceUrl:
+        defaultZone: http://localhost:8761/
+server:
+  port: 8082
+
 spring:
   application:
     name: security-service
-  profiles:
-    active: @activatedProperties@
+  cloud:
+    config:
+      enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.insycs.fr/realms/KeyClock-INSY2S-E-LEARING-FOR-LOCAL
+          jwk-set-uri: https://keycloak.insycs.fr/realms/KeyClock-INSY2S-E-LEARING-FOR-LOCAL/protocol/openid-connect/certs
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: ':::::::::::: Hikari DS Spades_1-MS POOL ::::::::::::'
+      connection-timeout: 60000
+      maximum-pool-size: 30
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/securitykeycloak
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update # When you launch the application for the first time - switch "none" at "create"
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+
+email:
+  url: http://localhost:9090/api/mail
+
+keycloak:
+  server-url: "https://keycloak.insycs.fr/"
+  realm: "KeyClock-INSY2S-E-LEARING-FOR-LOCAL"
+  client-id: "E_Learning"
+  client-secret: "IiHPzDstPIN2FTsxTZatL9MjMlQDnBeR"
+  admin-username: "insy2s"
+  admin-password: "insy2s"
+  lock-duration: 30
