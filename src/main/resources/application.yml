@@ -21,7 +21,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      pool-name: ':::::::::::: Hikari DS Spades_1-MS POOL ::::::::::::'
+      pool-name: '::::::::::::  ::::::::::::'
       connection-timeout: 60000
       maximum-pool-size: 30
     driver-class-name: org.postgresql.Driver
