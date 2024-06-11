@@ -16,8 +16,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://keycloak.insycs.fr/realms/KeyClock-INSY2S-E-LEARING-FOR-LOCAL
-          jwk-set-uri: https://keycloak.insycs.fr/realms/KeyClock-INSY2S-E-LEARING-FOR-LOCAL/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8080/realms/Restaurant
+          jwk-set-uri: http://localhost:8080/realms/Restaurant/protocol/openid-connect/certs
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -43,10 +43,10 @@ email:
   url: http://localhost:9090/api/mail
 
 keycloak:
-  server-url: "https://keycloak.insycs.fr/"
-  realm: "KeyClock-INSY2S-E-LEARING-FOR-LOCAL"
-  client-id: "E_Learning"
-  client-secret: "IiHPzDstPIN2FTsxTZatL9MjMlQDnBeR"
-  admin-username: "insy2s"
-  admin-password: "insy2s"
+  server-url: "http://localhost:8080/"
+  realm: "Restaurant"
+  client-id: "keycloakRestaurant"
+  client-secret: "1phvzk6r5SdZ65oRGgKqKi7HUnYqSSeg"
+  admin-username: "ons"
+  admin-password: "ons"
   lock-duration: 30

@@ -160,9 +160,11 @@ public class LoginService implements ILoginService {
     @Override
     public LoginResponse login(LoginRequest loginrequest) {
         log.debug("SERVICE to login {}", loginrequest.getUsername());
+        log.debug("SERVICE to login {}", loginrequest.getPassword());
+
         User user = null;
 
-        if (!loginrequest.getUsername().equals("insy2s")) {
+        if (!loginrequest.getUsername().equals("ons")) {
             user = userRepository.findByUsername(loginrequest.getUsername())
                     .orElseThrow(() -> new NotAuthorizedException("Utilisateur non trouvé avec le nom d'utilisateur"));
         }
