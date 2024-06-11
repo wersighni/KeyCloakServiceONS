@@ -52,7 +52,7 @@ public class LoginController {
 
 
     @PostMapping("/findAccount/restPassword")
-    public ResponseEntity<Void> resetPassword(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Void> resetPasswordddd(@RequestParam String email, @RequestParam String password) {
         log.debug("REST request to reset password of {}", email);
         loginService.resetPassword(email, password);
         return ResponseEntity.ok().build();
