@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -38,8 +37,8 @@ public class KeycloakConfig {
 
     @Bean
     protected Keycloak initKeycloakAdmin() {
-        System.out.println(realm);
-        System.out.println(clientId);
+        log.info("Initializing Keycloak admin client for realm: {}", realm);
+        log.debug("Client ID: {}", clientId);
 
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
@@ -51,18 +50,23 @@ public class KeycloakConfig {
                 .grantType(OAuth2Constants.PASSWORD)
                 .build();
         try {
-            System.out.println(keycloak);
+            log.debug("Keycloak instance: {}", keycloak);
 
             AccessTokenResponse accessTokenResponse = keycloak.tokenManager().grantToken();
             if (accessTokenResponse != null) {
+                log.info("Access token obtained successfully");
             } else {
-                System.err.println("Failed to obtain access token: accessTokenResponse is null");
+                log.error("Failed to obtain access token: accessTokenResponse is null");
             }
+        } catch (jakarta.ws.rs.BadRequestException e) {
+            String responseBody = e.getResponse().readEntity(String.class);
+            log.error("HTTP 400 Bad Request: {}", responseBody);
+            e.printStackTrace();
         } catch (jakarta.ws.rs.NotFoundException e) {
-            System.err.println("HTTP 404 Not Found: " + e.getMessage());
+            log.error("HTTP 404 Not Found: {}", e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            log.error("Error: {}", e.getMessage());
             e.printStackTrace();
         }
 
@@ -80,6 +84,4 @@ public class KeycloakConfig {
                 .password(password)
                 .build();
     }
-
 }
-

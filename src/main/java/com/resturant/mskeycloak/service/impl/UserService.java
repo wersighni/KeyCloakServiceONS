@@ -91,7 +91,7 @@ public class UserService implements IUserService {
      */
     @Override
     public User create(User user) {
-        log.debug("SERVICE : createUser : {}", user);
+        log.info("SERVICE : createUser : {}", user);
         UserRepresentation newUser = new UserRepresentation();
         newUser.setUsername(user.getUsername());
         newUser.setEmail(user.getEmail());
@@ -101,9 +101,7 @@ public class UserService implements IUserService {
         CredentialRepresentation credentials = new CredentialRepresentation();
         credentials.setTemporary(false);
         credentials.setType(CredentialRepresentation.PASSWORD);
-        String password = RandomUtils.generateRandomString(30);
-        user.setPassword(password);
-        credentials.setValue(password);
+        credentials.setValue(user.getPassword());
         newUser.setCredentials(List.of(credentials));
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -111,6 +109,9 @@ public class UserService implements IUserService {
         }
 
         Response response = keycloak.realm(keycloakConfig.getRealm()).users().create(newUser);
+
+        log.info("SERVICE : createUser : {}", response.getStatus());
+
         if (response.getStatus() != 201) {
             throw new BadRequestException("Erreur lors de la création de l'utilisateur");
         }
@@ -148,17 +149,9 @@ public class UserService implements IUserService {
                 .id(createdUser.getId())
                 .email(user.getEmail())
                 .roles(roles)
-                .dateInscription(new Date())
-                .password(password)
                 .build();
         userToCreateInLocalDb=userRepository.save(userToCreateInLocalDb);
-       // String fullname, String mailTo, String subject, String username, String password, String body)
-        MailDto mail=new MailDto("creationAccount",user.getFirstname(),user.getEmail(),"Création du compte",user.getUsername(),password,"Création du compte");
-      mail.setUsername(user.getUsername());
-      mail.setPassword(password);
-       mail.setMailTo(user.getEmail());
-        System.out.println("mail ds qu"+mail.getMailTo());
-        mailClient.sendAddEmail(mail);
+
         return userToCreateInLocalDb;
     }
 

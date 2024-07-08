@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface IRoleRepository extends JpaRepository<Role, Long> {
 
     List<Role> getAllRolesByStatusFalse();
+    Optional<Role> findByNameIgnoreCase(String name);
 
     Optional<Role> findByName(String name);
 

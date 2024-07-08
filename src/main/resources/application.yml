@@ -25,7 +25,7 @@ spring:
       connection-timeout: 60000
       maximum-pool-size: 30
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/securitykeycloak
+    url: jdbc:postgresql://localhost:5432/securitykeycloakOns
     username: postgres
     password: admin
   jpa:
@@ -43,10 +43,10 @@ email:
   url: http://localhost:9090/api/mail
 
 keycloak:
-  server-url: "http://localhost:8080/"
+  server-url: "http://localhost:8080"
   realm: "Restaurant"
   client-id: "keycloakRestaurant"
-  client-secret: "1phvzk6r5SdZ65oRGgKqKi7HUnYqSSeg"
+  client-secret: "FJ49Gy7gInUOz0OIZCPeBXPdZNzrp2Lh"
   admin-username: "ons"
   admin-password: "ons"
   lock-duration: 30

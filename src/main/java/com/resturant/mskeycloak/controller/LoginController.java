@@ -4,7 +4,9 @@ import com.resturant.mskeycloak.dto.ChangePasswordRequest;
 import com.resturant.mskeycloak.dto.LoginRequest;
 import com.resturant.mskeycloak.dto.LoginResponse;
 import com.resturant.mskeycloak.error.exception.BadRequestException;
+import com.resturant.mskeycloak.model.User;
 import com.resturant.mskeycloak.service.ILoginService;
+import com.resturant.mskeycloak.service.IUserService;
 import com.resturant.mskeycloak.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     private final ILoginService loginService;
-
+    private final IUserService iUserService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
@@ -27,7 +29,11 @@ public class LoginController {
         final LoginResponse loginResponse = loginService.login(loginRequest);
         return ResponseEntity.ok(loginResponse);
     }
-
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) {
+        final User loginResponse = iUserService.create(user);
+        return ResponseEntity.ok(loginResponse);
+    }
 
     @PostMapping("/logout/{userId}")
     public ResponseEntity<String> logout(@PathVariable String userId) {
