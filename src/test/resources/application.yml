@@ -1,0 +1,55 @@
+server:
+  port: 8082
+
+eureka:
+  client:
+    enabled: false
+
+spring:
+  application:
+    name: keycloak-service
+  cloud:
+    config:
+      enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.me/auth/realms/KeyClock
+          jwk-set-uri: https://.me/auth/realms/KeyClock/protocol/openid-connect/certs
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: ':::::::::::: Hikari DS Spades_1-MS POOL ::::::::::::'
+      connection-timeout: 60000
+      maximum-pool-size: 30
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:db
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      # TODO: needs to disable ddl-auto and use a database migration tool like liquibase
+      ddl-auto: create-drop
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: false
+    show-sql: true
+
+allowed:
+  origins: http://localhost:4200
+
+email:
+  url: http://localhost:9090/api/mail
+
+keycloak:
+  server-url: "https://fake.me/auth"
+  realm: "KeyCloack"
+  client-id: "KeyCloack"
+  client-secret: "KeyCloack"
+  admin-username: "KeyCloack"
+  admin-password: "KeyCloack"
+
+logging:
+  level:
+    com.insy2s: DEBUG
