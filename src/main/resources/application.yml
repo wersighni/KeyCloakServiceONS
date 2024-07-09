@@ -46,7 +46,7 @@ keycloak:
   server-url: "http://localhost:8080"
   realm: "Restaurant"
   client-id: "keycloakRestaurant"
-  client-secret: "FJ49Gy7gInUOz0OIZCPeBXPdZNzrp2Lh"
+  client-secret: "FJ49Gy7gInUOz0OIZCPeBXPdZNzrp2Lhg"
   admin-username: "ons"
   admin-password: "ons"
   lock-duration: 30
