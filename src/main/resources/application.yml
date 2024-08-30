@@ -47,6 +47,6 @@ keycloak:
   realm: "Restaurant"
   client-id: "keycloakRestaurant"
   client-secret: "FJ49Gy7gInUOz0OIZCPeBXPdZNzrp2Lh"
-  admin-username: "ons"
-  admin-password: "ons"
+  admin-username: "One.wersighni@esprit.tn"
+  admin-password: "ons12345"
   lock-duration: 30
